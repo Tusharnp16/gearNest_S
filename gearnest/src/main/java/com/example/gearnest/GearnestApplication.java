@@ -10,5 +10,4 @@ public class GearnestApplication {
 		System.out.println("Hello World");
 		SpringApplication.run(GearnestApplication.class, args);
 	}
-
 }

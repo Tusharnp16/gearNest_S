@@ -15,19 +15,11 @@ public class SecurityConfig {
     }
 
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
             .csrf().disable()
             .authorizeHttpRequests()
-                .requestMatchers("/register/**", "/login", "/css/**").permitAll()
-                .anyRequest().authenticated()
-            .and()
-            .formLogin()
-                .loginPage("/login") // custom login page
-                .defaultSuccessUrl("/dashboard", true)
-                .permitAll()
-            .and()
-            .logout().permitAll();
+                .anyRequest().permitAll();
 
         return http.build();
     }
