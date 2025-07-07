@@ -1,0 +1,20 @@
+<!-- Place inside src/main/resources/templates/garage-register.html -->
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Garage Registration</title>
+</head>
+<body>
+<h2>Register Your Garage</h2>
+<form th:action="@{/register/garage}" th:object="${garage}" method="post">
+    Owner Name: <input type="text" th:field="*{ownerName}"/><br/>
+    Email: <input type="email" th:field="*{email}"/><br/>
+    Password: <input type="password" th:field="*{password}"/><br/>
+    Garage Name: <input type="text" th:field="*{garageName}"/><br/>
+    Address: <input type="text" th:field="*{address}"/><br/>
+    Contact: <input type="text" th:field="*{contact}"/><br/>
+    Description: <textarea th:field="*{description}"></textarea><br/>
+    <button type="submit">Register</button>
+</form>
+</body>
+</html>
