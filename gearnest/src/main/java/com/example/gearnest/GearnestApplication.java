@@ -7,7 +7,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 public class GearnestApplication {
 
 	public static void main(String[] args) {
-		System.out.println("Hello World");
+		System.out.println("Application.java");
 		SpringApplication.run(GearnestApplication.class, args);
 	}
 }

@@ -1,16 +1,110 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
+
 <head>
     <title>Login - GearNest</title>
+    <link rel="shortcut icon" th:href="@{/images/logo.png}" type="image/x-icon">
+    <link rel="stylesheet" th:href="@{/css/style.css}" />
+    <link rel="stylesheet" th:href="@{/css/login.css}" />
 </head>
+
 <body>
-<h2>Login to GearNest</h2>
-<form th:action="@{/login}" method="post">
-    <label>Email:</label>
-    <input type="text" name="username"/><br/>
-    <label>Password:</label>
-    <input type="password" name="password"/><br/>
-    <button type="submit">Login</button>
-</form>
+    <header th:replace="header::header"></header>
+    <section>
+        <div class="container">
+            <div class="title">
+                <p>Login</p>
+            </div>
+
+            <form th:action="@{/login}" method="post">
+                <div class="user_details">
+                    <div class="role">
+                        <input type="radio" name="role" id="radio_1" value="admin">
+                        <input type="radio" name="role" id="radio_2" value="garage">
+                        <input type="radio" name="role" id="radio_3" value="user">
+
+                        <div class="category">
+                            <label for="radio_1">
+                                <span class="dot one"></span>
+                                <span>Admin</span>
+                            </label>
+                            <label for="radio_2">
+                                <span class="dot two"></span>
+                                <span>Garage</span>
+                            </label>
+                            <label for="radio_3">
+                                <span class="dot three"></span>
+                                <span>User</span>
+                            </label>
+                        </div>
+                    </div>
+                    <div class="input_box">
+                        <label for="email">Email</label>
+                        <input type="email" id="email" name="username" placeholder="Enter your email" required>
+                    </div>
+
+                    <div class="input_box">
+                        <label for="pass">Password</label>
+                        <input type="password" id="pass" name="password" placeholder="Enter your password" required><br>
+                        <p style="margin-top: 10px; display: flex; justify-content: space-between;">
+                            <span>
+                                <input style="margin-right: 6px;" type="checkbox" onclick="showPassword()">
+                                <span>Show Password</span>
+                            </span>
+                            <span><a href="#" style="text-decoration: none;">Forgot Password?</a></span>
+                        </p>
+                    </div>
+                </div>
+                <div class="reg_btn">
+                    <input type="submit" value="Login">
+                </div>
+                <div class="user_details">
+                    <div class="input_box" style="text-align: center;">
+                        <p>Don't have an account?
+                            <a href="" onclick="select_role(); return false;"
+                                style="text-decoration: none;">Register</a>
+                        </p>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </section>
+    <footer th:replace="footer::footer"></footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+        function showPassword() {
+            var x = document.getElementById("pass");
+            if (x.type === "password") {
+                x.type = "text";
+            } else {
+                x.type = "password";
+            }
+        }
+
+        async function select_role() {
+            const inputOptions = {
+                user: "User",
+                garage: "Garage"
+            };
+
+            const { value: role } = await Swal.fire({
+                title: "Select your role",
+                input: "radio",
+                inputOptions,
+                inputValidator: (value) => {
+                    if (!value) {
+                        return "You need to choose a role!";
+                    }
+                }
+            });
+            if (role == "garage") {
+                window.location.href = "/garage-register";
+            } else if (role == "user") {
+                window.location.href = "/user-register";
+            }
+        }
+    </script>
 </body>
+
 </html>
