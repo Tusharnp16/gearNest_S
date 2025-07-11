@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 public class GarageController {
 
     @GetMapping("/garage-register")
+
     public String showGarageRegisterForm(Model model) {
         model.addAttribute("garage", new Garage());
         return "garage-register";

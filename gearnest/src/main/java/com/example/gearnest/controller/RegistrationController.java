@@ -21,7 +21,7 @@ public class RegistrationController {
     public String garageRegisterForm(Model model) {
         model.addAttribute("garage", new GarageRegistrationDto());
         return "garage-register";
-    }
+    } 
 
     @PostMapping("/register/garage")
     public String registerGarage(@ModelAttribute("garage") GarageRegistrationDto dto) {

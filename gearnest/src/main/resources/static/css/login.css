@@ -1,0 +1,175 @@
+section {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    /* min-height: 80vh; */
+    height: 100vh !important;
+    background: #f6f8fa;
+    font-family: 'Poppins', sans-serif;
+       background-image: url('../images/background.jpg') !important;
+    background-repeat: no-repeat;
+    /* Optional: avoid repeating */
+    background-size: cover;
+    /* Optional: make it cover the element */
+    background-position: center
+}
+section::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.5);
+    /* black overlay at 50% opacity */
+}
+
+section .container {
+    max-width: 400px;
+    width: 100%;
+    background: #ffffff;
+    border-radius: 0.5rem;
+    box-shadow: 0px 0px 0px 1px rgba(0, 0, 0, 0.1),
+        0px 5px 12px -2px rgba(0, 0, 0, 0.1),
+        0px 18px 36px -6px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+     opacity: 0.8;
+    /* margin: 30px 10px; */
+    z-index: 500;
+
+}
+
+.container .title {
+    padding: 25px;
+    background: #f6f8fa;
+}
+
+.container .title p {
+    font-size: 25px;
+    font-weight: 500;
+    position: relative;
+}
+
+.container .title p::before {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 30px;
+    height: 3px;
+    background: linear-gradient(to right, #F37A65, #D64141);
+}
+
+.user_details {
+    display: block;
+    flex-wrap: wrap;
+    gap: 20px;
+    padding: 0px 25px;
+    /* border: 1px solid red; */
+}
+
+.user_details .input_box {
+    width: 100%;
+    margin: 0 0 30px 0;
+}
+
+.input_box label {
+    font-weight: 500;
+    margin-bottom: 5px;
+    display: block;
+}
+
+.input_box label::after {
+    content: " *";
+    color: red;
+}
+
+.input_box input[type="text"],
+input[type="email"],
+input[type="password"] {
+    width: 100%;
+    height: 45px;
+    border: none;
+    outline: none;
+    border-radius: 5px;
+    font-size: 16px;
+    padding-left: 15px;
+    box-shadow: 0px 0px 0px 1px rgba(0, 0, 0, 0.1);
+    background-color: #f6f8fa;
+    font-family: 'Poppins', sans-serif;
+    transition: all 120ms ease-out 0s;
+}
+
+
+.input_box input[type="text"],
+input[type="email"],
+input[type="password"]:focus,
+.input_box input,
+textarea,
+select:valid {
+    box-shadow: 0px 0px 0px 2px #AC8ECE;
+}
+
+
+.reg_btn {
+    padding: 10px 25px 25px 25px;
+    margin: 0;
+    /* border: 1px solid red; */
+}
+
+.reg_btn input {
+    height: 45px;
+    width: 100%;
+    border: none;
+    font-size: 18px;
+    font-weight: 500;
+    cursor: pointer;
+    background: linear-gradient(to right, #F37A65, #D64141);
+    border-radius: 5px;
+    color: #ffffff;
+    letter-spacing: 1px;
+    text-shadow: 0px 2px 2px rgba(0, 0, 0, 0.2);
+}
+
+.reg_btn input:hover {
+    background: linear-gradient(to right, #D64141, #F37A65);
+}
+
+form .role {
+    padding: 0px 0px;
+    margin: 10px 50px 20px 0px;
+}
+
+.role .category {
+    width: 80%;
+    display: flex;
+    justify-content: space-between;
+    margin: 5px 0;
+}
+
+.role .category label {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+}
+
+.role .category label .dot {
+    height: 18px;
+    width: 18px;
+    background: #d9d9d9;
+    border-radius: 50%;
+    margin-right: 10px;
+    border: 4px solid transparent;
+    transition: all 0.3s ease;
+}
+
+#radio_1:checked~.category label .one,
+#radio_2:checked~.category label .two,
+#radio_3:checked~.category label .three {
+    border-color: #d9d9d9;
+    background: #D64141;
+}
+
+.role input {
+    display: none;
+}

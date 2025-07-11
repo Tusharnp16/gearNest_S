@@ -1,36 +1,87 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
+
 <head>
     <title>Garage Registration</title>
+    <link rel="shortcut icon" th:href="@{/images/logo.png}" type="image/x-icon">
+    <link rel="stylesheet" th:href="@{/css/style.css}" />
     <link rel="stylesheet" th:href="@{/css/garage-register.css}" />
 </head>
+
 <body>
-<div class="form-container">
-    <h2>Register Your Garage</h2>
-    <form th:action="@{/register/garage}" th:object="${garage}" method="post">
-        <label>Owner Name:</label>
-        <input type="text" th:field="*{ownerName}" />
+    <header th:replace="header::header"></header>
+    <section>
+        <div class="container">
+            <div class="title">
+                <p>Register Your Garage</p>
+            </div>
 
-        <label>Email:</label>
-        <input type="email" th:field="*{email}" />
+            <form th:action="@{/register/garage}" th:object="${garage}" method="post">
+                <div class="user_details">
+                    <div class="input_box">
+                        <label for="name">Owner Name:</label>
+                        <input type="text" id="name" th:field="*{ownerName}" placeholder="Enter your name" required />
+                    </div>
+                    <div class="input_box">
+                        <label>Garage Name:</label>
+                        <input type="text" id="garagename" th:field="*{garageName}" placeholder="Enter your garage name"
+                            required />
+                    </div>
+                    <div class="input_box">
+                        <label for="email">Email</label>
+                        <input type="email" th:field="*{email}" id="email" placeholder="Enter your email" required>
+                    </div>
+                    <div class="input_box">
+                        <label for="phone">Phone Number</label>
+                        <input type="text" th:field="*{contact}" id="phone" placeholder="Enter your number" required>
+                    </div>
+                    <div class="input_box">
+                        <label for="pass">Password</label>
+                        <input type="password" id="pass" placeholder="Enter your password" required>
+                    </div>
+                    <div class="input_box">
+                        <label for="confirmPass">Confirm Password</label>
+                        <input type="password" id="confirmPass" placeholder="Confirm your password" required>
+                    </div>
+                    <div class="input_box">
+                        <label>Address:</label>
+                        <input type="text" th:field="*{address}" placeholder="Enter your address" required />
+                    </div>
+                    <div class="input_box">
+                        <label>State</label>
+                        <select name="state" id="state" required>
+                            <option value="">Select</option>
+                        </select>
+                    </div>
+                    <div class="input_box">
+                        <label>City</label>
+                        <select name="city" id="city" required>
+                            <option value="">Select</option>
+                        </select>
+                    </div>
+                    <div class="input_box">
+                        <label>Description:</label>
+                        <textarea th:field="*{description}" placeholder="Enter your description" required></textarea>
+                    </div>
+                    <div class="input_box" style="display: flex;width: 100%;">
+                        <input type="checkbox" id="terms" required style="margin-right: 10px;cursor: pointer;">
+                        <label for="terms">I agree to the <a href="#">Terms and Conditions</a></label>
+                    </div>
+                </div>
+                <div class="reg_btn">
+                    <input type="submit" value="Register">
+                </div>
+                <div class="user_details_login">
+                    <div class="input_box" style="text-align: center;">
+                        <p>Have already an account? <a href="/login" style="text-decoration: none;">Login</a></p>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </section>
 
-        <label>Password:</label>
-        <input type="password" th:field="*{password}" />
+       <footer th:replace="footer::footer"></footer>
 
-        <label>Garage Name:</label>
-        <input type="text" th:field="*{garageName}" />
-
-        <label>Address:</label>
-        <input type="text" th:field="*{address}" />
-
-        <label>Contact:</label>
-        <input type="text" th:field="*{contact}" />
-
-        <label>Description:</label>
-        <textarea th:field="*{description}"></textarea>
-
-        <button type="submit">Register</button>
-    </form>
-</div>
 </body>
+
 </html>

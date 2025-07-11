@@ -15,21 +15,14 @@ body{
     font-family: 'Poppins', sans-serif;
 } */
 
-section{
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    /* min-height: 100vh; */
-    background: #f6f8fa;
-    font-family: 'Poppins', sans-serif;
-     background-image: url('../images/background.jpg') !important;
-    background-repeat: no-repeat;
-    /* Optional: avoid repeating */
+.my-element {
+    position: relative;
+    background-image: url('your-image.png');
     background-size: cover;
-    /* Optional: make it cover the element */
     background-position: center;
 }
-section::after {
+
+.my-element::after {
     content: "";
     position: absolute;
     top: 0;
@@ -41,32 +34,59 @@ section::after {
 }
 
 
-section .container{
+section {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    /* min-height: 100vh; */
+    font-family: 'Poppins', sans-serif;
+    background-image: url('../images/background.jpg') !important;
+    background-repeat: no-repeat;
+    /* Optional: avoid repeating */
+    background-size: cover;
+    /* Optional: make it cover the element */
+    background-position: center;
+}
+
+section::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    /* black overlay at 50% opacity */
+}
+
+section .container {
+    margin: auto !important;
     max-width: 700px;
     width: 100%;
     background: #ffffff;
     border-radius: 0.5rem;
     box-shadow: 0px 0px 0px 1px rgba(0, 0, 0, 0.1),
-                0px 5px 12px -2px rgba(0, 0, 0, 0.1),
-                0px 18px 36px -6px rgba(0, 0, 0, 0.1);
+        0px 5px 12px -2px rgba(0, 0, 0, 0.1),
+        0px 18px 36px -6px rgba(0, 0, 0, 0.1);
     overflow: hidden;
+    margin-bottom: 30px !important;
+    margin-top: 30px !important;
     opacity: 0.8;
-    margin: 30px 10px;
     z-index: 500;
 }
 
-.container .title{
+.container .title {
     padding: 25px;
     background: #f6f8fa;
 }
 
-.container .title p{
+.container .title p {
     font-size: 25px;
     font-weight: 500;
     position: relative;
 }
 
-.container .title p::before{
+.container .title p::before {
     content: "";
     position: absolute;
     bottom: 0;
@@ -76,7 +96,7 @@ section .container{
     background: linear-gradient(to right, #F37A65, #D64141);
 }
 
-.user_details{
+.user_details {
     display: flex;
     justify-content: space-between;
     flex-wrap: wrap;
@@ -84,29 +104,32 @@ section .container{
     padding: 25px;
 }
 
-.user_details_login{
+.user_details_login {
     margin: 20px;
 }
 
-.user_details .input_box{
-    width: calc(100% / 2 - 20px);
+.user_details .input_box {
+    /* width: calc(100% / 2 - 20px); */
+    width: 100%;
     margin: 0 0 12px 0;
 }
 
-.input_box label{
+.input_box label {
     font-weight: 500;
     margin-bottom: 5px;
     display: block;
 }
 
-.input_box label::after{
+.input_box label::after {
     content: " *";
     color: red;
 }
 
+
 .input_box input[type="text"],
 input[type="email"],
-input[type="password"],select,textarea{
+input[type="password"],
+select {
     width: 100%;
     height: 45px;
     border: none;
@@ -123,7 +146,8 @@ input[type="password"],select,textarea{
 
 .input_box input[type="text"],
 input[type="email"],
-input[type="password"],select:focus,
+input[type="password"],
+select:focus,
 .input_box input,
 textarea,
 select:valid {
@@ -131,29 +155,29 @@ select:valid {
 }
 
 
-form .gender{
+form .gender {
     padding: 0px 25px;
 }
 
-.gender .gender_title{
+.gender .gender_title {
     font-size: 20px;
     font-weight: 500;
 }
 
-.gender .category{
+.gender .category {
     width: 80%;
     display: flex;
     justify-content: space-between;
     margin: 5px 0;
 }
 
-.gender .category label{
+.gender .category label {
     display: flex;
     align-items: center;
     cursor: pointer;
 }
 
-.gender .category label .dot{
+.gender .category label .dot {
     height: 18px;
     width: 18px;
     background: #d9d9d9;
@@ -163,14 +187,14 @@ form .gender{
     transition: all 0.3s ease;
 }
 
-#radio_1:checked ~ .category label .one,
-#radio_2:checked ~ .category label .two,
-#radio_3:checked ~ .category label .three{
+#radio_1:checked~.category label .one,
+#radio_2:checked~.category label .two,
+#radio_3:checked~.category label .three {
     border-color: #d9d9d9;
     background: #D64141;
 }
 
-.gender input{
+.gender input {
     display: none;
 }
 
@@ -198,30 +222,38 @@ form .gender{
     background: linear-gradient(to right, #D64141, #F37A65);
 }
 
-@media screen and (max-width: 584px){
+.otp_btn {
+    height: 50px;
+    width: max-content;
+    padding: 10px;
+    cursor: pointer;
 
-    .user_details{
+}
+
+@media screen and (max-width: 584px) {
+
+    .user_details {
         max-height: 340px;
         overflow-y: scroll;
     }
 
-    .user_details::-webkit-scrollbar{
+    .user_details::-webkit-scrollbar {
         width: 0;
     }
 
-    .user_details .input_box{
+    .user_details .input_box {
         width: 100%;
     }
 
-    .gender .category{
+    .gender .category {
         width: 100%;
     }
 
 }
 
 
-@media screen and (max-width: 419px){
-    .gender .category{
+@media screen and (max-width: 419px) {
+    .gender .category {
         flex-direction: column;
-    }   
+    }
 }

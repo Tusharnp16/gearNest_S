@@ -2,9 +2,18 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <title>Dashboard</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}" />
 </head>
 <body>
-    <h1>Welcome to Dashboard!</h1>
-    <a href="/logout">Logout</a>
+    <header th:replace="header::header">
+
+    </header>
+    <section>
+
+        <h1>Welcome to Dashboard!</h1>
+        <a href="/logout">Logout</a>
+    </section>
+    <footer th:replace="footer::footer"></footer>
+
 </body>
 </html>
