@@ -9,7 +9,7 @@
 </head>
 
 <body>
-    <header th:replace="header::header"></header>
+    <header th:replace="fragments/header::header"></header>
     <section>
         <div class="container">
             <div class="title">
@@ -75,7 +75,7 @@
                 </div>
                 <div class="user_details_login">
                     <div class="input_box" style="text-align: center;">
-                        <p>Have already an account? <a href="/login" style="text-decoration: none;">Login</a></p>
+                        <p>Have already an account? <a href="/login-user" style="text-decoration: none;">Login</a></p>
                     </div>
                 </div>
 
@@ -83,7 +83,7 @@
 
         </div>
     </section>
-    <footer th:replace="footer::footer"></footer>
+    <footer th:replace="fragments/footer::footer"></footer>
 
 </body>
 
