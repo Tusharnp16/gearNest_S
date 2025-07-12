@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import com.example.gearnest.model.ContactMessage;
 import com.example.gearnest.model.Feedback;
 import com.example.gearnest.repository.FeedbackRepository;
 
@@ -41,5 +42,7 @@ public class AdminFeedbackController {
         feedbackRepo.deleteById(id);
         return "redirect:/admin/feedback";
     }
+
+  
 
 }
