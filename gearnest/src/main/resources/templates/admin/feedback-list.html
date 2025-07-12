@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Admin Feedback Panel</title>
+    <link rel="stylesheet" th:href="@{/css/admin.css}">
+</head>
+<body>
+
+<h2 style="text-align:center;">Feedback Management Panel</h2>
+
+<table>
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Rating</th>
+            <th>Message</th>
+            <th>Reviewed</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr th:each="feedback : ${feedbackList}">
+            <td th:text="${feedback.id}"></td>
+            <td th:text="${feedback.name}"></td>
+            <td th:text="${feedback.rating}"></td>
+            <td th:text="${feedback.message}"></td>
+            <td>
+                <form th:action="@{/admin/feedback/update}" method="post">
+                    <input type="hidden" name="id" th:value="${feedback.id}" />
+                    <input type="checkbox" name="reviewed" value="true"
+                           th:checked="${feedback.reviewed}"
+                           onchange="this.form.submit()" />
+                </form>
+            </td>
+            <td>
+                <form th:action="@{/admin/feedback/delete}" method="post" onsubmit="return confirm('Are you sure?');">
+                    <input type="hidden" name="id" th:value="${feedback.id}" />
+                    <button type="submit">Delete</button>
+                </form>
+            </td>
+        </tr>
+    </tbody>
+</table>
+
+</body>
+</html>

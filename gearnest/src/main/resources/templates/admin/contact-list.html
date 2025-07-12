@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Admin - Contact Messages</title>
+    <link rel="stylesheet" th:href="@{/css/admin.css}">
+</head>
+<body>
+
+<h2 style="text-align:center;">Contact Messages Panel</h2>
+
+<table>
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Subject</th>
+            <th>Message</th>
+            <th>Responded</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr th:each="contact : ${contactList}">
+            <td th:text="${contact.id}"></td>
+            <td th:text="${contact.name}"></td>
+            <td th:text="${contact.email}"></td>
+            <td th:text="${contact.subject}"></td>
+            <td th:text="${contact.message}"></td>
+            <td>
+                <span th:text="${contact.responded} ? '✅' : '⏳'"></span>
+            </td>
+            <td>
+                <form th:action="@{/admin/contact/respond}" method="post" th:if="${!contact.responded}">
+                    <input type="hidden" name="id" th:value="${contact.id}" />
+                    <button type="submit">Mark Responded</button>
+                </form>
+                <form th:action="@{/admin/contact/delete}" method="post" onsubmit="return confirm('Are you sure?');">
+                    <input type="hidden" name="id" th:value="${contact.id}" />
+                    <button type="submit" style="background-color: #888;">Delete</button>
+                </form>
+            </td>
+        </tr>
+    </tbody>
+</table>
+
+</body>
+</html>

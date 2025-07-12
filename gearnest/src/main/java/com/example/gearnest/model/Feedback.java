@@ -22,6 +22,7 @@ public class Feedback {
     private String message;
 
     private LocalDateTime createdAt;
+    private boolean reviewed = false;
 
     @PrePersist
     public void onCreate() {

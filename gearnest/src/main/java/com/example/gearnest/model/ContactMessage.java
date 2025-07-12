@@ -25,6 +25,8 @@ public class ContactMessage {
     @Column(length = 1000)
     private String message;
 
+    private boolean responded = false;
+
     private LocalDateTime createdAt;
 
     @PrePersist
