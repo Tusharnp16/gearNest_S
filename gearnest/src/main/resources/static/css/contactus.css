@@ -1,0 +1,208 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap');
+
+section.contact-section {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-image: url('../images/background.jpg') !important;
+    padding-top: 50px; 
+    padding-bottom: 40px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: 'Poppins', sans-serif;
+    background-image: url('../images/background.jpg') !important;
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
+}
+
+.contact-section .container {
+    .contact-section .container {
+    max-width: 700px;
+    width: 100%;
+    background: rgba(255, 255, 255, 0.15); /* translucent white */
+    backdrop-filter: blur(10px);           /* glass blur effect */
+    -webkit-backdrop-filter: blur(10px);   /* Safari support */
+    border-radius: 10px;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.1);
+    padding: 30px;
+    margin: 20px;
+    color: #fff; /* optional if you want white text */
+}
+
+}
+
+.contact-section .title p {
+    font-size: 26px;
+    font-weight: 600;
+    margin-bottom: 25px;
+    position: relative;
+    color: #333;
+}
+
+.contact-section .title p::before {
+    content: "";
+    position: absolute;
+    bottom: -5px;
+    left: 0;
+    width: 30px;
+    height: 3px;
+    background: linear-gradient(to right, #F37A65, #D64141);
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+label {
+    display: block;
+    font-weight: 500;
+    margin-bottom: 6px;
+    color: #444;
+}
+
+input[type="text"], input[type="email"], textarea {
+    width: 100%;
+    padding: 12px;
+    font-size: 16px;
+    border: none;
+    outline: none;
+    border-radius: 5px;
+    background-color: #f6f8fa;
+    box-shadow: 0px 0px 0px 1px rgba(0, 0, 0, 0.1);
+    font-family: 'Poppins', sans-serif;
+}
+
+input:focus, textarea:focus {
+    box-shadow: 0px 0px 0px 2px #AC8ECE;
+}
+
+textarea {
+    height: 120px;
+    resize: none;
+}
+
+button {
+    padding: 12px 30px;
+    font-size: 16px;
+    font-weight: 500;
+    background: linear-gradient(to right, #d8cecc, #D64141);
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    text-shadow: 0px 2px 2px rgba(0, 0, 0, 0.2);
+    letter-spacing: 1px;
+    transition: all 0.3s ease-in-out;
+}
+
+button:hover {
+    background: linear-gradient(to right, #D64141, #F37A65);
+}
+
+.success-msg {
+    margin-top: 20px;
+    color: green;
+    font-weight: bold;
+    font-size: 16px;
+}
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap');
+
+section.contact-section {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: #f6f8fa;
+    font-family: 'Poppins', sans-serif;
+    padding-bottom: 40px;
+}
+
+.contact-section .container {
+    max-width: 700px;
+    width: 100%;
+    background: #ffffff;
+    border-radius: 0.5rem;
+    box-shadow: 0px 0px 0px 1px rgba(0, 0, 0, 0.1),
+                0px 5px 12px -2px rgba(0, 0, 0, 0.1),
+                0px 18px 36px -6px rgba(0, 0, 0, 0.1);
+    padding: 30px;
+    opacity: 0.95;
+    margin: 0 15px;
+}
+
+.contact-section .title p {
+    font-size: 26px;
+    font-weight: 600;
+    margin-bottom: 25px;
+    position: relative;
+    color: #333;
+}
+
+.contact-section .title p::before {
+    content: "";
+    position: absolute;
+    bottom: -5px;
+    left: 0;
+    width: 30px;
+    height: 3px;
+    background: linear-gradient(to right, #F37A65, #D64141);
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+label {
+    display: block;
+    font-weight: 500;
+    margin-bottom: 6px;
+    color: #444;
+}
+
+input[type="text"], input[type="email"], textarea {
+    width: 100%;
+    padding: 12px;
+    font-size: 16px;
+    border: none;
+    outline: none;
+    border-radius: 5px;
+    background-color: #f6f8fa;
+    box-shadow: 0px 0px 0px 1px rgba(0, 0, 0, 0.1);
+    font-family: 'Poppins', sans-serif;
+}
+
+input:focus, textarea:focus {
+    box-shadow: 0px 0px 0px 2px #AC8ECE;
+}
+
+textarea {
+    height: 120px;
+    resize: none;
+}
+
+button {
+    padding: 12px 30px;
+    font-size: 16px;
+    font-weight: 500;
+    background: linear-gradient(to right, #F37A65, #D64141);
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    text-shadow: 0px 2px 2px rgba(0, 0, 0, 0.2);
+    letter-spacing: 1px;
+    transition: all 0.3s ease-in-out;
+}
+
+button:hover {
+    background: linear-gradient(to right, #D64141, #F37A65);
+}
+
+.success-msg {
+    margin-top: 20px;
+    color: green;
+    font-weight: bold;
+    font-size: 16px;
+}

@@ -5,7 +5,7 @@
     <link rel="stylesheet" th:href="@{/css/style.css}" />
 </head>
 <body>
-    <header th:replace="header::header">
+    <header th:replace="fragments/footer::header">
 
     </header>
     <section>
@@ -13,7 +13,7 @@
         <h1>Welcome to Dashboard!</h1>
         <a href="/logout">Logout</a>
     </section>
-    <footer th:replace="footer::footer"></footer>
+    <footer th:replace="fragments/footer::footer"></footer>
 
 </body>
 </html>

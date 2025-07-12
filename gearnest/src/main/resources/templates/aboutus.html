@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About Us - GearNest</title>
+    <link rel="stylesheet" th:href="@{/css/aboutus.css}" />
+    <link rel="stylesheet" th:href="@{/css/style.css}" />
+</head>
+
+<body>
+
+
+    <header th:replace="~{fragments/header :: header}"></header>
+
+    <main class="about-container">
+    <div class="temp">
+        <section class="about-section">
+                <h2>Our Vision</h2>
+                <p>
+                    At <strong>GearNest</strong>, we envision a smarter, more connected ecosystem for vehicle services.
+                    We strive to be the most trusted garage management platform that bridges the gap between garage
+                    owners
+                    and customers with transparency, efficiency, and ease.
+                </p>
+        </section>
+
+        <section class="about-section">
+            <h2>Our Mission</h2>
+            <p>
+                Our mission is to empower garages with a digital presence and streamlined operations. We provide
+                customers
+                with a reliable way to discover, book, and interact with verified garages. From registration to
+                feedback,
+                GearNest simplifies the entire vehicle service journey.
+            </p>
+        </section>
+
+        <section class="about-section">
+            <h2>Our Core Values</h2>
+            <ul>
+                <div class="detailes">
+                    <li><strong>Transparency</strong> – Clear service details, no hidden charges.</li>
+                    <li><strong>Trust</strong> – Verified garages, real customer reviews.</li>
+                    <li><strong>Efficiency</strong> – Instant bookings, real-time updates.</li>
+                    <li><strong>Innovation</strong> – Tech-driven tools to manage and monitor vehicle care.</li>
+                </div>
+            </ul>
+        </section>
+    </div>
+        <section class="about-section">
+            <h2>Meet Our Team</h2>
+            <div class="team">
+
+                <div class="team-member">
+                    <img th:src="@{/images/logo.png}" alt="Tushar Parmar - Founder" loading="lazy" class="team-photo">
+                    <h3>Tushar Parmar</h3>
+                    <p>Founder & Backend Developer</p>
+                    <p>Specializes in Spring Boot, API design, and database integration. Tushar laid the foundation of
+                        GearNest's core logic and architecture.</p>
+                </div>
+
+
+                <div class="team-member">
+                    <img th:src="@{/images/logo.png}" alt="Akash Kumar - UI/UX" loading="lazy" class="team-photo">
+                    <h3>Nilesh Sonvane</h3>
+                    <p>Founder & CEO & Frontend Developer</p>
+                    <p>Focuses on user-centered design with modern frontend frameworks. Nilesh is the creative mind
+                        behind the interface you see.</p>
+                </div>
+            </div>
+            </div>
+            </div>
+        </section>
+    </main>
+
+    <footer th:replace="fragments/footer::footer"></footer>
+
+</body>
+
+</html>
