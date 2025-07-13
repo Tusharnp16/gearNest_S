@@ -25,7 +25,7 @@ public class AdminController {
     public String viewAllGaragesForAdmin(Model model) {
         List<Garage> garages = garageRepository.findAll();
         model.addAttribute("garages", garages);
-        return "admin-garages";
+        return "admin/admin-garages";
     }
 
     @PostMapping("/admin/garage/{id}/update-status")
