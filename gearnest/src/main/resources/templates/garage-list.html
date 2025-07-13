@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Garage List</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link rel="stylesheet" th:href="@{/css/garage-list.css}">
+
+</head>
+<body>
+    <h2>All Registered Garages</h2>
+
+    <div th:if="${garages.isEmpty()}">
+        <p>No garages found.</p>
+    </div>
+
+    <div th:each="garage : ${garages}" class="garage-card">
+        <img th:src="${garage.logoPath}" alt="Logo" style="width: 100px; height: auto;" />
+        <h3 th:text="${garage.garageName}">Garage Name</h3>
+        <p>Owner: <span th:text="${garage.ownerName}"></span></p>
+        <p>Location: <span th:text="${garage.city + ', ' + garage.state}"></span></p>
+        <p>Status: <span th:text="${garage.status}"></span></p>
+        <p>⭐ Rating: <span th:text="${garage.rating}">0.0</span></p>
+
+        <a th:href="@{'/garage/' + ${garage.id}}">View Details</a>
+    </div>
+</body>
+</html>

@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Garage Details</title>
+    <link rel="stylesheet" th:href="@{/css/garage-details.css}">
+
+</head>
+<body>
+    <h2 th:text="${garage.garageName}">Garage Name</h2>
+    <img th:src="${garage.logoPath}" alt="Garage Logo" style="max-width: 200px;" />
+
+    <p><strong>Owner:</strong> <span th:text="${garage.ownerName}"></span></p>
+    <p><strong>Email:</strong> <span th:text="${garage.email}"></span></p>
+    <p><strong>Phone:</strong> <span th:text="${garage.phoneNumber}"></span></p>
+    <p><strong>Address:</strong> <span th:text="${garage.address}"></span></p>
+    <p><strong>City:</strong> <span th:text="${garage.city}"></span></p>
+    <p><strong>State:</strong> <span th:text="${garage.state}"></span></p>
+    <p><strong>Location:</strong> <span th:text="${garage.location}"></span></p>
+    <p><strong>Opening Hours:</strong> <span th:text="${garage.openingHours}"></span></p>
+    <p><strong>Status:</strong> <span th:text="${garage.status}"></span></p>
+    <p><strong>Rating:</strong> <span th:text="${garage.rating}"></span></p>
+    <p><strong>Price:</strong> <span th:text="${garage.price}"></span></p>
+    <p><strong>Description:</strong></p>
+    <p th:text="${garage.description}"></p>
+
+    <div th:if="${garage.servicesOffered}">
+        <p><strong>Services:</strong></p>
+        <ul>
+            <li th:each="service : ${garage.servicesOffered}" th:text="${service}"></li>
+        </ul>
+    </div>
+</body>
+</html>
