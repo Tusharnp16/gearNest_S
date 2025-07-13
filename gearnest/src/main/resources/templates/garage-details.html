@@ -1,33 +1,90 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
+
 <head>
     <title>Garage Details</title>
-    <link rel="stylesheet" th:href="@{/css/garage-details.css}">
-
+    <link rel="stylesheet" th:href="@{/css/garage-details.css}" />
 </head>
+
 <body>
-    <h2 th:text="${garage.garageName}">Garage Name</h2>
-    <img th:src="${garage.logoPath}" alt="Garage Logo" style="max-width: 200px;" />
+    <div class="garage-container">
+        <div class="garage-header">
+            <img th:src="@{${garage.logoPath}}" alt="Garage Logo" class="garage-logo" />
+            <div>
+                <h2 th:text="${garage.garageName}" class="garage-name">Garage Name</h2>
+                <button class="book-btn">Book Service</button>
+            </div>
+        </div>
 
-    <p><strong>Owner:</strong> <span th:text="${garage.ownerName}"></span></p>
-    <p><strong>Email:</strong> <span th:text="${garage.email}"></span></p>
-    <p><strong>Phone:</strong> <span th:text="${garage.phoneNumber}"></span></p>
-    <p><strong>Address:</strong> <span th:text="${garage.address}"></span></p>
-    <p><strong>City:</strong> <span th:text="${garage.city}"></span></p>
-    <p><strong>State:</strong> <span th:text="${garage.state}"></span></p>
-    <p><strong>Location:</strong> <span th:text="${garage.location}"></span></p>
-    <p><strong>Opening Hours:</strong> <span th:text="${garage.openingHours}"></span></p>
-    <p><strong>Status:</strong> <span th:text="${garage.status}"></span></p>
-    <p><strong>Rating:</strong> <span th:text="${garage.rating}"></span></p>
-    <p><strong>Price:</strong> <span th:text="${garage.price}"></span></p>
-    <p><strong>Description:</strong></p>
-    <p th:text="${garage.description}"></p>
+        <div class="garage-info">
+            <p><strong>Owner:</strong> <span th:text="${garage.ownerName}"></span></p>
+            <p><strong>Email:</strong> <span th:text="${garage.email}"></span></p>
+            <p><strong>Phone:</strong> <span th:text="${garage.phoneNumber}"></span></p>
+            <p><strong>Full Address:</strong> <span
+                    th:text="${garage.address} + ', ' + ${garage.city} + ', ' + ${garage.state}"></span></p>
+            <p><strong>Landmark:</strong> <span th:text="${garage.location}"></span></p>
+            <p><strong>Opening Hours:</strong> <span th:text="${garage.openingHours}"></span></p>
+            <p><strong>Rating:</strong> <span th:text="${garage.rating}">0.0</span> ⭐</p>
+            <p><strong>Price:</strong> ₹<span th:text="${garage.price}"></span></p>
+            <p><strong>Description:</strong></p>
+            <p th:text="${garage.description}"></p>
 
-    <div th:if="${garage.servicesOffered}">
-        <p><strong>Services:</strong></p>
-        <ul>
-            <li th:each="service : ${garage.servicesOffered}" th:text="${service}"></li>
-        </ul>
+            <div th:if="${garage.servicesOffered}">
+                <p><strong>Services Offered:</strong></p>
+                <ul>
+                    <li th:each="service : ${garage.servicesOffered}" th:text="${service}"></li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="map-section" th:if="${garage.latitude} != null and ${garage.longitude} != null">
+            <h3>Location on Map:</h3>
+            <iframe width="100%" height="300" frameborder="0" style="border:0" allowfullscreen
+                th:src="'https://www.google.com/maps?q=' + ${garage.latitude} + ',' + ${garage.longitude} + '&output=embed'">
+            </iframe>
+            <p>
+                <a th:href="'https://www.google.com/maps/search/?api=1&query=' + ${garage.latitude} + ',' + ${garage.longitude}"
+                    target="_blank" class="map-link">View on Google Maps</a>
+            </p>
+        </div>
+
+        <div class="distance-section" id="distanceDisplay">
+            <p>Calculating distance from your location...</p>
+        </div>
     </div>
+
+    <script>
+        // Calculate distance using browser location
+        function calculateDistance(lat1, lon1, lat2, lon2) {
+            const R = 6371; // km
+            const dLat = (lat2 - lat1) * Math.PI / 180;
+            const dLon = (lon2 - lon1) * Math.PI / 180;
+            const a =
+                Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+                Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
+                Math.sin(dLon / 2) * Math.sin(dLon / 2);
+            const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+            return R * c;
+        }
+
+        document.addEventListener("DOMContentLoaded", () => {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(position => {
+                    const userLat = position.coords.latitude;
+                    const userLon = position.coords.longitude;
+                    const garageLat = parseFloat(/*[[${garage.latitude}]]*/ '0');
+                    const garageLon = parseFloat(/*[[${garage.longitude}]]*/ '0');
+
+                    const distance = calculateDistance(userLat, userLon, garageLat, garageLon).toFixed(2);
+                    document.getElementById("distanceDisplay").innerHTML = `<p><strong>Distance from you:</strong> ${distance} km</p>`;
+                }, () => {
+                    document.getElementById("distanceDisplay").innerHTML = '<p>Could not fetch your location.</p>';
+                });
+            } else {
+                document.getElementById("distanceDisplay").innerHTML = '<p>Geolocation not supported.</p>';
+            }
+        });
+    </script>
 </body>
+
 </html>

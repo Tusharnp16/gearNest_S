@@ -67,7 +67,7 @@ public class GarageController {
         byte[] decoded = java.util.Base64.getDecoder().decode(imageData);
 
         String fileName = "logo_" + System.currentTimeMillis() + ".png";
-        File uploadPath = new File("src/main/resources/static/" + uploadDir);
+        File uploadPath = new File("uploads/logos");
         if (!uploadPath.exists())
             uploadPath.mkdirs();
 

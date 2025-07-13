@@ -1,27 +1,93 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
+
 <head>
     <title>Garage List</title>
     <link rel="stylesheet" th:href="@{/css/style.css}">
     <link rel="stylesheet" th:href="@{/css/garage-list.css}">
+    <style>
+        .garage-card {
+            display: flex;
+            border: 1px solid #ccc;
+            padding: 16px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            background-color: #f9f9f9;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
 
+        .garage-logo {
+            flex: 0 0 150px;
+            margin-right: 20px;
+        }
+
+        .garage-logo img {
+            width: 150px;
+            height: auto;
+            border-radius: 8px;
+        }
+
+        .garage-details {
+            flex: 1;
+        }
+
+        .garage-details h3 {
+            margin: 0;
+            font-size: 20px;
+            color: #333;
+        }
+
+        .garage-details p {
+            margin: 6px 0;
+        }
+
+        .view-btn {
+            display: inline-block;
+            margin-top: 10px;
+            padding: 8px 12px;
+            background-color: #007BFF;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+        }
+
+        .view-btn:hover {
+            background-color: #0056b3;
+        }
+    </style>
 </head>
+
 <body>
-    <h2>All Registered Garages</h2>
+    <h2 style="text-align: center;">All Registered Garages</h2>
 
     <div th:if="${garages.isEmpty()}">
         <p>No garages found.</p>
     </div>
 
     <div th:each="garage : ${garages}" class="garage-card">
-        <img th:src="${garage.logoPath}" alt="Logo" style="width: 100px; height: auto;" />
-        <h3 th:text="${garage.garageName}">Garage Name</h3>
-        <p>Owner: <span th:text="${garage.ownerName}"></span></p>
-        <p>Location: <span th:text="${garage.city + ', ' + garage.state}"></span></p>
-        <p>Status: <span th:text="${garage.status}"></span></p>
-        <p>⭐ Rating: <span th:text="${garage.rating}">0.0</span></p>
 
-        <a th:href="@{'/garage/' + ${garage.id}}">View Details</a>
+        <!-- Logo section -->
+        <div class="garage-logo" th:if="${garage.logoPath}">
+            <img th:src="@{${garage.logoPath}}" alt="Garage Logo" />
+        </div>
+
+        <!-- Details section -->
+        <div class="garage-details">
+            <h3 th:text="${garage.garageName}">Garage Name</h3>
+            <p><strong>Location:</strong> <span th:text="${garage.city + ', ' + garage.state}">City, State</span></p>
+            <p><strong>Landmark:</strong> <span th:text="${garage.location}">Location</span></p>
+            <p><strong>Opening Hours:</strong> <span th:text="${garage.openingHours}">9AM - 6PM</span></p>
+            <p><strong>Visit Charge:</strong> ₹<span th:text="${garage.price}">0</span></p>
+            <p><strong>Services:</strong> <span th:text="${garage.servicesOffered}">None</span></p>
+            <p><strong>⭐ Rating:</strong> <span th:text="${garage.rating}">0.0</span></p>
+
+
+            <a th:href="@{'/garage/' + ${garage.id}}" class="view-btn">Book Service</a>
+            <a th:href="@{'/garage/' + ${garage.id}}" class="view-btn">View More Details</a>
+           
+            
+        </div>
     </div>
 </body>
+
 </html>

@@ -25,6 +25,13 @@ public class GarageList {
         return "garage-list";
     }
 
+    @GetMapping("/garages/app")
+    public String showApprovedGarages(Model model) {
+        List<Garage> garages = garageRepository.findByIsApprovedTrueAndStatus("Active");
+        model.addAttribute("garages", garages);
+        return "garage-list";
+    }
+
     @GetMapping("/garage/{id}")
     public String viewGarageDetails(@PathVariable Long id, Model model, HttpSession session) {
         Garage garage = garageRepository.findById(id).orElse(null);
