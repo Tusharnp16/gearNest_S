@@ -6,67 +6,110 @@
     <link rel="shortcut icon" th:href="@{/images/logo.png}" type="image/x-icon">
     <link rel="stylesheet" th:href="@{/css/style.css}" />
     <link rel="stylesheet" th:href="@{/css/user-register.css}" />
+
+    <style>
+        .error-message {
+            color: red;
+            font-size: 0.9em;
+        }
+
+        input.error-border,
+        select.error-border {
+            border-color: red;
+        }
+
+        #password-tooltip {
+            position: absolute;
+            background: #f8f9fa;
+            color: #333;
+            border: 1px solid #ccc;
+            padding: 8px;
+            border-radius: 5px;
+            font-size: 12px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            display: none;
+            z-index: 1000;
+        }
+    </style>
 </head>
 
 <body>
-    <header th:replace="fragments/header::header"></header>
+    <header th:replace="~{fragments/header::header}"></header>
     <section>
         <div class="container">
             <div class="title">
                 <p>Register</p>
             </div>
-            <form>
+            <form id="registerForm" method="post" autocomplete="off">
                 <div class="user_details">
                     <div class="input_box" style="width: calc(100% / 2 - 20px);">
                         <label for="firstname">First Name:</label>
-                        <input type="text" id="firstname" placeholder="Enter your first name" required />
+                        <input type="text" id="firstname" name="firstName" placeholder="Enter your first name"
+                            autocomplete="off" />
+                        <span class="error-message" id="firstnameError"></span>
                     </div>
                     <div class="input_box" style="width: calc(100% / 2 - 20px);">
                         <label for="lastname">Last Name:</label>
-                        <input type="text" id="lastname" placeholder="Enter your last name" required />
+                        <input type="text" id="lastname" name="lastName" placeholder="Enter your last name"
+                            autocomplete="off" />
+                        <span class="error-message" id="lastnameError"></span>
                     </div>
                     <div class="input_box">
                         <label>Address:</label>
-                        <input type="text" placeholder="Enter your address" required />
+                        <input type="text" id="address" name="address" placeholder="Enter your address"
+                            autocomplete="off" />
+                        <span class="error-message" id="addressError"></span>
                     </div>
                     <div class="input_box" style="width: calc(100% / 2 - 20px);">
                         <label>State</label>
-                        <select name="state" id="state" required>
+                        <select name="stateId" id="state">
                             <option value="">Select</option>
                         </select>
+                        <span class="error-message" id="stateError"></span>
                     </div>
                     <div class="input_box" style="width: calc(100% / 2 - 20px);">
                         <label>City</label>
-                        <select name="city" id="city" required>
+                        <select name="cityId" id="city">
                             <option value="">Select</option>
                         </select>
+                        <span class="error-message" id="cityError"></span>
                     </div>
                     <div class="input_box">
                         <label for="phno">Phone no:</label>
-                        <input type="text" id="phno" placeholder="Enter your phone no" required />
+                        <input type="text" id="phno" name="phone" placeholder="Enter your phone no"
+                            autocomplete="off" />
+                        <span class="error-message" id="phnoError"></span>
                     </div>
                     <div class="input_box">
                         <label for="email">Email:</label>
-                        <input type="email" id="email" placeholder="Enter your Email" required />
+                        <input type="email" id="email" name="email" placeholder="Enter your Email" autocomplete="off" />
+                        <span class="error-message" id="emailError"></span>
                     </div>
                     <div class="input_box" style="width: calc(100% / 2 - 20px);">
                         <label for="otp">OTP:</label>
-                        <input type="text" id="otp" placeholder="Enter your OTP" required />
+                        <input type="text" id="otp" name="otp" placeholder="Enter your OTP" autocomplete="off" />
+                        <span class="error-message" id="otpError"></span>
                     </div>
-                    <div class="input_box"
-                        style="width: calc(100% / 2 - 20px);display: flex;justify-content: left;align-items:center">
-                        <button type="button" class="btn btn-outline-primary">Generate OTP</button>
+                    <div class="input_box" style="width: calc(100% / 2 - 20px);margin-top: 20px;">
+                        <button type="button" id="generateOtp" class="btn btn-outline-primary">Generate OTP</button><br>
+                        <p id="resendText" style="display: none;color: #555;">
+                            You can resend OTP in <span id="countdown">120</span>
+                        </p>
                     </div>
                     <div class="input_box">
                         <label for="pass">Password</label>
-                        <input type="password" id="pass" placeholder="Enter your password" required>
+                        <input type="password" id="pass" name="password" placeholder="Enter your password"
+                            autocomplete="new-password" />
+                        <span class="error-message" id="passError"></span>
                     </div>
                     <div class="input_box">
                         <label for="confirmPass">Confirm Password</label>
-                        <input type="password" id="confirmPass" placeholder="Confirm your password" required>
+                        <input type="password" id="confirmPass" placeholder="Confirm your password"
+                            autocomplete="new-password" />
+                        <span class="error-message" id="confirmPassError"></span>
                     </div>
                     <div class="input_box" style="display: flex;">
-                        <input type="checkbox" id="terms" required style="margin-right: 10px;cursor: pointer;">
+                        <input type="checkbox" id="terms" style="margin-right: 10px;cursor: pointer;">
                         <label for="terms">I agree to the <a href="#">Terms and Conditions</a></label>
                     </div>
                 </div>
@@ -78,12 +121,280 @@
                         <p>Have already an account? <a href="/login-user" style="text-decoration: none;">Login</a></p>
                     </div>
                 </div>
-
             </form>
 
         </div>
     </section>
-    <footer th:replace="fragments/footer::footer"></footer>
+    <footer th:replace="~{fragments/footer::footer}"></footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script th:src="@{/javascript/jquery-3.7.1.min.js}"></script>
+
+    <script>
+        $(document).ready(function () {
+            const nameRegex = /^[A-Za-z]{2,30}$/;
+            const phoneRegex = /^[0-9]{10}$/;
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            const passRegex = /^(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*#?&]).{6,}$/;
+            const otpRegex = /^[0-9]{4,6}$/;
+
+            function showError(id, message) {
+                $("#" + id + "Error").text(message);
+                $("#" + id).addClass("error-border");
+            }
+
+            function clearError(id) {
+                $("#" + id + "Error").text("");
+                $("#" + id).removeClass("error-border");
+            }
+
+            // First & last name validation
+            $("#firstname, #lastname").on("keyup", function () {
+                let val = $(this).val().trim();
+                if (!val) showError(this.id, "Required");
+                else if (!nameRegex.test(val)) showError(this.id, "Only letters, 2-30 chars");
+                else clearError(this.id);
+            });
+
+            // Address
+            $("#address").on("keyup", function () {
+                let val = $(this).val().trim();
+                if (!val) showError("address", "Address is required");
+                else clearError("address");
+            });
+
+            // Phone
+            $("#phno").on("keyup", function () {
+                let val = $(this).val().trim();
+                if (!val) showError("phno", "Phone number is required");
+                else if (!phoneRegex.test(val)) showError("phno", "Must be 10 digits");
+                else clearError("phno");
+            });
+
+            // Email
+            $("#email").on("keyup", function () {
+                let val = $(this).val().trim();
+                if (!val) showError("email", "Email is required");
+                else if (!emailRegex.test(val)) showError("email", "Invalid email format");
+                else clearError("email");
+            });
+
+            // OTP
+            $("#otp").on("keyup", function () {
+                let val = $(this).val().trim();
+                if (!val) showError("otp", "OTP is required");
+                else if (!otpRegex.test(val)) showError("otp", "Must be 4–6 digits");
+                else clearError("otp");
+            });
+
+            // Password
+            $("#pass").on("keyup", function () {
+                let val = $(this).val();
+                if (!val) showError("pass", "Password is required");
+                else if (!passRegex.test(val)) showError("pass", "Uppercase, number, special char, min 6");
+                else clearError("pass");
+            });
+
+            // Confirm password
+            $("#confirmPass").on("keyup", function () {
+                let val = $(this).val();
+                if (!val) showError("confirmPass", "Confirm password");
+                else if (val !== $("#pass").val()) showError("confirmPass", "Passwords do not match");
+                else clearError("confirmPass");
+            });
+
+            // Load states
+            $.ajax({
+                url: "/api/location/states",
+                method: "GET",
+                success: function (states) {
+                    $.each(states, function (i, state) {
+                        $('#state').append('<option value="' + state.id + '">' + state.name + '</option>');
+                    });
+                }
+            });
+
+            // Load cities
+            $("#state").on("change", function () {
+                let stateId = $(this).val();
+                $('#city').empty().append('<option value="">Select</option>');
+                if (stateId) {
+                    $.ajax({
+                        url: "/api/location/cities/" + stateId,
+                        method: "GET",
+                        success: function (cities) {
+                            $.each(cities, function (i, city) {
+                                $('#city').append('<option value="' + city.id + '">' + city.name + '</option>');
+                            });
+                        }
+                    });
+                }
+            });
+
+            // OTP logic
+            let countdownInterval;
+            const initialSeconds = 120;
+
+            $('#generateOtp').click(function () {
+                let email = $('#email').val();
+                if (!email || !emailRegex.test(email)) {
+                    Swal.fire({ icon: "error", title: "Oops...", text: "Enter valid email to get OTP" });
+                    return;
+                }
+
+                Swal.fire({ title: "Sending OTP...", allowOutsideClick: false, didOpen: () => Swal.showLoading() });
+
+                $.ajax({
+                    url: "/api/register/send-otp",
+                    method: "POST",
+                    data: { email: email },
+                    success: function () {
+                        Swal.close();
+                        Swal.fire({ title: "OTP sent!", icon: "success" });
+
+                        $('#email').prop('disabled', true);
+                        $('#generateOtp').hide();
+                        $('#resendText').show();
+                        startCountdown(initialSeconds);
+                    },
+                    error: function () {
+                        Swal.close();
+                        Swal.fire({ icon: "error", title: "Oops...", text: "Error sending OTP. Try again." });
+                    }
+                });
+            });
+
+            function startCountdown(seconds) {
+                let remaining = seconds;
+                $('#countdown').text(remaining);
+                countdownInterval = setInterval(function () {
+                    remaining--;
+                    $('#countdown').text(remaining);
+                    if (remaining <= 0) {
+                        clearInterval(countdownInterval);
+                        $('#generateOtp').show();
+                        $('#resendText').hide();
+                        $('#email').prop('disabled', true);
+                    }
+                }, 1000);
+            }
+
+            // Tooltip for password
+            const tooltipContent = `
+            At least one uppercase letter<br>
+            At least one number (0–9)<br>
+            At least one special character (@$!%*#?&)<br>
+            Minimum 6 characters
+        `;
+            const tooltip = $('<div id="password-tooltip"></div>').html(tooltipContent);
+            $('body').append(tooltip);
+
+            $("#pass").on("focus", function () {
+                let offset = $(this).offset();
+                let tooltipWidth = tooltip.outerWidth();
+                let windowWidth = $(window).width();
+
+                let leftPos = offset.left;
+                // If close to right edge, adjust left
+                if (offset.left + tooltipWidth > windowWidth - 20) {
+                    leftPos = windowWidth - tooltipWidth - 20;
+                }
+
+                tooltip.css({
+                    top: offset.top - tooltip.outerHeight() - 10,
+                    left: leftPos
+                }).fadeIn(200);
+            });
+
+            $("#pass").on("blur", function () {
+                tooltip.fadeOut(200);
+            });
+
+            // Submit form
+            $('#registerForm').submit(function (e) {
+                e.preventDefault();
+                let errors = false;
+
+                $("#firstname, #lastname, #email, #phno, #otp, #pass, #confirmPass").trigger("keyup");
+                $("#address").trigger("keyup");
+
+                if (!$('#state').val()) {
+                    showError("state", "Please select a state");
+                    errors = true;
+                } else {
+                    clearError("state");
+                }
+
+                if (!$('#city').val()) {
+                    showError("city", "Please select a city");
+                    errors = true;
+                } else {
+                    clearError("city");
+                }
+
+                if (!$('#terms').is(":checked")) {
+                    Swal.fire({ icon: "error", title: "Oops...", text: "Please agree to the terms" });
+                    errors = true;
+                }
+
+                $(".error-message").each(function () {
+                    if ($(this).text()) errors = true;
+                });
+
+                if (errors) return;
+
+                let formData = {
+                    firstName: $('#firstname').val(),
+                    lastName: $('#lastname').val(),
+                    address: $('#address').val(),
+                    state: { id: $('#state').val() },
+                    city: { id: $('#city').val() },
+                    phone: $('#phno').val(),
+                    email: $('#email').val(),
+                    otp: $('#otp').val(),
+                    password: $('#pass').val()
+                };
+
+                Swal.fire({ title: "Registering...", allowOutsideClick: false, didOpen: () => Swal.showLoading() });
+
+                $.ajax({
+                    url: "/api/register/submit",
+                    method: "POST",
+                    contentType: "application/json",
+                    data: JSON.stringify(formData),
+                    success: function () {
+                        Swal.close();
+                        Swal.fire({ position: "top-end", icon: "success", title: "Registered successfully!", showConfirmButton: false, timer: 2000 })
+                            .then(() => window.location.href = "/login-user");
+                    },
+                    error: function (xhr) {
+                        Swal.close();
+                        Swal.fire({ icon: "error", title: "Oops...", text: "Registration failed: " + xhr.responseText });
+
+                        // Reload city options
+                        let selectedStateId = $('#state').val();
+                        let selectedCityId = $('#city').val();
+
+                        $('#city').empty().append('<option value="">Select</option>');
+                        if (selectedStateId) {
+                            $.ajax({
+                                url: "/api/location/cities/" + selectedStateId,
+                                method: "GET",
+                                success: function (cities) {
+                                    $.each(cities, function (i, city) {
+                                        $('#city').append('<option value="' + city.id + '">' + city.name + '</option>');
+                                    });
+                                    $('#city').val(selectedCityId);
+                                }
+                            });
+                        }
+                    }
+                });
+            });
+        });
+    </script>
+
+
 
 </body>
 

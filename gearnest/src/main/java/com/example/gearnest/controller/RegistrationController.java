@@ -1,45 +1,64 @@
 package com.example.gearnest.controller;
 
-import com.example.gearnest.dto.GarageRegistrationDto;
-import com.example.gearnest.model.*;
-import com.example.gearnest.repository.*;
-import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+
+import com.example.gearnest.model.User;
+import com.example.gearnest.repository.UserRepository;
+import com.example.gearnest.services.OtpService;
+
+import jakarta.servlet.http.HttpSession;
 
 @Controller
-@RequiredArgsConstructor
+@RequestMapping("/api/register")
 public class RegistrationController {
+    @Autowired
+    private UserRepository userRepository;
 
-    private final UserRepository userRepo;
-    private final GarageProfileRepository garageRepo;
-    private final BCryptPasswordEncoder encoder;
+    @Autowired
+    private OtpService otpService;
 
-    @GetMapping("/register/garage")
-    public String garageRegisterForm(Model model) {
-        model.addAttribute("garage", new GarageRegistrationDto());
-        return "garage-register";
-    } 
+    @PostMapping("/send-otp")
+    public ResponseEntity<?> sendOtp(@RequestParam String email, HttpSession session) {
+        String otp = otpService.generateOtp();
+        otpService.sendOtpEmail(email, otp);
 
-    @PostMapping("/register/garage")
-    public String registerGarage(@ModelAttribute("garage") GarageRegistrationDto dto) {
-        User user = new User();
-        user.setName(dto.getOwnerName());
-        user.setEmail(dto.getEmail());
-        user.setPassword(encoder.encode(dto.getPassword()));
-        user.setRole(Role.GARAGE);
-        userRepo.save(user);
+        // Save OTP and email in session
+        session.setAttribute("otp", otp);
+        session.setAttribute("otpEmail", email);
 
-        GarageProfile profile = new GarageProfile();
-        profile.setUser(user);
-        profile.setGarageName(dto.getGarageName());
-        profile.setAddress(dto.getAddress());
-        profile.setContact(dto.getContact());
-        profile.setDescription(dto.getDescription());
-        garageRepo.save(profile);
-
-        return "redirect:/login";
+        return ResponseEntity.ok("OTP sent successfully");
     }
+
+    @PostMapping("/submit")
+    public ResponseEntity<?> register(@RequestBody User user, HttpSession session) {
+        String sessionOtp = (String) session.getAttribute("otp");
+        String sessionEmail = (String) session.getAttribute("otpEmail");
+
+        // Validate OTP and email
+        if (sessionOtp == null || !sessionOtp.equals(user.getOtp()) || sessionEmail == null
+                || !sessionEmail.equals(user.getEmail())) {
+            return ResponseEntity.badRequest().body("Invalid OTP");
+        }
+
+        // Save as verified
+        user.setIsVerified(true);
+        user.setPassword(new BCryptPasswordEncoder().encode(user.getPassword()));
+        user.setProfilePic("default.jpg");
+
+        userRepository.save(user);
+
+        // Clear session OTP after successful registration
+        session.removeAttribute("otp");
+        session.removeAttribute("otpEmail");
+
+        return ResponseEntity.ok("User registered successfully");
+    }
+
 }
