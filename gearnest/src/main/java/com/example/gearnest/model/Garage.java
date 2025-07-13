@@ -1,69 +1,57 @@
 package com.example.gearnest.model;
 
+import jakarta.persistence.*;
+import java.time.LocalDateTime;
+import java.util.List;
+import lombok.*;
+
+@Data
+@Entity
 public class Garage {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    private String garageName;
     private String ownerName;
     private String email;
-    private String password;
-    private String garageName;
+    private String phoneNumber;
+
     private String address;
-    private String contact;
+    private String city;
+    private String state;
+
+    private String location; 
+    private Double latitude;
+    private Double longitude;
+
+    private String logoPath;
+    private String price;
+
+    @Column(length = 1000)
     private String description;
 
-    // ✅ Getters and Setters
-    public String getOwnerName() {
-        return ownerName;
+    private boolean isApproved=false;
+
+    private String openingHours;
+
+    private String status="pending";
+ 
+    private double rating = 5.0; 
+
+    private LocalDateTime createdAt;
+
+    @PrePersist
+    public void onCreate() {
+        this.createdAt = LocalDateTime.now();
     }
 
-    public void setOwnerName(String ownerName) {
-        this.ownerName = ownerName;
-    }
+  //  @ManyToOne
+  //  @JoinColumn(nullable = true)
+  //  private User user;
 
-    public String getEmail() {
-        return email;
-    }
+    @ElementCollection
+    private List<String> servicesOffered;
 
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public String getGarageName() {
-        return garageName;
-    }
-
-    public void setGarageName(String garageName) {
-        this.garageName = garageName;
-    }
-
-    public String getAddress() {
-        return address;
-    }
-
-    public void setAddress(String address) {
-        this.address = address;
-    }
-
-    public String getContact() {
-        return contact;
-    }
-
-    public void setContact(String contact) {
-        this.contact = contact;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
 }
