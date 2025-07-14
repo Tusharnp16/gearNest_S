@@ -148,7 +148,6 @@ select {
 input[type="email"],
 input[type="password"],
 select:focus,
-.input_box input,
 textarea,
 select:valid {
     box-shadow: 0px 0px 0px 2px #AC8ECE;

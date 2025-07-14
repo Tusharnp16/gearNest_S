@@ -138,6 +138,9 @@
             const passRegex = /^(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*#?&]).{6,}$/;
             const otpRegex = /^[0-9]{4,6}$/;
 
+            let emailExists = false;
+            let phoneExists = false;
+
             function showError(id, message) {
                 $("#" + id + "Error").text(message);
                 $("#" + id).addClass("error-border");
@@ -148,7 +151,6 @@
                 $("#" + id).removeClass("error-border");
             }
 
-            // First & last name validation
             $("#firstname, #lastname").on("keyup", function () {
                 let val = $(this).val().trim();
                 if (!val) showError(this.id, "Required");
@@ -156,30 +158,82 @@
                 else clearError(this.id);
             });
 
-            // Address
             $("#address").on("keyup", function () {
                 let val = $(this).val().trim();
                 if (!val) showError("address", "Address is required");
                 else clearError("address");
             });
 
-            // Phone
             $("#phno").on("keyup", function () {
                 let val = $(this).val().trim();
-                if (!val) showError("phno", "Phone number is required");
-                else if (!phoneRegex.test(val)) showError("phno", "Must be 10 digits");
-                else clearError("phno");
+                if (!val) {
+                    showError("phno", "Phone number is required");
+                    phoneExists = false;
+                    return;
+                } else if (!phoneRegex.test(val)) {
+                    showError("phno", "Must be 10 digits");
+                    phoneExists = false;
+                    return;
+                } else {
+                    clearError("phno");
+                }
+
+                // Check phone existence
+                $.ajax({
+                    url: "/api/register/check-phone",
+                    method: "POST",
+                    data: { phone: val },
+                    success: function (exists) {
+                        if (exists === true) {
+                            showError("phno", "Phone number already exists");
+                            phoneExists = true;
+                        } else {
+                            clearError("phno");
+                            phoneExists = false;
+                        }
+                    },
+                    error: function () {
+                        showError("phno", "Error checking phone");
+                        phoneExists = true;
+                    }
+                });
             });
 
-            // Email
             $("#email").on("keyup", function () {
                 let val = $(this).val().trim();
-                if (!val) showError("email", "Email is required");
-                else if (!emailRegex.test(val)) showError("email", "Invalid email format");
-                else clearError("email");
+                if (!val) {
+                    showError("email", "Email is required");
+                    emailExists = false;
+                    return;
+                } else if (!emailRegex.test(val)) {
+                    showError("email", "Invalid email format");
+                    emailExists = false;
+                    return;
+                } else {
+                    clearError("email");
+                }
+
+                // Check email existence
+                $.ajax({
+                    url: "/api/register/check-email",
+                    method: "POST",
+                    data: { email: val },
+                    success: function (exists) {
+                        if (exists === true) {
+                            showError("email", "Email already exists");
+                            emailExists = true;
+                        } else {
+                            clearError("email");
+                            emailExists = false;
+                        }
+                    },
+                    error: function () {
+                        showError("email", "Error checking email");
+                        emailExists = true;
+                    }
+                });
             });
 
-            // OTP
             $("#otp").on("keyup", function () {
                 let val = $(this).val().trim();
                 if (!val) showError("otp", "OTP is required");
@@ -187,7 +241,6 @@
                 else clearError("otp");
             });
 
-            // Password
             $("#pass").on("keyup", function () {
                 let val = $(this).val();
                 if (!val) showError("pass", "Password is required");
@@ -195,7 +248,6 @@
                 else clearError("pass");
             });
 
-            // Confirm password
             $("#confirmPass").on("keyup", function () {
                 let val = $(this).val();
                 if (!val) showError("confirmPass", "Confirm password");
@@ -237,8 +289,8 @@
 
             $('#generateOtp').click(function () {
                 let email = $('#email').val();
-                if (!email || !emailRegex.test(email)) {
-                    Swal.fire({ icon: "error", title: "Oops...", text: "Enter valid email to get OTP" });
+                if (!email || !emailRegex.test(email) || emailExists) {
+                    Swal.fire({ icon: "error", title: "Oops...", text: "Enter a valid and available email to get OTP" });
                     return;
                 }
 
@@ -274,7 +326,7 @@
                         clearInterval(countdownInterval);
                         $('#generateOtp').show();
                         $('#resendText').hide();
-                        $('#email').prop('disabled', true);
+                        $('#email').prop('disabled', false);
                     }
                 }, 1000);
             }
@@ -295,7 +347,6 @@
                 let windowWidth = $(window).width();
 
                 let leftPos = offset.left;
-                // If close to right edge, adjust left
                 if (offset.left + tooltipWidth > windowWidth - 20) {
                     leftPos = windowWidth - tooltipWidth - 20;
                 }
@@ -337,6 +388,16 @@
                     errors = true;
                 }
 
+                if (emailExists) {
+                    showError("email", "Email already exists");
+                    errors = true;
+                }
+
+                if (phoneExists) {
+                    showError("phno", "Phone number already exists");
+                    errors = true;
+                }
+
                 $(".error-message").each(function () {
                     if ($(this).text()) errors = true;
                 });
@@ -370,29 +431,13 @@
                     error: function (xhr) {
                         Swal.close();
                         Swal.fire({ icon: "error", title: "Oops...", text: "Registration failed: " + xhr.responseText });
-
-                        // Reload city options
-                        let selectedStateId = $('#state').val();
-                        let selectedCityId = $('#city').val();
-
-                        $('#city').empty().append('<option value="">Select</option>');
-                        if (selectedStateId) {
-                            $.ajax({
-                                url: "/api/location/cities/" + selectedStateId,
-                                method: "GET",
-                                success: function (cities) {
-                                    $.each(cities, function (i, city) {
-                                        $('#city').append('<option value="' + city.id + '">' + city.name + '</option>');
-                                    });
-                                    $('#city').val(selectedCityId);
-                                }
-                            });
-                        }
                     }
                 });
             });
         });
     </script>
+
+
 
 
 

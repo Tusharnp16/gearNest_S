@@ -1,9 +1,16 @@
 package com.example.gearnest.model;
 
-import jakarta.persistence.*;
-import lombok.*;
-
 import java.time.LocalDateTime;
+
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.PrePersist;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Data
@@ -16,17 +23,19 @@ public class Booking {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private Long garageId; 
-    private Long userId; 
+    private Long garageId;
+    private Long userId;
 
     private String customerName;
     private String customerPhone;
 
     private String selectedService;
     private String bookingDate;
-    private String bookingTime; 
+    private String bookingTime;
 
-    private String status="Approved"; 
+    @Builder.Default
+    private String status = "Approved";
+
     private LocalDateTime createdAt;
 
     @PrePersist

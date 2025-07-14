@@ -29,11 +29,22 @@ public class RegistrationController {
         String otp = otpService.generateOtp();
         otpService.sendOtpEmail(email, otp);
 
-        // Save OTP and email in session
         session.setAttribute("otp", otp);
         session.setAttribute("otpEmail", email);
 
         return ResponseEntity.ok("OTP sent successfully");
+    }
+
+    @PostMapping("/check-email")
+    public ResponseEntity<Boolean> checkEmail(@RequestParam("email") String email) {
+        boolean exists = userRepository.existsByEmail(email);
+        return ResponseEntity.ok(exists);
+    }
+
+    @PostMapping("/check-phone")
+    public ResponseEntity<Boolean> checkPhone(@RequestParam String phone) {
+        boolean exists = userRepository.existsByPhone(phone);
+        return ResponseEntity.ok(exists);
     }
 
     @PostMapping("/submit")
@@ -41,24 +52,20 @@ public class RegistrationController {
         String sessionOtp = (String) session.getAttribute("otp");
         String sessionEmail = (String) session.getAttribute("otpEmail");
 
-        // Validate OTP and email
         if (sessionOtp == null || !sessionOtp.equals(user.getOtp()) || sessionEmail == null
                 || !sessionEmail.equals(user.getEmail())) {
             return ResponseEntity.badRequest().body("Invalid OTP");
         }
 
-        // Save as verified
         user.setIsVerified(true);
         user.setPassword(new BCryptPasswordEncoder().encode(user.getPassword()));
         user.setProfilePic("default.jpg");
 
         userRepository.save(user);
 
-        // Clear session OTP after successful registration
         session.removeAttribute("otp");
         session.removeAttribute("otpEmail");
 
         return ResponseEntity.ok("User registered successfully");
     }
-
 }
