@@ -89,11 +89,20 @@
                     </div>
 
 
+                    <div class="input_box">
+                        <label for="password">Password:</label>
+                        <input type="password" th:field="*{password}" placeholder="Create a password" required />
+                    </div>
+
+                    <div class="input_box">
+                        <label for="password">Password:</label>
+                        <input type="password" placeholder="Confirm Password" required />
+                    </div>
+
                     <label for="uploadLogo">Upload Logo</label>
                     <input type="file" id="logoInput" accept="image/*" onchange="previewAndEncodeImage()" />
                     <input type="hidden" name="logoBase64" id="logoBase64">
                     <img id="previewImage" style="max-height:100px;" />
-
 
                     <input type="hidden" th:field="*{latitude}" id="latitude">
                     <input type="hidden" th:field="*{longitude}" id="longitude">
@@ -112,7 +121,7 @@
                         <p>Have already an account? <a href="/login-user" style="text-decoration: none;">Login</a></p>
                     </div>
                 </div>
-            </div>
+        </div>
         </div>
     </section>
 

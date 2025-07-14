@@ -42,6 +42,9 @@ public class Garage {
 
     private LocalDateTime createdAt;
 
+    private String password;
+
+
     @PrePersist
     public void onCreate() {
         this.createdAt = LocalDateTime.now();
