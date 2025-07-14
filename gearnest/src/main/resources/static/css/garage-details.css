@@ -1,0 +1,81 @@
+body {
+    font-family: 'Segoe UI', sans-serif;
+    background: #f9f9f9;
+    margin: 0;
+    padding: 20px;
+    color: #333;
+}
+
+.garage-container {
+    background: #fff;
+    max-width: 900px;
+    margin: auto;
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+}
+
+.garage-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    border-bottom: 1px solid #ccc;
+    padding-bottom: 20px;
+    margin-bottom: 25px;
+}
+
+.garage-logo {
+    max-height: 100px;
+    border-radius: 10px;
+    border: 1px solid #ccc;
+}
+
+.garage-name {
+    font-size: 2rem;
+    margin: 0;
+    color: #2c3e50;
+}
+
+.book-btn {
+    background-color: #2980b9;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    font-weight: bold;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: 0.3s ease;
+}
+
+.book-btn:hover {
+    background-color: #1f5e85;
+}
+
+.garage-info p {
+    margin: 8px 0;
+}
+
+.map-section {
+    margin-top: 30px;
+}
+
+.map-section iframe {
+    border-radius: 10px;
+}
+
+.map-link {
+    text-decoration: none;
+    color: #2980b9;
+    font-weight: bold;
+}
+
+.map-link:hover {
+    text-decoration: underline;
+}
+
+.distance-section {
+    margin-top: 20px;
+    font-weight: bold;
+    color: #555;
+}

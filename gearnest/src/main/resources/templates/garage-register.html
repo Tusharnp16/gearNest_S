@@ -3,71 +3,107 @@
 
 <head>
     <title>Garage Registration</title>
-    <link rel="shortcut icon" th:href="@{/images/logo.png}" type="image/x-icon">
     <link rel="stylesheet" th:href="@{/css/style.css}" />
     <link rel="stylesheet" th:href="@{/css/garage-register.css}" />
 </head>
 
 <body>
-    <header th:replace="fragments/header::header"></header>
+    <header th:replace="~{fragments/header::header}"></header>
+
     <section>
         <div class="container">
             <div class="title">
                 <p>Register Your Garage</p>
             </div>
 
-            <form th:action="@{/register/garage}" th:object="${garage}" method="post">
+            <div th:if="${success}" class="success" th:text="${success}"></div>
+            <div th:if="${error}" class="error" th:text="${error}"></div>
+
+            <form th:action="@{/garage/register}" th:object="${garage}" method="post">
                 <div class="user_details">
+
                     <div class="input_box">
-                        <label for="name">Owner Name:</label>
-                        <input type="text" id="name" th:field="*{ownerName}" placeholder="Enter your name" required />
+                        <label for="ownerName">Owner Name:</label>
+                        <input type="text" th:field="*{ownerName}" placeholder="Enter your name" required />
                     </div>
+
                     <div class="input_box">
-                        <label>Garage Name:</label>
-                        <input type="text" id="garagename" th:field="*{garageName}" placeholder="Enter your garage name"
-                            required />
+                        <label for="garageName">Garage Name:</label>
+                        <input type="text" th:field="*{garageName}" placeholder="Enter your garage name" required />
                     </div>
+
                     <div class="input_box">
-                        <label for="email">Email</label>
-                        <input type="email" th:field="*{email}" id="email" placeholder="Enter your email" required>
+                        <label for="email">Email:</label>
+                        <input type="email" th:field="*{email}" placeholder="Enter your email" required />
                     </div>
+
                     <div class="input_box">
-                        <label for="phone">Phone Number</label>
-                        <input type="text" th:field="*{contact}" id="phone" placeholder="Enter your number" required>
+                        <label for="phoneNumber">Phone Number:</label>
+                        <input type="text" th:field="*{phoneNumber}" placeholder="Enter your number" required />
                     </div>
+
                     <div class="input_box">
-                        <label for="pass">Password</label>
-                        <input type="password" id="pass" placeholder="Enter your password" required>
+                        <label for="address">Address:</label>
+                        <input type="text" th:field="*{address}" placeholder="Full address" required />
                     </div>
+
                     <div class="input_box">
-                        <label for="confirmPass">Confirm Password</label>
-                        <input type="password" id="confirmPass" placeholder="Confirm your password" required>
-                    </div>
-                    <div class="input_box">
-                        <label>Address:</label>
-                        <input type="text" th:field="*{address}" placeholder="Enter your address" required />
-                    </div>
-                    <div class="input_box">
-                        <label>State</label>
-                        <select name="state" id="state" required>
+                        <label for="state">State:</label>
+                        <select id="state" th:field="*{state}" required>
                             <option value="">Select</option>
                         </select>
                     </div>
+
                     <div class="input_box">
-                        <label>City</label>
-                        <select name="city" id="city" required>
+                        <label for="city">City:</label>
+                        <select id="city" th:field="*{city}" required>
                             <option value="">Select</option>
                         </select>
                     </div>
+
                     <div class="input_box">
-                        <label>Description:</label>
-                        <textarea th:field="*{description}" placeholder="Enter your description" required></textarea>
+                        <label for="location">Landmark / Location:</label>
+                        <input type="text" th:field="*{location}" placeholder="Nearby or landmark" />
                     </div>
+
+                    <div class="input_box">
+                        <label for="description">Description:</label>
+                        <textarea th:field="*{description}" placeholder="Brief about your garage..."
+                            required></textarea>
+                    </div>
+
+                    <div class="input_box">
+                        <label for="openingHours">Opening Hours:</label>
+                        <input type="text" th:field="*{openingHours}" placeholder="e.g., 9AM - 8PM" />
+                    </div>
+
+
+                    <div class="input_box">
+                        <label for="servicesOffered">Services Offered (comma separated):</label>
+                        <input type="text" name="servicesOffered" placeholder="Oil change, Car wash, Brake check" />
+                    </div>
+
+                    <div class="input_box">
+                        <label for="price">Visit Charge:</label>
+                        <input type="text" th:field="*{price}" placeholder="Enter Charge(E.g 500)/Hours" required />
+                    </div>
+
+
+                    <label for="uploadLogo">Upload Logo</label>
+                    <input type="file" id="logoInput" accept="image/*" onchange="previewAndEncodeImage()" />
+                    <input type="hidden" name="logoBase64" id="logoBase64">
+                    <img id="previewImage" style="max-height:100px;" />
+
+
+                    <input type="hidden" th:field="*{latitude}" id="latitude">
+                    <input type="hidden" th:field="*{longitude}" id="longitude">
+
                     <div class="input_box" style="display: flex;width: 100%;">
-                        <input type="checkbox" id="terms" required style="margin-right: 10px;cursor: pointer;">
+                        <input type="checkbox" id="terms" required style="margin-right: 10px;">
                         <label for="terms">I agree to the <a href="#">Terms and Conditions</a></label>
                     </div>
                 </div>
+
                 <div class="reg_btn">
                     <input type="submit" value="Register">
                 </div>
@@ -76,11 +112,68 @@
                         <p>Have already an account? <a href="/login-user" style="text-decoration: none;">Login</a></p>
                     </div>
                 </div>
-            </form>
+            </div>
         </div>
     </section>
 
-       <footer th:replace="fragments/footer::footer"></footer>
+    <footer th:replace="~{fragments/footer::footer}"></footer>
+
+    <script>
+        const cityByState = {
+            Gujarat: ["Ahmedabad", "Surat", "Vadodara", "Rajkot"],
+            Maharashtra: ["Mumbai", "Pune", "Nagpur", "Nashik"],
+            Rajasthan: ["Jaipur", "Udaipur", "Jodhpur", "Kota"],
+            Delhi: ["New Delhi", "Dwarka", "Saket", "Rohini"]
+        };
+
+
+        function previewAndEncodeImage() {
+            const input = document.getElementById('logoInput');
+            const file = input.files[0];
+
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    const base64String = e.target.result;
+                    document.getElementById('logoBase64').value = base64String;
+                    document.getElementById('previewImage').src = base64String;
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(function (position) {
+                document.getElementById("latitude").value = position.coords.latitude;
+                document.getElementById("longitude").value = position.coords.longitude;
+            }, function (error) {
+                console.warn("Geolocation not allowed or available.");
+            });
+        } else {
+            console.warn("Geolocation not supported.");
+        }
+
+        document.addEventListener("DOMContentLoaded", () => {
+            const stateSelect = document.getElementById("state");
+            const citySelect = document.getElementById("city");
+
+            Object.keys(cityByState).forEach(state => {
+                const option = new Option(state, state);
+                stateSelect.add(option);
+            });
+
+            stateSelect.addEventListener("change", () => {
+                const selectedState = stateSelect.value;
+                const cities = cityByState[selectedState] || [];
+
+                citySelect.innerHTML = "<option value=''>Select</option>";
+                cities.forEach(city => {
+                    const option = new Option(city, city);
+                    citySelect.add(option);
+                });
+            });
+        });
+    </script>
 
 </body>
 

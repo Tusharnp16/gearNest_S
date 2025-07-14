@@ -1,0 +1,62 @@
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f4f6f9;
+    margin: 0;
+    padding: 0;
+}
+
+.container {
+    width: 90%;
+    max-width: 1200px;
+    margin: 40px auto;
+}
+
+h1 {
+    text-align: center;
+    margin-bottom: 30px;
+    color: #2c3e50;
+}
+
+.garage-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 25px;
+}
+
+.garage-card {
+    background-color: #fff;
+    border-radius: 12px;
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.08);
+    padding: 20px;
+    transition: transform 0.2s;
+}
+
+.garage-card:hover {
+    transform: translateY(-5px);
+}
+
+.garage-card h3 {
+    margin: 0 0 10px;
+    font-size: 20px;
+    color: #34495e;
+}
+
+.garage-card p {
+    margin: 5px 0;
+    color: #555;
+}
+
+.garage-card .view-btn {
+    margin-top: 15px;
+    display: inline-block;
+    padding: 10px 15px;
+    background-color: #3498db;
+    color: white;
+    border-radius: 6px;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.garage-card .view-btn:hover {
+    background-color: #2980b9;
+}
