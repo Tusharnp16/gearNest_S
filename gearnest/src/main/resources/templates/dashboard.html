@@ -1,19 +1,20 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
+
 <head>
     <title>Dashboard</title>
     <link rel="stylesheet" th:href="@{/css/style.css}" />
 </head>
-<body>
-    <header th:replace="fragments/header::header"></header>
 
-    </header>
+<body>
+    <header th:replace="~{fragments/header::header}"></header>
     <section>
 
         <h1>Welcome to Dashboard!</h1>
         <a href="/logout">Logout</a>
     </section>
-    <footer th:replace="fragments/footer::footer"></footer>
+    <footer th:replace="~{fragments/footer::footer}"></footer>
 
 </body>
+
 </html>

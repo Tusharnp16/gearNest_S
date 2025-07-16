@@ -8,30 +8,30 @@
     <link rel="stylesheet" th:href="@{/css/style.css}" />
 </head>
 
-<body> 
+<body>
     <header>
         <nav class="navbar">
-        <div class="navbar-container container">
-            <input type="checkbox" name="" id="">
-            <div class="hamburger-lines">
-                <span class="line line1"></span>
-                <span class="line line2"></span>
-                <span class="line line3"></span>
+            <div class="navbar-container container">
+                <input type="checkbox" name="" id="">
+                <div class="hamburger-lines">
+                    <span class="line line1"></span>
+                    <span class="line line2"></span>
+                    <span class="line line3"></span>
+                </div>
+                <ul class="menu-items">
+                    <li><a href="/dashboard">Home</a></li>
+                    <li><a href="/about">About</a></li>
+                    <li><a href="#">Category</a></li>
+                    <li><a href="#">Menu</a></li>
+                    <li><a href="#">Contact</a></li>
+                    <li><a href="/login">Login</a></li>
+                </ul>
+                <div class="logo">
+                    <a href="/"><img th:src="@{/images/logo.png}" alt="" srcset=""><span>GearNest</span></a>
+                </div>
+
             </div>
-            <ul class="menu-items">
-                <li><a href="/dashboard">Home</a></li>
-                <li><a href="/about">About</a></li>
-                <li><a href="#">Category</a></li>
-                <li><a href="#">Menu</a></li>
-                <li><a href="#">Contact</a></li>
-                <li><a href="/login-user">Login</a></li>
-            </ul>
-            <div class="logo">
-                <a href="/"><img th:src="@{/images/logo.png}" alt="" srcset=""><span>GearNest</span></a>
-            </div>
-           
-        </div>
-     </nav>
+        </nav>
     </header>
     <script src="script.js"></script>
 </body>

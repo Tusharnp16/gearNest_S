@@ -9,14 +9,14 @@
 </head>
 
 <body>
-    <header th:replace="fragments/header::header"></header>
+    <header th:replace="~{fragments/header::header}"></header>
     <section>
         <div class="container">
             <div class="title">
                 <p>Login</p>
             </div>
 
-            <form th:action="@{/login}" method="post">
+            <form th:action="@{/}" method="post">
                 <div class="user_details">
                     <div class="role">
                         <input type="radio" name="role" id="radio_1" value="admin">
@@ -69,9 +69,9 @@
             </form>
         </div>
     </section>
-    <footer th:replace="fragments/footer::footer"></footer>
+    <footer th:replace="~{fragments/footer::footer}"></footer>
 
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script th:src="@{/javascript/sweetalert2@11.js}"></script>
     <script>
         function showPassword() {
             var x = document.getElementById("pass");

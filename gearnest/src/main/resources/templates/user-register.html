@@ -118,7 +118,7 @@
                 </div>
                 <div class="user_details_login">
                     <div class="input_box" style="text-align: center;">
-                        <p>Have already an account? <a href="/login-user" style="text-decoration: none;">Login</a></p>
+                        <p>Have already an account? <a href="/login" style="text-decoration: none;">Login</a></p>
                     </div>
                 </div>
             </form>
@@ -127,9 +127,8 @@
     </section>
     <footer th:replace="~{fragments/footer::footer}"></footer>
 
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script th:src="@{/javascript/sweetalert2@11.js}"></script>
     <script th:src="@{/javascript/jquery-3.7.1.min.js}"></script>
-
     <script>
         $(document).ready(function () {
             const nameRegex = /^[A-Za-z]{2,30}$/;
