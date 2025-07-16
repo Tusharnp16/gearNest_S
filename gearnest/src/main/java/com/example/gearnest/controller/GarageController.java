@@ -23,7 +23,7 @@ public class GarageController {
     @Autowired
     private GarageProfileRepository garageRepository;
 
-    @GetMapping("/garage/register")
+    @GetMapping("/garage-register")
     public String showGarageForm(Model model, HttpSession session) {
         model.addAttribute("garage", new Garage());
 
@@ -77,7 +77,5 @@ public class GarageController {
 
         return "/" + uploadDir + fileName;
     }
-
-    
 
 }
