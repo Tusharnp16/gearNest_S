@@ -9,7 +9,7 @@
 </head>
 
 <body>
-    <header th:replace="fragments/header::header"></header>
+    <header th:replace="~{fragments/header::header}"></header>
     <section>
         <div class="container">
             <div class="title">
@@ -69,9 +69,8 @@
             </form>
         </div>
     </section>
-    <footer th:replace="fragments/footer::footer"></footer>
-
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <footer th:replace="~{fragments/footer::footer}"></footer>
+    <script th:src="@{/javascript/sweetalert2@11.js}"></script>
     <script>
         function showPassword() {
             var x = document.getElementById("pass");

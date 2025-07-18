@@ -6,13 +6,14 @@ section {
     height: 100vh !important;
     background: #f6f8fa;
     font-family: 'Poppins', sans-serif;
-       background-image: url('../images/background.jpg') !important;
+    background-image: url('../images/background.jpg') !important;
     background-repeat: no-repeat;
     /* Optional: avoid repeating */
     background-size: cover;
     /* Optional: make it cover the element */
     background-position: center
 }
+
 section::after {
     content: "";
     position: absolute;
@@ -33,7 +34,7 @@ section .container {
         0px 5px 12px -2px rgba(0, 0, 0, 0.1),
         0px 18px 36px -6px rgba(0, 0, 0, 0.1);
     overflow: hidden;
-     opacity: 0.8;
+    opacity: 0.8;
     /* margin: 30px 10px; */
     z-index: 500;
 
@@ -137,7 +138,7 @@ select:valid {
 
 form .role {
     padding: 0px 0px;
-    margin: 10px 50px 20px 0px;
+    margin: 10px 0px 20px 0px;
 }
 
 .role .category {
