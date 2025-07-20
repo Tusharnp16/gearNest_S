@@ -24,23 +24,31 @@
 
                     <div class="input_box">
                         <label for="ownerName">Owner Name:</label>
-                        <input type="text" th:field="*{ownerName}" placeholder="Enter your name" required />
+                        <input type="text" id="owner_name" placeholder="Enter your name" required />
+                        <span class="error-message" id="ownerNameError"></span>
+
                     </div>
 
                     <div class="input_box">
                         <label for="garageName">Garage Name:</label>
-                        <input type="text" th:field="*{garageName}" placeholder="Enter your garage name" required />
+                        <input type="text" id="garage_name" placeholder="Enter your garage name" required />
+                        <span class="error-message" id="garageNameError"></span>
+
                     </div>
 
 
                     <div class="input_box">
                         <label for="phoneNumber">Phone Number:</label>
-                        <input type="text" th:field="*{phoneNumber}" placeholder="Enter your number" required />
+                        <input type="text" id="phone_no" placeholder="Enter your number" required />
+                        <span class="error-message" id="phnoError"></span>
+
                     </div>
 
                     <div class="input_box">
                         <label for="email">Email:</label>
-                        <input type="email" th:field="*{email}" placeholder="Enter your email" required />
+                        <input type="email" id="email" placeholder="Enter your email" required />
+                        <span class="error-message" id="emailError"></span>
+
                     </div>
 
                     <div class="input_box">
@@ -57,7 +65,9 @@
 
                     <div class="input_box" style="width: 100%;">
                         <label for="address">Address:</label>
-                        <input type="text" th:field="*{address}" placeholder="Full address" required />
+                        <input type="text" id="address" placeholder="Full address" required />
+                        <span class="error-message" id="addressError"></span>
+
                     </div>
 
                     <div class="input_box">
@@ -65,6 +75,8 @@
                         <select id="state" th:field="*{state}" required>
                             <option value="">Select</option>
                         </select>
+                        <span class="error-message" id="stateError"></span>
+
                     </div>
 
                     <div class="input_box">
@@ -72,11 +84,14 @@
                         <select id="city" th:field="*{city}" required>
                             <option value="">Select</option>
                         </select>
+                        <span class="error-message" id="cityError"></span>
                     </div>
 
                     <div class="input_box">
                         <label for="location">Landmark / Location:</label>
-                        <input type="text" th:field="*{location}" placeholder="Nearby or landmark" />
+                        <input type="text" id="location" placeholder="Nearby or landmark" />
+                        <span class="error-message" id="locationError"></span>
+
                     </div>
 
                     <div class="input_box">
@@ -126,6 +141,8 @@
                                 <option value="PM">PM</option>
                             </select>
                         </div>
+                        <span class="error-message" id="opnigHourseError"></span>
+
                     </div>
 
 
@@ -148,28 +165,35 @@
                             </div>
                             <input type="hidden" id="servicesOffered" name="servicesOffered" />
                         </div>
+                        <span class="error-message" id="servicesOfferedError"></span>
+
                     </div>
 
                     <div class="input_box">
                         <label for="price">Visit Charge:</label>
-                        <input type="text" th:field="*{price}" placeholder="Enter Charge(E.g 500)/Hours" required />
+                        <input type="text" id="price" placeholder="Enter Charge(E.g 500)/Hours" required />
+                        <span class="error-message" id="priceError"></span>
                     </div>
 
                     <div class="input_box">
                         <label for="description">Description:</label>
-                        <textarea th:field="*{description}" placeholder="Brief about your garage..."
-                            required></textarea>
+                        <textarea id="description" placeholder="Brief about your garage..." required></textarea>
+                        <span class="error-message" id="descriptionError"></span>
+
                     </div>
 
 
                     <div class="input_box">
                         <label for="password">Password:</label>
-                        <input type="password" th:field="*{password}" placeholder="Create a password" required />
+                        <input type="password" id="password" placeholder="Create a password" required />
+                        <span class="error-message" id="passwordError"></span>
+
                     </div>
 
                     <div class="input_box">
-                        <label for="password">Confirm Password:</label>
-                        <input type="password" placeholder="Confirm Password" required />
+                        <label for="confiremPassword">Confirm Password:</label>
+                        <input type="password" id="confiremPassword" placeholder="Confirm Password" required />
+                        <span class="error-message" id="confiremPasswordError"></span>
                     </div>
 
                     <div class="input_box" style="width: 100%;">
@@ -187,6 +211,8 @@
                                 </svg>
                                 <span>Upload file</span></label>
                         </div>
+                        <span class="error-message" id="uploadImgError"></span>
+
                         <input type="hidden" name="logoBase64" id="logoBase64">
                         <img id="previewImage" style="max-height:100px;" />
 
@@ -197,6 +223,8 @@
                     <div class="input_box" style="display: flex;width: 100%;">
                         <input type="checkbox" id="terms" required style="margin-right: 10px;">
                         <label for="terms">I agree to the <a href="#">Terms and Conditions</a></label>
+                        <span class="error-message" id="termsError"></span>
+
                     </div>
                 </div>
 
@@ -319,7 +347,7 @@
 
         function selectOption(value) {
             if (selectedValues.has(value)) {
-                removeTag(value); // re-click to remove
+                removeTag(value);
                 return;
             }
 
