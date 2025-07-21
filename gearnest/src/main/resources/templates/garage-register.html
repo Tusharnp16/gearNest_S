@@ -3,6 +3,7 @@
 
 <head>
     <title>Garage Registration</title>
+    <link rel="shortcut icon" th:href="@{/images/logo.png}" type="image/x-icon">
     <link rel="stylesheet" th:href="@{/css/style.css}" />
     <link rel="stylesheet" th:href="@{/css/garage-register.css}" />
 </head>
@@ -39,7 +40,7 @@
 
                     <div class="input_box">
                         <label for="phoneNumber">Phone Number:</label>
-                        <input type="text" id="phone_no" placeholder="Enter your number" required />
+                        <input type="text" id="phno" placeholder="Enter your number" required />
                         <span class="error-message" id="phnoError"></span>
 
                     </div>
@@ -157,11 +158,6 @@
                                 <input type="text" id="select-input" placeholder="Select or type services..." />
                             </div>
                             <div id="dropdown" class="dropdown">
-                                <div onclick="selectOption('Oil Change')">Oil Change</div>
-                                <div onclick="selectOption('Car Wash')">Car Wash</div>
-                                <div onclick="selectOption('Brake Check')">Brake Check</div>
-                                <div onclick="selectOption('AC Repair')">AC Repair</div>
-                                <div onclick="selectOption('Wheel Alignment')">Wheel Alignment</div>
                             </div>
                             <input type="hidden" id="servicesOffered" name="servicesOffered" />
                         </div>
@@ -249,6 +245,24 @@
     <script>
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
+        let emailExists = false;
+        let phoneExists = false;
+
+        // Load Services
+        $.ajax({
+            url: "/api/garage-services/services",
+            method: "GET",
+            success: function (services) {
+                $.each(services, function (i, service) {
+                    $('#dropdown').append(
+                        `<div data-id="${service.id}" data-name="${service.name}" onclick="selectOption('${service.id}')">${service.name}</div>`
+                    );
+                });
+            }
+        });
+
+
+
         // Load states
         $.ajax({
             url: "/api/location/states",
@@ -260,7 +274,7 @@
             }
         });
 
-        // Load cities
+        // Load cities on state change
         $("#state").on("change", function () {
             let stateId = $(this).val();
             $('#city').empty().append('<option value="">Select</option>');
@@ -277,13 +291,14 @@
             }
         });
 
+
         // OTP logic
         let countdownInterval;
         const initialSeconds = 120;
 
         $('#generateOtp').click(function () {
             let email = $('#email').val();
-            if (!email || !emailRegex.test(email)) {
+            if (!email || !emailRegex.test(email) || emailExists) {
                 Swal.fire({ icon: "error", title: "Oops...", text: "Enter a valid and available email to get OTP" });
                 return;
             }
@@ -291,7 +306,7 @@
             Swal.fire({ title: "Sending OTP...", allowOutsideClick: false, didOpen: () => Swal.showLoading() });
 
             $.ajax({
-                url: "/api/register/send-otp",
+                url: "/api/garage/register/send-otp",
                 method: "POST",
                 data: { email: email },
                 success: function () {
@@ -325,11 +340,12 @@
             }, 1000);
         }
 
+        // Services Offered dropdown (multi-select)
         const selectedItemsContainer = document.getElementById("selected-items");
         const dropdown = document.getElementById("dropdown");
         const input = document.getElementById("select-input");
         const hiddenInput = document.getElementById("servicesOffered");
-        const selectedValues = new Set();
+        const selectedValues = new Map();
 
         function showDropdown() {
             dropdown.style.display = "block";
@@ -340,22 +356,22 @@
             dropdown.style.display = "none";
         }
 
-        function focusInput() {
-            input.focus();
-            showDropdown();
-        }
+        function selectOption(id) {
+            const option = Array.from(dropdown.children).find(opt => opt.dataset.id === id);
+            if (!option) return;
 
-        function selectOption(value) {
-            if (selectedValues.has(value)) {
-                removeTag(value);
+            const name = option.dataset.name;
+
+            if (selectedValues.has(id)) {
+                removeTag(id);
                 return;
             }
 
-            selectedValues.add(value);
+            selectedValues.set(id, name);
 
             const tag = document.createElement("div");
             tag.className = "tag";
-            tag.innerHTML = `<span>${value}</span><span class="remove" onclick="removeTag('${value}')">×</span>`;
+            tag.innerHTML = `<span>${name}</span><span class="remove" onclick="removeTag('${id}')">×</span>`;
             selectedItemsContainer.insertBefore(tag, input);
 
             updateHiddenInput();
@@ -364,13 +380,15 @@
             hideDropdown();
         }
 
-        function removeTag(value) {
-            selectedValues.delete(value);
+
+        function removeTag(id) {
+            const name = selectedValues.get(id);
+            selectedValues.delete(id);
 
             const tags = document.querySelectorAll(".tag");
             tags.forEach(tag => {
                 const span = tag.querySelector("span");
-                if (span && span.textContent.trim() === value) {
+                if (span && span.textContent.trim() === name) {
                     tag.remove();
                 }
             });
@@ -379,23 +397,22 @@
             filterOptions();
         }
 
+
         function updateHiddenInput() {
-            hiddenInput.value = Array.from(selectedValues).join(",");
+            hiddenInput.value = Array.from(selectedValues.keys()).join(",");
         }
 
         function filterOptions() {
             const search = input.value.toLowerCase();
             const options = dropdown.querySelectorAll("div");
-
             options.forEach(option => {
-                const val = option.textContent.trim();
-                option.style.display = val.toLowerCase().includes(search) ? "block" : "none";
+                const name = option.dataset.name.toLowerCase();
+                const id = option.dataset.id;
 
-                if (selectedValues.has(val)) {
-                    option.classList.add("selected");
-                } else {
-                    option.classList.remove("selected");
-                }
+                option.style.display = name.includes(search) ? "block" : "none";
+                selectedValues.has(id)
+                    ? option.classList.add("selected")
+                    : option.classList.remove("selected");
             });
         }
 
@@ -406,25 +423,21 @@
                     opt.style.display !== 'none'
                 );
                 if (visibleOption) {
-                    selectOption(visibleOption.textContent.trim());
+                    selectOption(visibleOption.dataset.id); // ← use ID, not name
                 }
             }
         });
 
-        input.addEventListener("input", showDropdown);
 
+        input.addEventListener("input", showDropdown);
+        input.addEventListener("focus", showDropdown);
         document.addEventListener("click", function (e) {
             if (!document.querySelector(".multi-select-container").contains(e.target)) {
                 hideDropdown();
             }
         });
 
-
-
-
-
-
-
+        // Image preview
         function previewAndEncodeImage() {
             const input = document.getElementById('file-input');
             const file = input.files[0];
@@ -440,19 +453,232 @@
             }
         }
 
+        // Geolocation
         if (navigator.geolocation) {
             navigator.geolocation.getCurrentPosition(function (position) {
                 document.getElementById("latitude").value = position.coords.latitude;
                 document.getElementById("longitude").value = position.coords.longitude;
-            }, function (error) {
+            }, function () {
                 console.warn("Geolocation not allowed or available.");
             });
-        } else {
-            console.warn("Geolocation not supported.");
         }
 
+        // jQuery validation and submission
+        $(document).ready(function () {
+            function showError(id, message) {
+                $(`#${id}`).text(message).show();
+            }
 
+            function clearError(id) {
+                $(`#${id}`).text('').hide();
+            }
+
+            const nameRegex = /^[a-zA-Z\s]{3,}$/;
+            const phoneRegex = /^[6-9]\d{9}$/;
+            const addressRegex = /^.{10,}$/;
+            const priceRegex = /^\d{2,6}$/;
+            const passwordRegex = /^(?=.*[A-Z])(?=.*\d).{6,}$/;
+
+            $('#owner_name').on('keyup', function () {
+                const val = $(this).val().trim();
+                if (val === '') showError('ownerNameError', 'Owner name is required');
+                else if (!nameRegex.test(val)) showError('ownerNameError', 'Only letters, min 3 characters');
+                else clearError('ownerNameError');
+            });
+
+            $('#garage_name').on('keyup', function () {
+                const val = $(this).val().trim();
+                if (val === '') showError('garageNameError', 'Garage name is required');
+                else if (!nameRegex.test(val)) showError('garageNameError', 'Only letters, min 3 characters');
+                else clearError('garageNameError');
+            });
+
+
+            $('#phno').on('keyup', function () {
+                const val = $(this).val().trim();
+                if (val === '') {
+                    showError('phnoError', 'Phone number is required');
+                } else if (!phoneRegex.test(val)) {
+                    showError('phnoError', 'Enter a valid 10-digit number');
+                } else {
+                    // AJAX check if phone exists
+                    $.ajax({
+                        url: "/api/garage/register/check-phone",
+                        method: "POST",
+                        data: { phone: val },
+                        success: function (exists) {
+                            exists ? showError('phnoError', 'Phone number already exists') : clearError('phnoError');
+                        },
+                        error: function () {
+                            showError('phnoError', 'Error validating phone');
+                        }
+                    });
+                }
+            });
+
+            $('#email').on('keyup', function () {
+                const val = $(this).val().trim();
+                if (val === '') {
+                    showError('emailError', 'Email is required');
+                } else if (!emailRegex.test(val)) {
+                    showError('emailError', 'Enter a valid email address');
+                } else {
+                    // AJAX check if email exists
+                    $.ajax({
+                        url: "/api/garage/register/check-email",
+                        method: "POST",
+                        data: { email: val },
+                        success: function (exists) {
+                            if (exists === true) {
+                                showError("emailError", "Email already exists");
+                                emailExists = true;
+                            } else {
+                                clearError("emailError");
+                                emailExists = false;
+                            }
+                        },
+                        error: function () {
+                            showError('emailError', 'Error validating email');
+                        }
+                    });
+                }
+            });
+
+            $('#otp').on('keyup', function () {
+                const val = $(this).val().trim();
+                if (val === '') showError('otpError', 'OTP is required');
+                else if (!/^\d{4,6}$/.test(val)) showError('otpError', 'Enter a valid 4–6 digit OTP');
+                else clearError('otpError');
+            });
+
+            $('#address').on('keyup', function () {
+                const val = $(this).val().trim();
+                if (val === '') showError('addressError', 'Address is required');
+                else if (!addressRegex.test(val)) showError('addressError', 'Minimum 10 characters');
+                else clearError('addressError');
+            });
+
+            $('#location').on('keyup', function () {
+                const val = $(this).val().trim();
+                if (val === '') showError('locationError', 'Location is required');
+                else if (val.length < 3) showError('locationError', 'Must be at least 3 characters');
+                else clearError('locationError');
+            });
+
+            $('#price').on('keyup', function () {
+                const val = $(this).val().trim();
+                if (val === '') showError('priceError', 'Visit charge is required');
+                else if (!priceRegex.test(val)) showError('priceError', 'Enter a valid number (e.g. 500)');
+                else clearError('priceError');
+            });
+
+            $('#description').on('keyup', function () {
+                const val = $(this).val().trim();
+                if (val === '') showError('descriptionError', 'Description is required');
+                else if (val.length < 10) showError('descriptionError', 'Minimum 10 characters');
+                else clearError('descriptionError');
+            });
+
+            $('#password').on('keyup', function () {
+                const val = $(this).val();
+                if (val === '') showError('passwordError', 'Password is required');
+                else if (!passwordRegex.test(val)) showError('passwordError', 'Min 6 chars, 1 capital & 1 number');
+                else clearError('passwordError');
+            });
+
+            $('#confiremPassword').on('keyup', function () {
+                const val = $(this).val();
+                const pwd = $('#password').val();
+                if (val === '') showError('confiremPasswordError', 'Please confirm your password');
+                else if (val !== pwd) showError('confiremPasswordError', 'Passwords do not match');
+                else clearError('confiremPasswordError');
+            });
+
+            $('#select-input').on('keyup', function () {
+                if (selectedValues.size === 0) showError('servicesOfferedError', 'Select at least one service');
+                else clearError('servicesOfferedError');
+            });
+
+            $('#openingHours, #openingHours_am_pm, #closingHours, #closingHours_am_pm').on('change', function () {
+                if ($('#openingHours').val() && $('#openingHours_am_pm').val() &&
+                    $('#closingHours').val() && $('#closingHours_am_pm').val()) {
+                    clearError('opnigHourseError');
+                } else {
+                    showError('opnigHourseError', 'Please select full opening and closing time');
+                }
+            });
+
+            $('#file-input').on('change', function () {
+                if (this.files.length > 0) clearError('uploadImgError');
+                else showError('uploadImgError', 'Logo file is required');
+            });
+
+            $('#terms').on('change', function () {
+                $(this).is(':checked') ? clearError('termsError') : showError('termsError', 'You must agree to the terms');
+            });
+
+            // SUBMIT
+            $('.reg_btn input[type="submit"]').click(function (e) {
+                e.preventDefault();
+
+                $('#owner_name, #garage_name, #phno, #email, #otp, #address, #location, #price, #description, #password, #confiremPassword, #select-input').trigger('keyup');
+                $('#openingHours, #openingHours_am_pm, #closingHours, #closingHours_am_pm, #file-input, #terms').trigger('change');
+
+                const state = $('#state').val();
+                const city = $('#city').val();
+                state ? clearError('stateError') : showError('stateError', 'Please select a state');
+                city ? clearError('cityError') : showError('cityError', 'Please select a city');
+
+                if (selectedValues.size === 0) showError('servicesOfferedError', 'Select at least one service');
+                else clearError('servicesOfferedError');
+
+                if ($('.error-message:visible').length > 0) {
+                    Swal.fire({ icon: 'error', title: 'Please fix all errors before submitting.' });
+                    return;
+                }
+
+                const data = {
+                    ownerName: $('#owner_name').val(),
+                    garageName: $('#garage_name').val(),
+                    phno: $('#phno').val(),
+                    email: $('#email').val(),
+                    otp: $('#otp').val(),
+                    address: $('#address').val(),
+                    state: state,
+                    city: city,
+                    location: $('#location').val(),
+                    openingHours: $('#openingHours').val() + ' ' + $('#openingHours_am_pm').val() + ' to ' + $('#closingHours').val() + ' ' + $('#closingHours_am_pm').val(),
+                    servicesOffered: $('#servicesOffered').val().split(','),
+                    price: $('#price').val(),
+                    description: $('#description').val(),
+                    password: $('#password').val(),
+                    logoPath: $('#logoBase64').val(),
+                    latitude: $('#latitude').val(),
+                    longitude: $('#longitude').val()
+                };
+
+                Swal.fire({ title: 'Submitting...', allowOutsideClick: false, didOpen: () => Swal.showLoading() });
+
+                $.ajax({
+                    url: '/api/garage/register/submit',
+                    method: 'POST',
+                    contentType: 'application/json',
+                    data: JSON.stringify(data),
+                    success: function () {
+                        Swal.close();
+                        Swal.fire({ position: "top-end", icon: "success", title: "Registered successfully!", showConfirmButton: false, timer: 2000 })
+                            .then(() => window.location.href = "/login-user");
+                    },
+                    error: function (xhr) {
+                        Swal.close();
+                        console.log(data);
+                        Swal.fire({ icon: "error", title: "Oops...", text: "Registration failed: " + xhr.responseText });
+                    }
+                });
+            });
+        });
     </script>
+
 
 </body>
 

@@ -43,7 +43,7 @@ section::after {
 
 
 section .container {
-    max-width: 700px;
+    max-width: 750px;
     width: 100%;
     background: #ffffff;
     border-radius: 0.5rem;
