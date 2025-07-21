@@ -14,6 +14,15 @@ public class GarageServices {
 
     private String name;
 
+    // Constructors
+    public GarageServices() {
+    }
+
+    public GarageServices(String name) {
+        this.name = name;
+    }
+
+    // Getters & Setters
     public long getId() {
         return id;
     }

@@ -20,19 +20,20 @@
             <div th:if="${success}" class="success" th:text="${success}"></div>
             <div th:if="${error}" class="error" th:text="${error}"></div>
 
-            <form th:action="@{/garage/register}" th:object="${garage}" method="post">
+            <form th:action="@{/garage/register}" th:object="${garage}" method="post" autocomplete="off">
                 <div class="user_details">
 
                     <div class="input_box">
                         <label for="ownerName">Owner Name:</label>
-                        <input type="text" id="owner_name" placeholder="Enter your name" required />
+                        <input type="text" id="owner_name" placeholder="Enter your name" autocomplete="off" required />
                         <span class="error-message" id="ownerNameError"></span>
 
                     </div>
 
                     <div class="input_box">
                         <label for="garageName">Garage Name:</label>
-                        <input type="text" id="garage_name" placeholder="Enter your garage name" required />
+                        <input type="text" id="garage_name" placeholder="Enter your garage name" autocomplete="off"
+                            required />
                         <span class="error-message" id="garageNameError"></span>
 
                     </div>
@@ -40,14 +41,14 @@
 
                     <div class="input_box">
                         <label for="phoneNumber">Phone Number:</label>
-                        <input type="text" id="phno" placeholder="Enter your number" required />
+                        <input type="text" id="phno" placeholder="Enter your number" autocomplete="off" required />
                         <span class="error-message" id="phnoError"></span>
 
                     </div>
 
                     <div class="input_box">
                         <label for="email">Email:</label>
-                        <input type="email" id="email" placeholder="Enter your email" required />
+                        <input type="email" id="email" placeholder="Enter your email" autocomplete="off" required />
                         <span class="error-message" id="emailError"></span>
 
                     </div>
@@ -66,7 +67,7 @@
 
                     <div class="input_box" style="width: 100%;">
                         <label for="address">Address:</label>
-                        <input type="text" id="address" placeholder="Full address" required />
+                        <input type="text" id="address" placeholder="Full address" autocomplete="off" required />
                         <span class="error-message" id="addressError"></span>
 
                     </div>
@@ -90,7 +91,7 @@
 
                     <div class="input_box">
                         <label for="location">Landmark / Location:</label>
-                        <input type="text" id="location" placeholder="Nearby or landmark" />
+                        <input type="text" id="location" placeholder="Nearby or landmark" autocomplete="off" />
                         <span class="error-message" id="locationError"></span>
 
                     </div>
@@ -101,7 +102,7 @@
 
                         <div style="display: flex;justify-content: space-between; align-items: center;">
                             <select name="openingHours" id="openingHours" style="margin: 5px;">
-                                <option value="">0</option>
+                                <option value="">-</option>
                                 <option value="1">1</option>
                                 <option value="2">2</option>
                                 <option value="3">3</option>
@@ -116,13 +117,13 @@
                                 <option value="12">12</option>
                             </select>
                             <select name="openingHours_am_pm" id="openingHours_am_pm" style="margin: 5px;">
-                                <option value="">--</option>
+                                <option value="">-</option>
                                 <option value="AM">AM</option>
                                 <option value="PM">PM</option>
                             </select>
                             <h6 style="margin: 2px;">To</h6>
                             <select name="closingHours" id="closingHours" style="margin: 5px;">
-                                <option value="">0</option>
+                                <option value="">-</option>
                                 <option value="1">1</option>
                                 <option value="2">2</option>
                                 <option value="3">3</option>
@@ -137,7 +138,7 @@
                                 <option value="12">12</option>
                             </select>
                             <select name="closingHours_am_pm" id="closingHours_am_pm" style="margin: 5px;">
-                                <option value="">--</option>
+                                <option value="">-</option>
                                 <option value="AM">AM</option>
                                 <option value="PM">PM</option>
                             </select>
@@ -167,13 +168,15 @@
 
                     <div class="input_box">
                         <label for="price">Visit Charge:</label>
-                        <input type="text" id="price" placeholder="Enter Charge(E.g 500)/Hours" required />
+                        <input type="text" id="price" placeholder="Enter Charge(E.g 500)/Hours" autocomplete="off"
+                            required />
                         <span class="error-message" id="priceError"></span>
                     </div>
 
                     <div class="input_box">
                         <label for="description">Description:</label>
-                        <textarea id="description" placeholder="Brief about your garage..." required></textarea>
+                        <textarea id="description" placeholder="Brief about your garage..." autocomplete="off"
+                            required></textarea>
                         <span class="error-message" id="descriptionError"></span>
 
                     </div>
@@ -181,14 +184,16 @@
 
                     <div class="input_box">
                         <label for="password">Password:</label>
-                        <input type="password" id="password" placeholder="Create a password" required />
+                        <input type="password" id="password" placeholder="Create a password" autocomplete="off"
+                            required />
                         <span class="error-message" id="passwordError"></span>
 
                     </div>
 
                     <div class="input_box">
                         <label for="confiremPassword">Confirm Password:</label>
-                        <input type="password" id="confiremPassword" placeholder="Confirm Password" required />
+                        <input type="password" id="confiremPassword" placeholder="Confirm Password" autocomplete="off"
+                            required />
                         <span class="error-message" id="confiremPasswordError"></span>
                     </div>
 
@@ -232,7 +237,7 @@
                         <p>Have already an account? <a href="/login" style="text-decoration: none;">Login</a></p>
                     </div>
                 </div>
-        </div>
+            </form>
         </div>
     </section>
 
@@ -620,7 +625,6 @@
             // SUBMIT
             $('.reg_btn input[type="submit"]').click(function (e) {
                 e.preventDefault();
-
                 $('#owner_name, #garage_name, #phno, #email, #otp, #address, #location, #price, #description, #password, #confiremPassword, #select-input').trigger('keyup');
                 $('#openingHours, #openingHours_am_pm, #closingHours, #closingHours_am_pm, #file-input, #terms').trigger('change');
 
@@ -648,7 +652,7 @@
                     city: city,
                     location: $('#location').val(),
                     openingHours: $('#openingHours').val() + ' ' + $('#openingHours_am_pm').val() + ' to ' + $('#closingHours').val() + ' ' + $('#closingHours_am_pm').val(),
-                    servicesOffered: $('#servicesOffered').val().split(','),
+                    serviceIds: $('#servicesOffered').val().split(','),
                     price: $('#price').val(),
                     description: $('#description').val(),
                     password: $('#password').val(),

@@ -4,12 +4,15 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 import jakarta.persistence.Column;
-import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.PrePersist;
+import jakarta.persistence.Transient;
 
 @Entity
 public class Garage {
@@ -47,13 +50,17 @@ public class Garage {
   private Boolean verified = false;
   private String otp;
 
-  @ElementCollection
-  private List<String> servicesOffered;
+  @ManyToMany
+  @JoinTable(name = "garage_services_offered", joinColumns = @JoinColumn(name = "garage_id"), inverseJoinColumns = @JoinColumn(name = "service_id"))
+  private List<GarageServices> servicesOffered;
 
   @PrePersist
   public void onCreate() {
     this.createdAt = LocalDateTime.now();
   }
+
+  @Transient
+  private List<Long> serviceIds;
 
   // Getters and Setters
 
@@ -233,11 +240,20 @@ public class Garage {
     this.otp = otp;
   }
 
-  public List<String> getServicesOffered() {
+  public List<GarageServices> getServicesOffered() {
     return servicesOffered;
   }
 
-  public void setServicesOffered(List<String> servicesOffered) {
+  public void setServicesOffered(List<GarageServices> servicesOffered) {
     this.servicesOffered = servicesOffered;
   }
+
+  public List<Long> getServiceIds() {
+    return serviceIds;
+  }
+
+  public void setServiceIds(List<Long> serviceIds) {
+    this.serviceIds = serviceIds;
+  }
+
 }

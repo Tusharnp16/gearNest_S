@@ -111,6 +111,10 @@ select:valid {
     box-shadow: 0px 0px 0px 2px #AC8ECE;
 }
 
+.input_box input[type="checkbox"] {
+    box-shadow: none;
+}
+
 
 .reg_btn {
     padding: 10px 25px 25px 25px;

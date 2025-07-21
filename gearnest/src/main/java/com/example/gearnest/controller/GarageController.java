@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import com.example.gearnest.model.Garage;
 import com.example.gearnest.repository.GarageRepository;
+import com.example.gearnest.repository.GarageServicesRepository;
 import com.example.gearnest.services.OtpService;
 
 import jakarta.servlet.http.HttpSession;
@@ -29,6 +30,9 @@ public class GarageController {
 
     @Autowired
     private OtpService otpService;
+
+    @Autowired
+    private GarageServicesRepository garageServicesRepository;
 
     // ==== Page Rendering ====
 
@@ -68,11 +72,10 @@ public class GarageController {
     }
 
     // ==== Final Submission ====
-
     @PostMapping("/api/garage/register/submit")
     public ResponseEntity<?> registerGarage(@RequestBody Garage garage, HttpSession session) {
         try {
-            // OTP check
+            // OTP validation
             String sessionOtp = (String) session.getAttribute("garageOtp");
             String sessionEmail = (String) session.getAttribute("garageOtpEmail");
 
@@ -81,14 +84,14 @@ public class GarageController {
                 return ResponseEntity.badRequest().body("Invalid OTP");
             }
 
-            // Save logo file if present
+            // Handle logo
             String base64 = garage.getLogoPath();
             if (base64 != null && base64.startsWith("data:image")) {
                 String logoPath = saveBase64ImageToFile(base64, "uploads/logos/");
                 garage.setLogoPath(logoPath);
             }
 
-            // Password encryption
+            // Encrypt password
             garage.setPassword(new BCryptPasswordEncoder().encode(garage.getPassword()));
 
             // Metadata
@@ -98,9 +101,13 @@ public class GarageController {
             garage.setVerified(true);
             garage.setRating(5.0);
 
+            // Lookup and assign services
+            if (garage.getServiceIds() != null && !garage.getServiceIds().isEmpty()) {
+                garage.setServicesOffered(garageServicesRepository.findAllById(garage.getServiceIds()));
+            }
+
             garageRepository.save(garage);
 
-            // Clear session
             session.removeAttribute("garageOtp");
             session.removeAttribute("garageOtpEmail");
 
