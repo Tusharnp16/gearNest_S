@@ -277,3 +277,10 @@ section {
         max-width: 180px;
     }
 }
+
+/* error msg  */
+
+.error-message {
+    color: red;
+    font-size: 0.9em;
+}

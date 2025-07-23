@@ -1,8 +1,16 @@
 package com.example.gearnest.model;
 
-import jakarta.persistence.*;
-import lombok.*;
 import java.time.LocalDateTime;
+
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.PrePersist;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Data
@@ -16,7 +24,7 @@ public class Feedback {
 
     private String name;
     private String email;
-    private Integer rating; 
+    private Integer rating;
 
     @Column(length = 1000)
     private String message;
