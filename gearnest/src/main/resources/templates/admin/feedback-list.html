@@ -1,47 +1,72 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
+
 <head>
     <title>Admin Feedback Panel</title>
+    
+    <!-- Font Awesome for stars and icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" integrity="sha512-..." crossorigin="anonymous" referrerpolicy="no-referrer" />
+
     <link rel="stylesheet" th:href="@{/css/admin.css}">
+    <link rel="stylesheet" th:href="@{/css/style.css}" />
 </head>
+
 <body>
+    <header th:replace="~{fragments/header::header}"></header>
 
-<h2 style="text-align:center;">Feedback Management Panel</h2>
+    <h2>Feedback Management Panel</h2>
 
-<table>
-    <thead>
-        <tr>
-            <th>ID</th>
-            <th>Name</th>
-            <th>Rating</th>
-            <th>Message</th>
-            <th>Reviewed</th>
-            <th>Actions</th>
-        </tr>
-    </thead>
-    <tbody>
-        <tr th:each="feedback : ${feedbackList}">
-            <td th:text="${feedback.id}"></td>
-            <td th:text="${feedback.name}"></td>
-            <td th:text="${feedback.rating}"></td>
-            <td th:text="${feedback.message}"></td>
-            <td>
-                <form th:action="@{/admin/feedback/update}" method="post">
-                    <input type="hidden" name="id" th:value="${feedback.id}" />
-                    <input type="checkbox" name="reviewed" value="true"
-                           th:checked="${feedback.reviewed}"
-                           onchange="this.form.submit()" />
-                </form>
-            </td>
-            <td>
-                <form th:action="@{/admin/feedback/delete}" method="post" onsubmit="return confirm('Are you sure?');">
-                    <input type="hidden" name="id" th:value="${feedback.id}" />
-                    <button type="submit">Delete</button>
-                </form>
-            </td>
-        </tr>
-    </tbody>
-</table>
+    <div class="table-wrapper">
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>Rating</th>
+                    <th>Message</th>
+                    <th>Reviewed</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="feedback : ${feedbackList}">
+                    <td th:text="${feedback.id}"></td>
+                    <td th:text="${feedback.name}"></td>
 
+                    <!-- ⭐ Star-based rating -->
+                    <td>
+                        <span th:each="i : ${#numbers.sequence(1, 5)}">
+                            <i class="fa-star" th:classappend="${i <= feedback.rating} ? 'fas checked' : 'far'"></i>
+                        </span>
+                    </td>
+
+                    <td th:text="${feedback.message}"></td>
+
+                    <!-- ✅ Reviewed badge -->
+                    <td>
+                        <form th:action="@{/admin/feedback/update}" method="post" style="display: inline;">
+                            <input type="hidden" name="id" th:value="${feedback.id}" />
+                            <span th:text="${feedback.reviewed ? 'Reviewed' : 'Not Reviewed'}"
+                                  th:classappend="${feedback.reviewed ? 'badge reviewed' : 'badge not-reviewed'}">
+                            </span>
+                            <input type="checkbox" name="reviewed" value="true"
+                                   th:checked="${feedback.reviewed}" onchange="this.form.submit()" />
+                        </form>
+                    </td>
+
+                    <!-- ❌ Delete button -->
+                    <td>
+                        <form th:action="@{/admin/feedback/delete}" method="post"
+                              onsubmit="return confirm('Are you sure?');">
+                            <input type="hidden" name="id" th:value="${feedback.id}" />
+                            <button type="submit">Delete</button>
+                        </form>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <footer th:replace="~{fragments/footer::footer}"></footer>
 </body>
 </html>

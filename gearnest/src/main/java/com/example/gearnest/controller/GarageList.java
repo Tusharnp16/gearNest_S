@@ -19,14 +19,14 @@ public class GarageList {
     @Autowired
     private GarageProfileRepository garageRepository;
 
-    @GetMapping("/garages")
+    @GetMapping("/garages/app")
     public String showAllGarages(Model model) {
         List<Garage> garages = garageRepository.findAll();
         model.addAttribute("garages", garages);
         return "garage-list";
     }
 
-    @GetMapping("/garages/app")
+    @GetMapping("/garages")
     public String showApprovedGarages(Model model) {
         List<Garage> garages = garageRepository.findByIsApprovedTrueAndStatus("Active");
         model.addAttribute("garages", garages);

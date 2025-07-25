@@ -3,61 +3,20 @@
 
 <head>
     <title>Garage List</title>
+
+    <!-- Font Awesome for star icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+        integrity="sha512-..." crossorigin="anonymous" referrerpolicy="no-referrer" />
+
     <link rel="stylesheet" th:href="@{/css/style.css}">
     <link rel="stylesheet" th:href="@{/css/garage-list.css}">
-    <style>
-        .garage-card {
-            display: flex;
-            border: 1px solid #ccc;
-            padding: 16px;
-            margin-bottom: 20px;
-            border-radius: 8px;
-            background-color: #f9f9f9;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-        }
-
-        .garage-logo {
-            flex: 0 0 150px;
-            margin-right: 20px;
-        }
-
-        .garage-logo img {
-            width: 150px;
-            height: auto;
-            border-radius: 8px;
-        }
-
-        .garage-details {
-            flex: 1;
-        }
-
-        .garage-details h3 {
-            margin: 0;
-            font-size: 20px;
-            color: #333;
-        }
-
-        .garage-details p {
-            margin: 6px 0;
-        }
-
-        .view-btn {
-            display: inline-block;
-            margin-top: 10px;
-            padding: 8px 12px;
-            background-color: #007BFF;
-            color: white;
-            text-decoration: none;
-            border-radius: 5px;
-        }
-
-        .view-btn:hover {
-            background-color: #0056b3;
-        }
-    </style>
+    <link rel="stylesheet" th:href="@{/css/admin-garages.css}" />
+    <link rel="shortcut icon" th:href="@{/images/logo.png}" type="image/x-icon">
 </head>
 
 <body>
+    <header th:replace="~{fragments/header::header}"></header>
+
     <h2 style="text-align: center;">All Registered Garages</h2>
 
     <div th:if="${garages.isEmpty()}">
@@ -65,7 +24,6 @@
     </div>
 
     <div th:each="garage : ${garages}" class="garage-card">
-
         <!-- Logo section -->
         <div class="garage-logo" th:if="${garage.logoPath}">
             <img th:src="@{${garage.logoPath}}" alt="Garage Logo" />
@@ -79,15 +37,23 @@
             <p><strong>Opening Hours:</strong> <span th:text="${garage.openingHours}">9AM - 6PM</span></p>
             <p><strong>Visit Charge:</strong> ₹<span th:text="${garage.price}">0</span></p>
             <p><strong>Services:</strong> <span th:text="${garage.servicesOffered}">None</span></p>
-            <p><strong>⭐ Rating:</strong> <span th:text="${garage.rating}">0.0</span></p>
 
+            <!-- ⭐ Rating with stars -->
+            <p><strong>⭐ Rating:</strong>
+                <span th:each="i : ${#numbers.sequence(1, 5)}">
+                    <i class="fa-star" th:classappend="${i <= garage.rating} ? 'fas checked' : 'far'"></i>
+                </span>
+                <span th:text="'(' + ${garage.rating} + ')'">0.0</span>
+            </p>
 
-            <a th:href="@{'/book-service/' + ${garage.id}}" class="view-btn">Book Service</a>
-            <a th:href="@{'/garage/' + ${garage.id}}" class="view-btn">View More Details</a>
-           
-            
+            <div class="garage-actions">
+                <a th:href="@{'/book-service/' + ${garage.id}}" class="view-btn">Book Service</a>
+                <a th:href="@{'/garage/' + ${garage.id}}" class="view-btn secondary">View More Details</a>
+            </div>
         </div>
     </div>
+
+    <footer th:replace="~{fragments/footer::footer}"></footer>
 </body>
 
 </html>

@@ -44,6 +44,9 @@ public class Garage {
   private String openingHours;
   private String status = "pending";
   private double rating = 5.0;
+ 
+ 
+
   private LocalDateTime createdAt;
 
   private String password;
