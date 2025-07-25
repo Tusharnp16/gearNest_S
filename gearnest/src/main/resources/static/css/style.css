@@ -32,6 +32,43 @@ body {
     margin: auto;
 }
 
+nav ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+}
+
+nav li {
+    display: inline-block;
+    position: relative;
+    margin-right: 15px;
+}
+
+nav li ul.dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: #f9f9f9;
+    padding: 0;
+    min-width: 160px;
+    z-index: 1;
+}
+
+nav li:hover ul.dropdown-content {
+    display: block;
+}
+
+nav li ul.dropdown-content li {
+    display: block;
+    padding: 10px;
+    border-bottom: 1px solid #ddd;
+}
+
+nav li ul.dropdown-content li a {
+    color: #000;
+    text-decoration: none;
+}
+
+
 .navbar {
     box-shadow: 0px 5px 10px 0px #aaa;
     position: fixed;

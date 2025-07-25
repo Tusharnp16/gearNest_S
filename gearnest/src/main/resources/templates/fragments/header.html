@@ -21,10 +21,26 @@
                 <ul class="menu-items">
                     <li><a href="/dashboard">Home</a></li>
                     <li><a href="/about">About</a></li>
-                    <li><a href="#">Category</a></li>
-                    <li><a href="#">Menu</a></li>
-                    <li><a href="#">Contact</a></li>
+                    <li><a href="/garages">Garages</a></li>
+                    <li><a href="/feedback">Feedback</a></li>
+                    <li><a href="/contact">Contact</a></li>
                     <li><a href="/login-user">Login</a></li>
+                    <li th:if="${session.role == 'ADMIN'}">
+                        <a href="/dashboard">Admin Panel</a>
+                        <ul class="dropdown-content">
+                            <li><a th:href="@{/admin/garages}">Manage Garages</a></li>
+                            <li><a th:href="@{/admin/users}">Manage Users</a></li>
+                            <li><a th:href="@{/admin/feedback}">View Feedback</a></li>
+                            <li><a th:href="@{/admin/settings}">Settings</a></li>
+                        </ul>
+                    </li>
+                    <li th:if="${session.role == 'GARAGE'}">
+                        <a href="/dashboard">Garage Panel</a>
+                    </li>
+                    <li th:if="${session.role == 'USER'}">
+                        <a href="/dashboard">User Panel</a>
+                    </li>
+
                 </ul>
                 <div class="logo">
                     <a href="/"><img th:src="@{/images/logo.png}" alt="" srcset=""><span>GearNest</span></a>
