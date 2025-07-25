@@ -77,7 +77,7 @@ public class GarageController {
         try {
             // OTP validation
             String sessionOtp = (String) session.getAttribute("garageOtp");
-            String sessionEmail = (String) session.getAttribute("garageOtpEmail");
+                String sessionEmail = (String) session.getAttribute("garageOtpEmail");
 
             if (sessionOtp == null || !sessionOtp.equals(garage.getOtp()) ||
                     sessionEmail == null || !sessionEmail.equals(garage.getEmail())) {
