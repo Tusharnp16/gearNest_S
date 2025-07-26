@@ -1,132 +1,372 @@
 /* admin-garages.css */
 
+:root {
+    --primary-color: #0072ff;
+    --secondary-color: #00c6ff;
+    --dark-blue: #14213d;
+    --light-grey-bg: #f4f7fa;
+    --white: #ffffff;
+    --text-dark: #333;
+    --text-light: #f0f0f0;
+    --success-color: #155724;
+    --success-bg: #d4edda;
+    --error-color: #721c24;
+    --error-bg: #f8d7da;
+}
+
 body {
     font-family: 'Poppins', sans-serif;
     margin: 0;
     padding: 0;
-    background: #f4f7fa;
-    color: #333;
-}
-
-section {
-    padding: 40px 60px;
-    background: linear-gradient(to right, #e0eafc, #cfdef3);
+    background: var(--light-grey-bg);
+    color: var(--text-dark);
+    padding-top: 70px;
     min-height: 100vh;
+    display: flex;
+    flex-direction: column;
 }
 
-h2 {
+.admin-garages-main-content {
+    flex-grow: 1;
+    padding: 40px 20px;
+    background: var(--light-grey-bg);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.page-title {
     text-align: center;
-    color: #2b2d42;
-    font-size: 28px;
-    margin-bottom: 30px;
-    font-weight: 600;
+    color: var(--dark-blue);
+    font-size: 2.2em;
+    margin-bottom: 40px;
+    font-weight: 700;
+    position: relative;
+    padding-bottom: 10px;
 }
 
-.success,
-.error {
+.page-title::after {
+    content: '';
+    display: block;
+    width: 80px;
+    height: 4px;
+    background: var(--primary-color);
+    margin: 10px auto 0;
+    border-radius: 2px;
+}
+
+.message {
     text-align: center;
     font-weight: 600;
     padding: 12px 20px;
-    margin-bottom: 20px;
-    width: fit-content;
-    margin: 10px auto;
-    border-radius: 6px;
+    margin-bottom: 25px;
+    width: 90%;
+    max-width: 600px;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
-.success {
-    background-color: #d4edda;
-    color: #155724;
+.message.success {
+    background-color: var(--success-bg);
+    color: var(--success-color);
     border: 1px solid #c3e6cb;
 }
 
-.error {
-    background-color: #f8d7da;
-    color: #721c24;
+.message.error {
+    background-color: var(--error-bg);
+    color: var(--error-color);
     border: 1px solid #f5c6cb;
+}
+
+.garage-table-container {
+    width: 95%;
+    max-width: 1300px;
+    background-color: var(--white);
+    border-radius: 12px;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+    overflow-x: auto;
+    padding: 25px;
 }
 
 .garage-table {
     width: 100%;
     border-collapse: separate;
-    border-spacing: 0 10px;
-    background-color: transparent;
+    border-spacing: 0 12px;
+    margin: 0;
 }
 
 .garage-table thead {
-    background-color: #14213d;
-    color: white;
+    background-color: var(--dark-blue);
+    color: var(--white);
 }
 
 .garage-table th {
-    padding: 14px;
+    padding: 18px 10px;
     text-align: center;
-    font-size: 15px;
+    font-size: 0.95em;
     text-transform: uppercase;
-    letter-spacing: 0.05em;
-    border-top-left-radius: 10px;
-    border-top-right-radius: 10px;
+    letter-spacing: 0.08em;
+    font-weight: 600;
+    &:first-child { border-top-left-radius: 10px; }
+    &:last-child { border-top-right-radius: 10px; }
 }
 
 .garage-table td {
-    background-color: white;
-    padding: 14px;
+    background-color: var(--white);
+    padding: 15px 10px;
     text-align: center;
-    border-bottom: 1px solid #eee;
-    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.05);
-    font-size: 14px;
+    border-bottom: none;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    font-size: 0.9em;
+    color: var(--text-dark);
+    vertical-align: middle;
     border-radius: 6px;
 }
 
 .garage-table tr {
-    transition: transform 0.2s ease;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    background-color: transparent;
 }
 
 .garage-table tr:hover {
-    transform: scale(1.01);
+    transform: translateY(-3px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
 }
 
-.garage-table img {
-    width: 60px;
-    height: 60px;
+.garage-table tbody tr td:first-child {
+    border-top-left-radius: 6px;
+    border-bottom-left-radius: 6px;
+}
+
+.garage-table tbody tr td:last-child {
+    border-top-right-radius: 6px;
+    border-bottom-right-radius: 6px;
+}
+
+.garage-table img.garage-logo {
+    width: 50px;
+    height: 50px;
     object-fit: cover;
     border-radius: 50%;
-    border: 2px solid #ddd;
+    border: 3px solid var(--primary-color);
+    box-shadow: 0 0 8px rgba(0, 114, 255, 0.3);
 }
 
-select {
-    padding: 8px 12px;
-    border-radius: 6px;
-    border: 1px solid #ccc;
-    font-size: 14px;
-    background: #f9f9f9;
-    transition: border-color 0.3s ease;
+.status-form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
 }
 
-select:focus {
-    border-color: #007bff;
+.status-select {
+    padding: 10px 14px;
+    border-radius: 8px;
+    border: 1px solid #d0d0d0;
+    font-size: 0.9em;
+    background: var(--white);
+    color: var(--text-dark);
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    width: 100%;
+    max-width: 150px;
+    appearance: none;
+    background-image: url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%230072ff%22%20d%3D%22M287%2C197.3L159.2%2C69.5c-3.2-3.2-8.3-3.2-11.5%2C0L5.4%2C197.3c-3.2%2C3.2-3.2%2C8.3%2C0%2C11.5l15.3%2C15.3c3.2%2C3.2%2C8.3%2C3.2%2C11.5%2C0l118.2-118.2l118.2%2C118.2c3.2%2C3.2%2C8.3%2C3.2%2C11.5%2C0l15.3-15.3C290.2%2C205.6%2C290.2%2C200.5%2C287%2C197.3z%22%2F%3E%3C%2Fsvg%3E');
+    background-repeat: no-repeat;
+    background-position: right 10px top 50%;
+    background-size: 12px auto;
+}
+
+.status-select:focus {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(0, 114, 255, 0.2);
     outline: none;
 }
 
-button {
-    padding: 8px 16px;
-    background-color: #007bff;
+.update-button {
+    padding: 10px 18px;
+    background-color: var(--primary-color);
     border: none;
-    color: white;
-    font-weight: 500;
-    border-radius: 6px;
+    color: var(--white);
+    font-weight: 600;
+    border-radius: 8px;
     cursor: pointer;
-    transition: background-color 0.3s ease;
-    margin-top: 8px;
+    transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.2s ease;
+    margin-top: 0;
+    width: 100%;
+    max-width: 150px;
 }
 
-button:hover {
+.update-button:hover {
     background-color: #0056b3;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 10px rgba(0, 114, 255, 0.3);
 }
 
-.admin-card {
-    background: #ffffff;
-    border-radius: 12px;
-    padding: 20px;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-    overflow-x: auto;
+.status-active {
+    color: #28a745;
+    font-weight: 600;
+}
+
+.status-pending {
+    color: #ffc107;
+    font-weight: 600;
+}
+
+.status-rejected {
+    color: #dc3545;
+    font-weight: 600;
+}
+
+.status-blacklisted {
+    color: #6c757d;
+    font-weight: 600;
+}
+
+.no-garages-message {
+    text-align: center;
+    padding: 30px;
+    font-size: 1.1em;
+    color: #666;
+    background-color: var(--white);
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    margin-top: 20px;
+}
+
+@media (max-width: 1024px) {
+    .garage-table-container {
+        padding: 20px;
+    }
+
+    .garage-table th,
+    .garage-table td {
+        padding: 12px 8px;
+        font-size: 0.85em;
+    }
+
+    .garage-table img.garage-logo {
+        width: 45px;
+        height: 45px;
+    }
+
+    .status-select,
+    .update-button {
+        max-width: 120px;
+        font-size: 0.8em;
+        padding: 8px 10px;
+    }
+}
+
+@media (max-width: 768px) {
+    body {
+        padding-top: 60px;
+    }
+
+    .admin-garages-main-content {
+        padding: 30px 15px;
+    }
+
+    .page-title {
+        font-size: 1.8em;
+        margin-bottom: 30px;
+    }
+
+    .message {
+        width: 100%;
+        padding: 10px 15px;
+    }
+
+    .garage-table-container {
+        padding: 15px;
+    }
+
+    .garage-table thead {
+        display: none;
+    }
+
+    .garage-table, .garage-table tbody, .garage-table tr, .garage-table td {
+        display: block;
+        width: 100%;
+    }
+
+    .garage-table tr {
+        margin-bottom: 20px;
+        border: 1px solid #e0e0e0;
+        border-radius: 12px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+        padding: 15px;
+    }
+
+    .garage-table td {
+        text-align: right;
+        padding-left: 50%;
+        position: relative;
+        border-bottom: 1px solid #eee;
+        border-radius: 0;
+        box-shadow: none;
+    }
+
+    .garage-table td:last-child {
+        border-bottom: none;
+    }
+
+    .garage-table td::before {
+        content: attr(data-label);
+        position: absolute;
+        left: 10px;
+        width: calc(50% - 20px);
+        text-align: left;
+        font-weight: 600;
+        color: var(--dark-blue);
+        font-size: 0.9em;
+    }
+
+    .garage-table td:nth-of-type(1)::before { content: "Logo:"; }
+    .garage-table td:nth-of-type(2)::before { content: "Garage Name:"; }
+    .garage-table td:nth-of-type(3)::before { content: "Owner:"; }
+    .garage-table td:nth-of-type(4)::before { content: "Email:"; }
+    .garage-table td:nth-of-type(5)::before { content: "Status:"; }
+    .garage-table td:nth-of-type(6)::before { content: "Approved:"; }
+    .garage-table td:nth-of-type(7)::before { content: "Actions:"; }
+
+    .garage-table img.garage-logo {
+        margin: 0 auto;
+        display: block;
+    }
+
+    .status-form {
+        flex-direction: row;
+        flex-wrap: wrap;
+        justify-content: center;
+        width: 100%;
+    }
+
+    .status-select, .update-button {
+        width: auto;
+        flex-grow: 1;
+        max-width: none;
+    }
+}
+
+@media (max-width: 480px) {
+    .admin-garages-main-content {
+        padding: 20px 10px;
+    }
+
+    .page-title {
+        font-size: 1.6em;
+    }
+
+    .garage-table td {
+        padding-left: 45%;
+    }
+
+    .garage-table td::before {
+        width: calc(45% - 20px);
+        font-size: 0.85em;
+    }
+
+    .status-form {
+        flex-direction: column;
+    }
 }

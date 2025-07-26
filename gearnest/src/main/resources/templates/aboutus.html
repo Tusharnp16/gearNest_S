@@ -5,18 +5,19 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>About Us - GearNest</title>
+    <link rel="stylesheet" th:href="@{/css/tempheadfoot.css}" />
+    <link rel="stylesheet" th:href="@{/css/tempfooter.css}" />
     <link rel="stylesheet" th:href="@{/css/aboutus.css}" />
-    <link rel="stylesheet" th:href="@{/css/style.css}" />
 </head>
 
 <body>
 
 
-    <header th:replace="~{fragments/header :: header}"></header>
+    <header th:replace="~{fragments/tempheader :: header}"></header>
 
     <main class="about-container">
-    <div class="temp">
-        <section class="about-section">
+        <div class="temp">
+            <section class="about-section">
                 <h2>Our Vision</h2>
                 <p>
                     At <strong>GearNest</strong>, we envision a smarter, more connected ecosystem for vehicle services.
@@ -24,31 +25,55 @@
                     owners
                     and customers with transparency, efficiency, and ease.
                 </p>
-        </section>
+            </section>
 
-        <section class="about-section">
-            <h2>Our Mission</h2>
-            <p>
-                Our mission is to empower garages with a digital presence and streamlined operations. We provide
-                customers
-                with a reliable way to discover, book, and interact with verified garages. From registration to
-                feedback,
-                GearNest simplifies the entire vehicle service journey.
-            </p>
-        </section>
-
-        <section class="about-section">
-            <h2>Our Core Values</h2>
-            <ul>
-                <div class="detailes">
-                    <li><strong>Transparency</strong> – Clear service details, no hidden charges.</li>
-                    <li><strong>Trust</strong> – Verified garages, real customer reviews.</li>
-                    <li><strong>Efficiency</strong> – Instant bookings, real-time updates.</li>
-                    <li><strong>Innovation</strong> – Tech-driven tools to manage and monitor vehicle care.</li>
+            <section class="about-section">
+                <h2>Our Mission</h2>
+                <p>
+                    Our mission is to empower garages with a digital presence and streamlined operations. We provide
+                    customers
+                    with a reliable way to discover, book, and interact with verified garages. From registration to
+                    feedback,
+                    GearNest simplifies the entire vehicle service journey.
+                </p>
+            </section>
+            <section class="about-section">
+                <h2>Our Core Values</h2>
+                <div class="core-values-grid">
+                    <div class="value-card">
+                        <h3>🪞 Transparency</h3>
+                        <p>We keep it crystal clear – no shady pricing or mystery bills. Even our bugs are honest about
+                            their existence.</p>
+                    </div>
+                    <div class="value-card">
+                        <h3>🤝 Trust</h3>
+                        <p>Only verified garages here. If your mechanic says “engine is just a suggestion,” he’s out.
+                        </p>
+                    </div>
+                    <div class="value-card">
+                        <h3>⚡ Efficiency</h3>
+                        <p>No more “we’ll call you back in 5 minutes” lies. We respect your time like it’s the last
+                            episode of your favorite series.</p>
+                    </div>
+                    <div class="value-card">
+                        <h3>🚀 Innovation</h3>
+                        <p>We don’t just follow trends – we upgrade them. Smart tech, real-time updates, and garages
+                            that <em>actually reply</em>.</p>
+                    </div>
+                    <div class="value-card">
+                        <h3>🛠️ Reliability</h3>
+                        <p>Breakdowns happen, but disappearing support? Never. We stick around like that one helpful
+                            friend who actually owns a toolbox.</p>
+                    </div>
+                    <div class="value-card">
+                        <h3>😎 Customer Delight</h3>
+                        <p>We aim for 5-star service with 0-star drama. You ride smooth, we vibe smoother.</p>
+                    </div>
                 </div>
-            </ul>
-        </section>
-    </div>
+            </section>
+
+
+        </div>
         <section class="about-section">
             <h2>Meet Our Team</h2>
             <div class="team">
@@ -75,7 +100,7 @@
         </section>
     </main>
 
-    <footer th:replace="fragments/footer::footer"></footer>
+    <footer th:replace="fragments/tempfooter::footer"></footer>
 
 </body>
 

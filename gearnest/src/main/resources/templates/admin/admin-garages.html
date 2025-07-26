@@ -1,61 +1,73 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
 
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin - Manage Garages</title>
     <link rel="stylesheet" th:href="@{/css/admin-garages.css}" />
-    <link rel="stylesheet" th:href="@{/css/style.css}" />
+    <link rel="stylesheet" th:href="@{/css/tempheadfoot.css}" />
+     <link rel="stylesheet" th:href="@{/css/tempfooter.css}" />
     <link rel="shortcut icon" th:href="@{/images/logo.png}" type="image/x-icon">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
 </head>
 
 <body>
-    <header th:replace="~{fragments/header::header}"></header>
+    <header th:replace="~{fragments/tempheader::header}"></header>
 
-    <section>
-        <h2>All Registered Garages</h2>
-        <div th:if="${success}" class="success" th:text="${success}"></div>
-        <div th:if="${error}" class="error" th:text="${error}"></div>
+    <main class="admin-garages-main-content">
+        <h2 class="page-title">All Registered Garages</h2>
 
-        <table class="garage-table">
-            <thead>
-                <tr>
-                    <th>Logo</th>
-                    <th>Garage Name</th>
-                    <th>Owner</th>
-                    <th>Email</th>
-                    <th>Status</th>
-                    <th>Approved</th>
-                    <th>Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr th:each="garage : ${garages}">
-                    <td><img th:src="@{${garage.logoPath}}" alt="Logo" style="width: 80px;" /></td>
-                    <td th:text="${garage.garageName}">Garage</td>
-                    <td th:text="${garage.ownerName}">Owner</td>
-                    <td th:text="${garage.email}">Email</td>
-                    <td th:text="${garage.status}">Status</td>
-                    <td th:text="${garage.approved ? 'Yes' : 'No'}">Approved</td>
-                    <td>
-                        <form th:action="@{'/admin/garage/' + ${garage.id} + '/update-status'}" method="post">
-                            <select name="status">
-                                <option th:selected="${garage.status == 'Pending'}" value="Pending">Pending</option>
-                                <option th:selected="${garage.status == 'Active'}" value="Active">Approve</option>
-                                <option th:selected="${garage.status == 'Rejected'}" value="Rejected">Reject</option>
-                                <option th:selected="${garage.status == 'Blacklisted'}" value="Blacklisted">Blacklist
-                                </option>
-                            </select>
-                            <button type="submit">Update</button>
-                        </form>
-                    </td>
-                </tr>
-            </tbody>
+        <div th:if="${success}" class="message success" th:text="${success}"></div>
+        <div th:if="${error}" class="message error" th:text="${error}"></div>
 
-        </table>
+        <div class="garage-table-container">
+            <table class="garage-table">
+                <thead>
+                    <tr>
+                        <th>Logo</th>
+                        <th>Garage Name</th>
+                        <th>Owner</th>
+                        <th>Email</th>
+                        <th>Status</th>
+                        <th>Approved</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="garage : ${garages}">
+                        <td><img th:src="@{${garage.logoPath}}" alt="Garage Logo" class="garage-logo" /></td>
+                        <td th:text="${garage.garageName}">Garage Name Placeholder</td>
+                        <td th:text="${garage.ownerName}">Owner Name Placeholder</td>
+                        <td th:text="${garage.email}">Email Placeholder</td>
+                        <td th:text="${garage.status}" th:classappend="'status-' + ${garage.status.toLowerCase()}">
+                            Status Placeholder</td>
+                        <td th:text="${garage.approved ? 'Yes' : 'No'}">Approved Placeholder</td>
+                        <td>
+                            <form th:action="@{'/admin/garage/' + ${garage.id} + '/update-status'}" method="post"
+                                class="status-form">
+                                <select name="status" class="status-select">
+                                    <option th:selected="${garage.status == 'Pending'}" value="Pending">Pending</option>
+                                    <option th:selected="${garage.status == 'Active'}" value="Active">Approve</option>
+                                    <option th:selected="${garage.status == 'Rejected'}" value="Rejected">Reject
+                                    </option>
+                                    <option th:selected="${garage.status == 'Blacklisted'}" value="Blacklisted">
+                                        Blacklist</option>
+                                </select>
+                                <button type="submit" class="update-button">Update</button>
+                            </form>
+                        </td>
+                    </tr>
+                    <tr th:if="${#lists.isEmpty(garages)}">
+                        <td colspan="7" class="no-garages-message">No registered garages found.</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </main>
 
-    </section>
-
-    <footer th:replace="fragments/footer::footer"></footer>
+    <footer th:replace="fragments/tempfooter::footer"></footer>
 
 </body>
 

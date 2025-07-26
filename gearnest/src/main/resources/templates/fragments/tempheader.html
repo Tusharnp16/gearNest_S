@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GearNest</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/tempheadfoot.css}" />
+
+</head>
+
+<body>
+    <header>
+        <nav class="navbar">
+            <div class="navbar-container">
+                <div class="logo">
+                    <a href="/">
+                        
+                      <img th:src="@{/images/ngarage.png}" alt="GearNest Logo">
+                        <span>GearNest</span>
+                    </a>
+                </div>
+                <ul class="menu-items">
+                    <li><a href="/dashboard">Home</a></li>
+                    <li><a href="/about">About</a></li>
+                    <li><a href="/garages">Garages</a></li>
+                    <li><a href="/feedback">Feedback</a></li>
+                    <li><a href="/contact">Contact</a></li>
+                    <li><a href="/login-user">Login</a></li>
+                    <li th:if="${session.role == 'ADMIN'}">
+                        <a href="/dashboard">Admin Panel</a>
+                        <ul class="dropdown-content">
+                            <li><a th:href="@{/admin/garages}">Manage Garages</a></li>
+                            <li><a th:href="@{/admin/users}">Manage Users</a></li>
+                            <li><a th:href="@{/admin/feedback}">View Feedback</a></li>
+                            <li><a th:href="@{/admin/settings}">Settings</a></li>
+                        </ul>
+                    </li>
+                    <li th:if="${session.role == 'GARAGE'}">
+                        <a href="/dashboard">Garage Panel</a>
+                    </li>
+                    <li th:if="${session.role == 'USER'}">
+                        <a href="/dashboard">User Panel</a>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+    </header>
+</body>
+
+</html>
