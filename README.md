@@ -17,7 +17,7 @@
 
 | Home Page | Garage Listings | Admin Panel |
 |:--:|:--:|:--:|
-| ![](https://i.imgur.com/yourHomeImage.png) | ![](https://i.imgur.com/yourGarageImage.png) | ![](https://i.imgur.com/yourAdminImage.png) |
+| ![](https://i.postimg.cc/g0sjsfkB/admin-Garages.png) | ![](https://i.postimg.cc/g0sjsfkB/admin-Garages.png) | ![](https://i.postimg.cc/g0sjsfkB/admin-Garages.png) |
 
 ---
 
@@ -50,5 +50,5 @@
 ### 1. Clone the Repo
 
 ```bash
-git clone https://github.com/your-username/gearnest.git
+git clone https://github.com/Tusharnp16/gearNest_S.git
 cd gearnest
