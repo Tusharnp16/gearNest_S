@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" th:replace="admin/fragments/base::layout(~{::main})">
+
+<!-- Main content will override the fragment in base.html -->
+<main>
+    <div class="head-title">
+        <div class="left">
+            <h1>Dashboard</h1>
+            <ul class="breadcrumb">
+                <li><a href="#">Dashboard</a></li>
+                <li><i class='bx bx-chevron-right'></i></li>
+                <li><a class="active" href="#">Home</a></li>
+            </ul>
+        </div>
+    </div>
+
+    <ul class="box-info">
+        <li>
+            <i class="fas fa-solid fa-users totalNumbers"></i>
+            <span class="text">
+                <h3 th:text="${userCount}"></h3>
+                <p>Total Users</p>
+            </span>
+        </li>
+        <li>
+            <i class="fas fa-screwdriver-wrench totalNumbers"></i>
+            <span class="text">
+                <h3 th:text="${garageCount}"></h3>
+                <p>Total Garages</p>
+            </span>
+        </li>
+        <li>
+            <i class="fa-solid fa-calendar-check totalNumbers"></i>
+            <span class="text">
+                <h3 th:text="${bookingCount}"></h3>
+                <p>Total Booking</p>
+            </span>
+        </li>
+    </ul>
+
+</main>
+
+</html>

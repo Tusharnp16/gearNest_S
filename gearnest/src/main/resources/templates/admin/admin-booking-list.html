@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" th:replace="~{admin/fragments/base::layout(~{::main})}">
+
+<main>
+    <div class="head-title d-flex justify-content-between align-items-center">
+        <div class="left">
+            <h1>Bookings</h1>
+            <ul class="breadcrumb">
+                <li><a href="#">Bookings</a></li>
+                <li><i class='bx bx-chevron-right'></i></li>
+                <li><a class="active" href="#">List</a></li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="table-data mt-4">
+        <div class="card shadow w-100">
+            <div class="d-flex justify-content-between align-items-center">
+                <h3 class="card-title m-0">All Bookings</h3>
+            </div>
+            <div class="card-body">
+                <!-- Empty list fallback -->
+                <div th:if="${#lists.isEmpty(bookingList)}" class="p-4 text-center">
+                    <p>No Bookings available.</p>
+                </div>
+
+                <!-- Feedback table -->
+                <div class="table-responsive" th:if="${not #lists.isEmpty(bookingList)}">
+                    <table id="feedbackTable" class="display nowrap table table-striped dataTables_wrapper"
+                        style="width:100%">
+                        <thead>
+                            <th>#</th>
+                            <th>Customer Name</th>
+                            <th>Phone Number</th>
+                            <!-- <th>Garage Name</th> -->
+                            <th>Service</th>
+                            <th>Booking Date</th>
+                            <th>Booking Time</th>
+                            <th>Request At</th>
+                            <th>Status</th>
+                        </thead>
+                        <tbody>
+                            <tr th:each="booking, stat : ${bookingList}">
+                                <td th:text="${stat.count}">1</td>
+                                <td th:text="${booking.customerName}">Name</td>
+                                <td th:text="${booking.customerPhone}">Phone</td>
+                                <!-- <td th:text="${garageMap[booking.garageId]?.name}">Garage Name</td> -->
+                                <td th:text="${booking.selectedService}">Service</td>
+                                <td th:text="${booking.bookingDate}">Date</td>
+                                <td th:text="${booking.bookingTime}">Time</td>
+                                <td th:text="${#temporals.format(booking.createdAt, 'dd MMM yyyy hh:mm a')}">Request At
+                                </td>
+                                <td th:text="${booking.status}">Status</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+</html>

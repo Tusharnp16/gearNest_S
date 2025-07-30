@@ -7,5 +7,5 @@ import com.example.gearnest.model.GarageServices;
 
 @Repository
 public interface GarageServicesRepository extends JpaRepository<GarageServices, Long> {
-
+    boolean existsByNameIgnoreCase(String name);
 }

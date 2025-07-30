@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" th:replace="~{admin/fragments/base::layout(~{::main})}">
+
+<main>
+    <div class="head-title d-flex justify-content-between align-items-center">
+        <div class="left">
+            <h1>Services</h1>
+            <ul class="breadcrumb">
+                <li><a href="#">Services</a></li>
+                <li><i class='bx bx-chevron-right'></i></li>
+                <li><a class="active" href="#">List</a></li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="table-data mt-4">
+        <div class="card shadow w-100">
+            <div class="d-flex justify-content-between align-items-center">
+                <h3 class="card-title m-0">All Services</h3>
+                <div>
+                    <button class="btn btn-sm btn-outline-primary me-2" data-bs-toggle="modal"
+                        data-bs-target="#addServiceModal"><i class="fas fa-plus me-1"></i>
+                        Add Service
+                    </button>
+                </div>
+            </div>
+            <div class="card-body">
+                <!-- Empty list services -->
+                <div th:if="${#lists.isEmpty(servicesList)}" class="p-4 text-center">
+                    <p>No Services available.</p>
+                </div>
+
+                <!-- Services table -->
+                <div class="table-responsive" th:if="${not #lists.isEmpty(servicesList)}">
+                    <table id="servicesTable" class="display nowrap table table-striped" style="width:100%">
+                        <thead>
+                            <th>#</th>
+                            <th>Service Name</th>
+                            <th>Action</th>
+
+                        </thead>
+                        <tbody>
+                            <tr th:each="service, stat:${servicesList}">
+                                <td th:text="${stat.count}">1</td>
+                                <td style="text-transform: capitalize;" th:text="${service.name}"></td>
+                                <td>
+                                    <button class="btn btn-sm btn-outline-success btn-update-service"
+                                        th:data-id="${service.id}" th:data-name="${service.name}"> <i
+                                            class="fas fa-pen-to-square me-1"></i>
+                                        Update
+                                    </button>
+
+                                    <button class="btn btn-sm btn-outline-danger btn-delete-service"
+                                        th:data-id="${service.id}" th:data-name="${service.name}"> <i
+                                            class="fas fa-trash me-1"></i>
+                                        Delete
+                                    </button>
+
+                                </td>
+
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Service Modal -->
+    <div class="modal fade" id="addServiceModal" tabindex="-1" aria-labelledby="addServiceModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form th:action="@{/admin/services/add}" method="post" th:object="${newService}" id="addServiceForm">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="addServiceModalLabel">Add New Service</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="mb-3">
+                            <label for="serviceName" class="form-label">Service Name</label>
+                            <input type="text" th:field="*{name}" class="form-control" id="serviceName" required />
+                            <small id="serviceNameError" class="text-danger d-none"></small>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn btn-primary" id="submitServiceBtn">Add Service</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Update Service Modal -->
+    <div class="modal fade" id="updateServiceModal" tabindex="-1" aria-labelledby="updateServiceModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form id="updateServiceForm" method="post">
+                    <input type="hidden" id="updateServiceId" name="id">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Update Service</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    </div>
+                    <div class="modal-body">
+                        <label for="updateServiceName" class="form-label">Service Name</label>
+                        <input type="text" class="form-control" id="updateServiceName" name="name" required>
+                        <small id="updateServiceError" class="text-danger d-none"></small>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn btn-primary" id="submitUpdateBtn">Update</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+
+</main>
+<script th:if="${serviceSuccess}">
+    Swal.fire({
+        position: "top-end",
+        icon: "success",
+        title: "Add Service successfully!",
+        showConfirmButton: false,
+        timer: 2000
+    });
+</script>
+
+</html>

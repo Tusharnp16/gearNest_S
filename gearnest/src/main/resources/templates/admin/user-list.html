@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" th:replace="~{admin/fragments/base::layout(~{::main})}">
+
+<main>
+    <div class="head-title d-flex justify-content-between align-items-center">
+        <div class="left">
+            <h1>Users</h1>
+            <ul class="breadcrumb">
+                <li><a href="#">Users</a></li>
+                <li><i class='bx bx-chevron-right'></i></li>
+                <li><a class="active" href="#">List</a></li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="table-data mt-4">
+        <div class="card shadow w-100">
+            <div class="d-flex justify-content-between align-items-center">
+                <h3 class="card-title m-0">All Users</h3>
+            </div>
+            <div class="card-body">
+                <!-- Empty list fallback -->
+                <div th:if="${#lists.isEmpty(userList)}" class="p-4 text-center">
+                    <p>No feedbacks available.</p>
+                </div>
+
+                <!-- Feedback table -->
+                <div class="table-responsive" th:if="${not #lists.isEmpty(userList)}">
+                    <table id="usersTable" class="display nowrap table table-striped" style="width:100%">
+                        <thead>
+                            <th>#</th>
+                            <th>Image</th>
+                            <th>Name</th>
+                            <th>Email</th>
+                            <th>Phone No</th>
+                            <th>State</th>
+                            <th>City</th>
+                            <th>Address</th>
+                        </thead>
+                        <tbody>
+                            <tr th:each="user, stat:${userList}">
+                                <td th:text="${stat.count}">1</td>
+                                <td>
+                                    <img th:src="@{'/images/' + ${user.profilePic}}" alt="Profile pic" width="40"
+                                        height="40" class="rounded-circle" />
+                                </td>
+
+                                <td style="text-transform: capitalize;" th:text="${user.firstName+' '+user.lastName}">
+                                </td>
+                                <td th:text="${user.email}"></td>
+                                <td th:text="${user.phone}"></td>
+                                <td th:text="${user.state.name}"></td>
+                                <td th:text="${user.city.name}"></td>
+                                <td style="text-transform: capitalize;" th:text="${user.address}"></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+</html>

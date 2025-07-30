@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!-- <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 
 <head>
@@ -17,14 +17,13 @@
     </div>
 
     <div style="text-align: right; margin-bottom: 10px;">
-    <a href="/admin/contact/export/excel">
-        <button style="background-color:#4caf50;">Export Excel</button>
-    </a>
-    <a href="/admin/contact/export/pdf">
-        <button style="background-color:#f44336;">Export PDF</button>
-    </a>
-</div>
-
+        <a href="/admin/contact/export/excel">
+            <button style="background-color:#4caf50;">Export Excel</button>
+        </a>
+        <a href="/admin/contact/export/pdf">
+            <button style="background-color:#f44336;">Export PDF</button>
+        </a>
+    </div>
 
     <table>
         <thead>
@@ -66,5 +65,107 @@
     </table>
 
 </body>
+
+</html> -->
+
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" th:replace="~{admin/fragments/base::layout(~{::main})}">
+
+<main>
+    <div class="head-title d-flex justify-content-between align-items-center">
+        <div class="left">
+            <h1 class="mb-1">Contact Us</h1>
+            <ul class="breadcrumb">
+                <li><a href="#">Contact</a></li>
+                <li><i class='bx bx-chevron-right'></i></li>
+                <li><a class="active" href="#">List</a></li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="table-data mt-4">
+        <div class="card shadow w-100">
+            <div style="margin: 10px;">
+                <a href="/admin/contact/filter?type=all">All</a> |
+                <a href="/admin/contact/filter?type=responded">Responded</a> |
+                <a href="/admin/contact/filter?type=unresponded">Unresponded</a>
+            </div>
+            <div class="d-flex justify-content-between align-items-center">
+                <h3 class="card-title m-0">Contact Messages</h3>
+                <div>
+                    <a href="/admin/contact/export/excel" class="btn btn-sm btn-outline-primary me-2">Export Excel</a>
+                    <a href="/admin/contact/export/pdf" class="btn btn-sm btn-outline-danger">Export PDF</a>
+                </div>
+            </div>
+            <div class="card-body">
+
+                <!-- Empty list fallback -->
+                <div th:if="${#lists.isEmpty(contactList)}" class="p-4 text-center">
+                    <p class="text-muted">No Contact Messages available.</p>
+                </div>
+
+                <!-- Contact Us Table -->
+                <div class="table-responsive" th:if="${not #lists.isEmpty(contactList)}">
+                    <table id="contactUsTable" class="table table-bordered table-striped table-hover">
+                        <thead class="table-light">
+                            <tr>
+                                <th>#</th>
+                                <th>Name</th>
+                                <th>Email</th>
+                                <th>Subject</th>
+                                <th>Message</th>
+                                <th>Responded</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:each="contact, stat : ${contactList}">
+                                <td th:text="${stat.count}">1</td>
+                                <td style="text-transform: capitalize;" th:text="${contact.name}"></td>
+                                <td th:text="${contact.email}"></td>
+                                <td style="text-transform: capitalize;" th:text="${contact.subject}"></td>
+                                <td th:text="${contact.message}"></td>
+                                <td>
+                                    <span th:text="${contact.responded} ? '✅' : '⏳'"></span>
+                                </td>
+                                <td>
+                                    <!-- <form th:action="@{/admin/contact/respond-email}" method="post" class="mb-2">
+                                        <input type="hidden" name="id" th:value="${contact.id}" />
+                                        <textarea name="message" class="form-control mb-1" rows="2"
+                                            placeholder="Type your reply..." required></textarea>
+                                        <button type="submit" class="btn btn-sm btn-primary w-100">
+                                            <i class="bx bx-mail-send"></i> Send & Mark Responded
+                                        </button>
+                                    </form> -->
+                                    <form th:id="'respondForm_' + ${contact.id}"
+                                        th:action="@{/admin/contact/respond-email}" method="post" class="mb-2">
+                                        <input type="hidden" name="id" th:value="${contact.id}" />
+                                        <textarea name="message" th:id="'messageInput_' + ${contact.id}"
+                                            class="form-control mb-1" rows="2" placeholder="Type your reply..."
+                                            required></textarea>
+                                        <button type="button" class="btn btn-sm btn-primary w-100 btn-respond-contact"
+                                            th:data-id="${contact.id}"> <!-- type="button" to prevent default -->
+                                            <i class="bx bx-mail-send"></i> Send & Mark Responded
+                                        </button>
+                                    </form>
+
+                                    <form th:id="'deleteContactForm_' + ${contact.id}"
+                                        th:action="@{/admin/contact/delete}" method="post">
+                                        <input type="hidden" name="id" th:value="${contact.id}" />
+                                        <button type="button" class="btn btn-sm btn-danger w-100 btn-delete-contact"
+                                            th:data-id="${contact.id}">
+                                            <i class="bx bx-trash"></i> Delete
+                                        </button>
+                                    </form>
+
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
 
 </html>

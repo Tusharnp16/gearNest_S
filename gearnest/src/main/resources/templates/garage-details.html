@@ -19,7 +19,7 @@
         <div class="garage-info">
             <p><strong>Owner:</strong> <span th:text="${garage.ownerName}"></span></p>
             <p><strong>Email:</strong> <span th:text="${garage.email}"></span></p>
-            <p><strong>Phone:</strong> <span th:text="${garage.phoneNumber}"></span></p>
+            <p><strong>Phone:</strong> <span th:text="${garage.phno}"></span></p>
             <p><strong>Full Address:</strong> <span
                     th:text="${garage.address} + ', ' + ${garage.city} + ', ' + ${garage.state}"></span></p>
             <p><strong>Landmark:</strong> <span th:text="${garage.location}"></span></p>
@@ -32,7 +32,7 @@
             <div th:if="${garage.servicesOffered}">
                 <p><strong>Services Offered:</strong></p>
                 <ul>
-                    <li th:each="service : ${garage.servicesOffered}" th:text="${service}"></li>
+                    <li th:each="service : ${garage.servicesOffered}" th:text="${service.name}"></li>
                 </ul>
             </div>
         </div>
@@ -52,8 +52,7 @@
             <p>Calculating distance from your location...</p>
         </div>
     </div>
-
-    <script>
+    <script th:inline="javascript">
         // Calculate distance using browser location
         function calculateDistance(lat1, lon1, lat2, lon2) {
             const R = 6371; // km
@@ -72,8 +71,9 @@
                 navigator.geolocation.getCurrentPosition(position => {
                     const userLat = position.coords.latitude;
                     const userLon = position.coords.longitude;
-                    const garageLat = parseFloat(/*[[${garage.latitude}]]*/ '0');
-                    const garageLon = parseFloat(/*[[${garage.longitude}]]*/ '0');
+
+                    const garageLat = /*[[${garage.latitude}]]*/ 0;
+                    const garageLon = /*[[${garage.longitude}]]*/ 0;
 
                     const distance = calculateDistance(userLat, userLon, garageLat, garageLon).toFixed(2);
                     document.getElementById("distanceDisplay").innerHTML = `<p><strong>Distance from you:</strong> ${distance} km</p>`;
@@ -85,6 +85,7 @@
             }
         });
     </script>
+
 </body>
 
 </html>

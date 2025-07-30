@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!-- <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <title>Admin - Manage Garages</title>
@@ -45,4 +45,88 @@
         </tbody>
     </table>
 </body>
+</html> -->
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" th:replace="admin/fragments/base::layout(~{::main})">
+
+<main>
+    <div class="head-title">
+        <div class="left">
+            <h1>Garage</h1>
+            <ul class="breadcrumb">
+                <li><a href="#">Garage</a></li>
+                <li><i class='bx bx-chevron-right'></i></li>
+                <li><a class="active" href="#">List</a></li>
+            </ul>
+        </div>
+
+    </div>
+
+    <div class="table-data mt-4">
+        <div class="order">
+            <div class="head">
+                <h3>All Garages</h3>
+            </div>
+            <!-- Empty list fallback -->
+
+            <div th:if="${#lists.isEmpty(garages)}" class="p-4 text-center">
+                <p>No garages found.</p>
+            </div>
+
+            <div class="table-responsive" th:if="${not #lists.isEmpty(garages)}">
+                <table id="garageTable" class="display nowrap table table-striped" style="width:100%">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Logo</th>
+                            <th>Garage Name</th>
+                            <th>Owner</th>
+                            <th>Email</th>
+                            <th>Status</th>
+                            <th>Approved</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="garage, stat : ${garages}">
+                            <td th:text="${stat.count}">1</td>
+                            <td><img th:src="@{${garage.logoPath}}" alt="Logo" width="50" height="50" /></td>
+                            <td style="text-transform: capitalize;" th:text="${garage.garageName}">Garage</td>
+                            <td style="text-transform: capitalize;" th:text="${garage.ownerName}">Owner</td>
+                            <td th:text="${garage.email}">Email</td>
+                            <td>
+                                <span th:switch="${garage.status}">
+                                    <span th:case="'Pending'" class="badge badge-warning">Pending</span>
+                                    <span th:case="'Active'" class="badge badge-success">Active</span>
+                                    <span th:case="'Rejected'" class="badge badge-danger">Rejected</span>
+                                    <span th:case="'Blacklisted'" class="badge badge-dark">Blacklisted</span>
+                                    <span th:case="*" class="badge badge-secondary"
+                                        th:text="${garage.status}">Unknown</span>
+                                </span>
+                            </td>
+                            <td th:text="${garage.approved ? 'Yes' : 'No'}">No</td>
+                            <td>
+                                <form th:action="@{'/admin/garage/' + ${garage.id} + '/update-status'}" method="post"
+                                    class="status-form d-flex flex-column gap-1">
+                                    <select name="status" class="form-select">
+                                        <option value="Pending" th:selected="${garage.status == 'Pending'}">Pending
+                                        </option>
+                                        <option value="Active" th:selected="${garage.status == 'Active'}">Approve
+                                        </option>
+                                        <option value="Rejected" th:selected="${garage.status == 'Rejected'}">Reject
+                                        </option>
+                                        <option value="Blacklisted" th:selected="${garage.status == 'Blacklisted'}">
+                                            Blacklist</option>
+                                    </select>
+                                    <button type="submit" class="btn btn-sm btn-primary btn-update mt-1">Update</button>
+                                </form>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</main>
+
 </html>

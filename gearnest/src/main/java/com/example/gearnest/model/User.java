@@ -25,7 +25,7 @@ public class User {
     private String phone;
     private String email;
     private String password;
-    private String profilePic = "default.jpg"; // default profile picture
+    private String profilePic = "default.png"; // default profile picture
 
     private Boolean isVerified = false;
     private String otp;

@@ -98,7 +98,6 @@ public class PasswordResetService {
         if (resetToken == null || resetToken.isExpired()) {
             return false;
         }
-        System.out.println("##################" + role);
         String encodedPassword = passwordEncoder.encode(newPassword);
 
         switch (role.toUpperCase()) {

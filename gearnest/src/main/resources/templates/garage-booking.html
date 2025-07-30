@@ -1,9 +1,11 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
+
 <head>
     <title>Book Garage Service</title>
     <link rel="stylesheet" th:href="@{/css/booking.css}" />
 </head>
+
 <body>
     <div class="booking-container">
         <h2>Book a Service</h2>
@@ -24,14 +26,22 @@
                 <input type="tel" th:field="*{customerPhone}" placeholder="Your phone number" required />
             </div>
 
-            <div class="form-group">
+            <!-- <div class="form-group">
                 <label for="selectedService">Service</label>
                 <select th:field="*{selectedService}" required>
                     <option value="">-- Select a Service --</option>
                     <option th:each="s : ${garage.servicesOffered}" th:value="${s}" th:text="${s}"></option>
                 </select>
-            </div>
+            </div> -->
 
+            <div class="form-group">
+                <label for="selectedService">Service</label>
+                <select th:field="*{selectedService}" required>
+                    <option value="">-- Select a Service --</option>
+                    <option th:each="s : ${garage.servicesOffered}" th:value="${s.id}" th:text="${s.name}">
+                    </option>
+                </select>
+            </div>
             <div class="form-group">
                 <label for="bookingDate">Date</label>
                 <input type="date" th:field="*{bookingDate}" required />
@@ -49,4 +59,5 @@
         </form>
     </div>
 </body>
+
 </html>

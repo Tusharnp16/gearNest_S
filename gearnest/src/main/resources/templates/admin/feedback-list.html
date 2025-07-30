@@ -1,47 +1,94 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
-<head>
-    <title>Admin Feedback Panel</title>
-    <link rel="stylesheet" th:href="@{/css/admin.css}">
-</head>
-<body>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" th:replace="~{admin/fragments/base::layout(~{::main})}">
 
-<h2 style="text-align:center;">Feedback Management Panel</h2>
+<main>
+    <div class="head-title d-flex justify-content-between align-items-center">
+        <div class="left">
+            <h1>Feedback</h1>
+            <ul class="breadcrumb">
+                <li><a href="#">Feedback</a></li>
+                <li><i class='bx bx-chevron-right'></i></li>
+                <li><a class="active" href="#">List</a></li>
+            </ul>
+        </div>
+    </div>
 
-<table>
-    <thead>
-        <tr>
-            <th>ID</th>
-            <th>Name</th>
-            <th>Rating</th>
-            <th>Message</th>
-            <th>Reviewed</th>
-            <th>Actions</th>
-        </tr>
-    </thead>
-    <tbody>
-        <tr th:each="feedback : ${feedbackList}">
-            <td th:text="${feedback.id}"></td>
-            <td th:text="${feedback.name}"></td>
-            <td th:text="${feedback.rating}"></td>
-            <td th:text="${feedback.message}"></td>
-            <td>
-                <form th:action="@{/admin/feedback/update}" method="post">
-                    <input type="hidden" name="id" th:value="${feedback.id}" />
-                    <input type="checkbox" name="reviewed" value="true"
-                           th:checked="${feedback.reviewed}"
-                           onchange="this.form.submit()" />
-                </form>
-            </td>
-            <td>
-                <form th:action="@{/admin/feedback/delete}" method="post" onsubmit="return confirm('Are you sure?');">
-                    <input type="hidden" name="id" th:value="${feedback.id}" />
-                    <button type="submit">Delete</button>
-                </form>
-            </td>
-        </tr>
-    </tbody>
-</table>
+    <div class="table-data mt-4">
+        <div class="card shadow w-100">
+            <div class="d-flex justify-content-between align-items-center">
+                <h3 class="card-title m-0">All Feedbacks</h3>
+            </div>
+            <div class="card-body">
+                <!-- Empty list fallback -->
+                <div th:if="${#lists.isEmpty(feedbackList)}" class="p-4 text-center">
+                    <p>No feedbacks available.</p>
+                </div>
 
-</body>
+                <!-- Feedback table -->
+                <div class="table-responsive" th:if="${not #lists.isEmpty(feedbackList)}">
+                    <table id="feedbackTable" class="display nowrap table table-striped dataTables_wrapper"
+                        style="width:100%">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Name</th>
+                                <th>Rating</th>
+                                <th>Message</th>
+                                <th>Reviewed</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:each="feedback, stat : ${feedbackList}">
+                                <td th:text="${stat.count}">1</td>
+                                <td th:text="${feedback.name}">Name</td>
+                                <td th:text="${feedback.rating}">Rating</td>
+                                <td th:text="${feedback.message}">Message</td>
+                                <td>
+                                    <!-- <form th:action="@{/admin/feedback/update}" method="post">
+                                        <div class="form-check form-switch">
+                                            <input class="form-check-input" type="checkbox" name="reviewed" value="true"
+                                                id="reviewedSwitch__${feedback.id}" th:checked="${feedback.reviewed}"
+                                                onchange="this.form.submit()" />
+                                            <label class="form-check-label"
+                                                th:for="'reviewedSwitch__' + ${feedback.id}">Reviewed</label>
+                                        </div>
+                                    </form> -->
+
+                                    <form th:action="@{/admin/feedback/update}" method="post">
+                                        <!-- Ensure this is included -->
+                                        <input type="hidden" name="id" th:value="${feedback.id}" />
+
+                                        <!-- Hidden fallback in case checkbox is unchecked -->
+                                        <input type="hidden" name="reviewed" value="false" />
+
+                                        <div class="form-check form-switch">
+                                            <input class="form-check-input" type="checkbox" name="reviewed" value="true"
+                                                th:checked="${feedback.reviewed}"
+                                                th:id="'reviewedSwitch__' + ${feedback.id}"
+                                                onchange="this.form.submit()" />
+                                            <label class="form-check-label"
+                                                th:for="'reviewedSwitch__' + ${feedback.id}">Reviewed</label>
+                                        </div>
+                                    </form>
+                                </td>
+                                <td>
+                                    <form th:id="'deleteForm_' + ${feedback.id}" th:action="@{/admin/feedback/delete}"
+                                        method="post">
+                                        <input type="hidden" name="id" th:value="${feedback.id}" />
+                                        <button type="button" class="btn btn-sm btn-danger btn-delete-feedback"
+                                            th:data-id="${feedback.id}"> <i class="bx bx-trash"></i> Delete
+                                        </button>
+                                    </form>
+
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
 </html>

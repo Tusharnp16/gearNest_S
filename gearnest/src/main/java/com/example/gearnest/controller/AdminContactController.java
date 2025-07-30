@@ -7,12 +7,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+// import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.ui.Model;
-// import org.springframework.web.bind.annotation.*;
 
 import com.example.gearnest.model.ContactMessage;
 // import com.example.gearnest.model.Feedback;
@@ -34,6 +34,9 @@ public class AdminContactController {
 
     @GetMapping
     public String listMessages(Model model) {
+        model.addAttribute("title", "-Contact us");
+
+        model.addAttribute("activePage", "contact-us");
         model.addAttribute("contactList", messageRepo.findAll());
         return "admin/contact-list";
     }
@@ -87,7 +90,7 @@ public class AdminContactController {
         return "admin/contact-list";
     }
 
-     @GetMapping("/export/excel")
+    @GetMapping("/export/excel")
     public void exportToExcel(HttpServletResponse response) throws IOException {
         response.setContentType("application/octet-stream");
         String headerKey = "Content-Disposition";
