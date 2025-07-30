@@ -4,9 +4,11 @@
 <head>
     <title>Admin - Contact Messages</title>
     <link rel="stylesheet" th:href="@{/css/admin.css}">
+    <link rel="stylesheet" th:href="@{/css/style.css}" />
 </head>
 
 <body>
+    <header th:replace="~{fragments/header::header}"></header>
 
     <h2 style="text-align:center;">Contact Messages Panel</h2>
 
@@ -24,6 +26,10 @@
             <button style="background-color:#f44336;">Export PDF</button>
         </a>
     </div>
+<<<<<<< HEAD
+=======
+
+>>>>>>> a332c5f8ddbd0f37537bb2cff6a96f14209117dd
 
     <table>
         <thead>
@@ -50,8 +56,6 @@
                 <td>
                     <form th:action="@{/admin/contact/respond-email}" method="post" style="margin-bottom: 5px;">
                         <input type="hidden" name="id" th:value="${contact.id}" />
-                        <textarea name="message" placeholder="Type your reply..." required
-                            style="width: 100%; height: 60px;"></textarea>
                         <button type="submit">Send & Mark Responded</button>
                     </form>
                     <form th:action="@{/admin/contact/delete}" method="post"
@@ -63,6 +67,7 @@
             </tr>
         </tbody>
     </table>
+    <footer th:replace="~{fragments/footer::footer}"></footer>
 
 </body>
 

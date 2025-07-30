@@ -16,12 +16,12 @@
                 <p>Login</p>
             </div>
 
-            <form th:action="@{/}" method="post">
+            <form th:action="@{/login-user}" method="post">
                 <div class="user_details">
                     <div class="role">
-                        <input type="radio" name="role" id="radio_1" value="admin">
-                        <input type="radio" name="role" id="radio_2" value="garage">
-                        <input type="radio" name="role" id="radio_3" value="user">
+                        <input type="radio" name="role" id="radio_1" value="ADMIN">
+                        <input type="radio" name="role" id="radio_2" value="GARAGE">
+                        <input type="radio" name="role" id="radio_3" value="USER">
 
                         <div class="category">
                             <label for="radio_1">
@@ -40,7 +40,7 @@
                     </div>
                     <div class="input_box">
                         <label for="email">Email</label>
-                        <input type="email" id="email" name="username" placeholder="Enter your email" required>
+                        <input type="email" id="email" name="email" placeholder="Enter your email" required>
                     </div>
 
                     <div class="input_box">

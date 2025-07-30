@@ -1,33 +1,33 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>GearNest</title>
-    <link rel="stylesheet" th:href="@{/css/style.css}" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/tempheadfoot.css}" />
+
 </head>
 
 <body>
     <header>
         <nav class="navbar">
-            <div class="navbar-container container">
-                <input type="checkbox" name="" id="">
-                <div class="hamburger-lines">
-                    <span class="line line1"></span>
-                    <span class="line line2"></span>
-                    <span class="line line3"></span>
+            <div class="navbar-container">
+                <div class="logo">
+                    <a href="/">
+                        
+                      <img th:src="@{/images/ngarage.png}" alt="GearNest Logo">
+                        <span>GearNest</span>
+                    </a>
                 </div>
                 <ul class="menu-items">
                     <li><a href="/dashboard">Home</a></li>
                     <li><a href="/about">About</a></li>
-<<<<<<< HEAD
-                    <li><a href="#">Category</a></li>
-                    <li><a href="#">Menu</a></li>
-=======
                     <li><a href="/garages">Garages</a></li>
                     <li><a href="/feedback">Feedback</a></li>
->>>>>>> a332c5f8ddbd0f37537bb2cff6a96f14209117dd
                     <li><a href="/contact">Contact</a></li>
                     <li><a href="/login-user">Login</a></li>
                     <li th:if="${session.role == 'ADMIN'}">
@@ -45,16 +45,10 @@
                     <li th:if="${session.role == 'USER'}">
                         <a href="/dashboard">User Panel</a>
                     </li>
-
                 </ul>
-                <div class="logo">
-                    <a href="/"><img th:src="@{/images/logo.png}" alt="" srcset=""><span>GearNest</span></a>
-                </div>
-
             </div>
         </nav>
     </header>
-    <script src="script.js"></script>
 </body>
 
 </html>
