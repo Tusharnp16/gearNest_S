@@ -11,8 +11,8 @@ public class HomeController {
         return "dashboard";
     }
 
-    @GetMapping("/")
-    public String Home() {
-        return "dashboard";
-    }
+    // @GetMapping("/")
+    // public String Home() {
+    // return "dashboard";
+    // }
 }

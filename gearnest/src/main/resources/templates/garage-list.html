@@ -8,14 +8,19 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
         integrity="sha512-..." crossorigin="anonymous" referrerpolicy="no-referrer" />
 
+    <!-- <link rel="stylesheet" th:href="@{/css/style.css}"> -->
+    <!-- <link rel="stylesheet" th:href="@{/css/garage-list.css}"> -->
+    <!-- <link rel="stylesheet" th:href="@{/css/admin-garages.css}" /> -->
+
     <link rel="stylesheet" th:href="@{/css/style.css}">
     <link rel="stylesheet" th:href="@{/css/garage-list.css}">
-    <link rel="stylesheet" th:href="@{/css/admin-garages.css}" />
     <link rel="shortcut icon" th:href="@{/images/logo.png}" type="image/x-icon">
 </head>
 
 <body>
     <header th:replace="~{fragments/header::header}"></header>
+
+    <br><br><br><br>
 
     <h2 style="text-align: center;">All Registered Garages</h2>
 
@@ -32,11 +37,20 @@
         <!-- Details section -->
         <div class="garage-details">
             <h3 th:text="${garage.garageName}">Garage Name</h3>
-            <p><strong>Location:</strong> <span th:text="${garage.city + ', ' + garage.state}">City, State</span></p>
+            <p><strong>Location:</strong> <span th:text="${garage.city + ', ' + garage.state}">City, State</span>
+            </p>
             <p><strong>Landmark:</strong> <span th:text="${garage.location}">Location</span></p>
             <p><strong>Opening Hours:</strong> <span th:text="${garage.openingHours}">9AM - 6PM</span></p>
             <p><strong>Visit Charge:</strong> ₹<span th:text="${garage.price}">0</span></p>
-            <p><strong>Services:</strong> <span th:text="${garage.servicesOffered}">None</span></p>
+            <!-- <p><strong>Services:</strong> <span th:text="${garage.servicesOffered}">None</span></p> -->
+            <p>
+                <strong>Services:</strong>
+                <span th:each="service, iterStat : ${garage.servicesOffered}">
+                    <span th:text="${service.name}"></span><span th:if="${!iterStat.last}">, </span>
+                </span>
+            </p>
+
+
 
             <!-- ⭐ Rating with stars -->
             <p><strong>⭐ Rating:</strong>

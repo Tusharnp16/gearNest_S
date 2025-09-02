@@ -1,7 +1,6 @@
 package com.example.gearnest.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -11,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import com.example.gearnest.repository.AdminRepository;
 import com.example.gearnest.repository.GarageRepository;
 import com.example.gearnest.repository.UserRepository;
+
 import jakarta.servlet.http.HttpSession;
 
 @Controller
@@ -22,8 +22,9 @@ public class Login {
     private GarageRepository garageRepo;
     @Autowired
     private UserRepository userRepo;
-    @Autowired
-    private BCryptPasswordEncoder encoder;
+
+    // @Autowired
+    // private BCryptPasswordEncoder encoder;
 
     @GetMapping("/")
     public String redirectToLogin() {
