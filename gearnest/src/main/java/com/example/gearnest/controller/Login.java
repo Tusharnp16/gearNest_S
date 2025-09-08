@@ -26,10 +26,10 @@ public class Login {
     // @Autowired
     // private BCryptPasswordEncoder encoder;
 
-    @GetMapping("/")
-    public String redirectToLogin() {
-        return "redirect:/login-user";
-    }
+    // @GetMapping("/")
+    // public String redirectToLogin() {
+    // return "redirect:/login-user";
+    // }
 
     @GetMapping("/login-user")
     public String showLoginForm(Model model) {
