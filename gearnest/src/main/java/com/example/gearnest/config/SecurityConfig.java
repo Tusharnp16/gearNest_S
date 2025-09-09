@@ -1,5 +1,4 @@
 package com.example.gearnest.config;
-
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -31,17 +30,23 @@ public class SecurityConfig {
     }
 
     // ✅ Restrict access to admin URLs
+
+    // .formLogin(Customizer.withDefaults())
+
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/admin/**").hasRole("ADMIN") 
-                        .anyRequest().permitAll()
-                )
-                .formLogin(Customizer.withDefaults()) 
-                .logout(logout -> logout.permitAll()); 
+                        .requestMatchers("/admin/**").hasRole("ADMIN")
+                        .anyRequest().permitAll())
+                .formLogin(form -> form
+                        .loginPage("/admin/dashboard")
+                        .defaultSuccessUrl("/admin/dashboard") // 👈 custom login page
+                        .permitAll())
+                .logout(logout -> logout.permitAll());
 
         return http.build();
     }
+
 }
