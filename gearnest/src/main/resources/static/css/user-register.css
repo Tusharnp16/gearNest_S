@@ -131,7 +131,7 @@ section .container {
     color: red;
 }
 
-
+/* 
 .input_box input[type="text"],
 input[type="email"],
 input[type="password"],
@@ -147,9 +147,27 @@ select {
     background-color: #f6f8fa;
     font-family: 'Poppins', sans-serif;
     transition: all 120ms ease-out 0s;
+} */
+
+.input_box input[type="text"],
+input[type="email"],
+input[type="password"],
+select {
+    width: 100%;
+    padding: 0.8rem;
+    border: 2px solid var(--color-gray-300);
+    border-radius: var(--border-radius-lg);
+    box-sizing: border-box;
+    transition: var(--transition-fast);
 }
 
+.input_box input:focus {
+    outline: none;
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 3px rgba(243, 122, 101, 0.2);
+}
 
+/* 
 .input_box input[type="text"],
 input[type="email"],
 input[type="password"],
@@ -157,7 +175,7 @@ select:focus,
 textarea,
 select:valid {
     box-shadow: 0px 0px 0px 2px #AC8ECE;
-}
+} */
 
 
 form .gender {
@@ -261,4 +279,16 @@ form .gender {
     .gender .category {
         flex-direction: column;
     }
+}
+
+
+.scroll-animate {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+}
+
+.scroll-animate.is-visible {
+    opacity: 1;
+    transform: translateY(0);
 }

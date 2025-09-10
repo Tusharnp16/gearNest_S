@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <title>GearNest - Profile</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}" />
+    <link rel="stylesheet" th:href="@{/css/myprofile.css}" />
+    <!-- Google Fonts: Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="shortcut icon" th:href="@{/images/logo.png}" type="image/x-icon">
+</head>
+
+<body>
+    <header th:replace="~{fragments/header::header}"></header>
+    <main>
+        <section class="page-section">
+            <div class="container">
+                <div class="profile-wrapper">
+                    <aside class="profile-sidebar scroll-animate">
+                        <div class="profile-picture-container">
+                            <img src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=150&h=150&fit=crop&q=80"
+                                alt="User Profile Picture" class="profile-picture" id="profile-picture">
+                            <input type="file" id="profile-picture-input" accept="image/*" style="display: none;">
+                            <div class="edit-icon" id="edit-icon">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                    stroke-width="1.5" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                        d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L6.832 19.82a4.5 4.5 0 01-1.897 1.13l-2.685.8.8-2.685a4.5 4.5 0 011.13-1.897L16.863 4.487zm0 0L19.5 7.125" />
+                                </svg>
+                            </div>
+                        </div>
+                        <h2>John Doe</h2>
+                        <p>john.doe@example.com</p>
+                    </aside>
+                    <div class="profile-content scroll-animate" style="transition-delay: 0.1s;">
+                        <form id="profile-form">
+                            <h3>Personal Information</h3>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="firstName">First Name</label>
+                                    <input type="text" id="firstName" value="John">
+                                    <div class="error-message" id="firstNameError"></div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="lastName">Last Name</label>
+                                    <input type="text" id="lastName" value="Doe">
+                                    <div class="error-message" id="lastNameError"></div>
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="email">Email Address</label>
+                                    <input type="email" id="email" value="john.doe@example.com">
+                                    <div class="error-message" id="emailError"></div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="phone">Phone Number</label>
+                                    <input type="text" id="phone" value="+91 98765 43210">
+                                    <div class="error-message" id="phoneError"></div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="address">Address</label>
+                                <input type="text" id="address" value="123 Auto Street, Car City">
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="state">State</label>
+                                    <select id="state"></select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="city">City</label>
+                                    <select id="city"></select>
+                                </div>
+                            </div>
+
+                            <div class="form-actions">
+                                <button type="submit" class="btn btn-primary" style="width: 100%;">Save Changes</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+    <footer th:replace="~{fragments/footer::footer}"></footer>
+
+    <script th:src="@{/javascript/script.js}"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) { entry.target.classList.add('is-visible'); }
+                });
+            }, { threshold: 0.1 });
+            document.querySelectorAll('.scroll-animate').forEach(el => observer.observe(el));
+
+            const editIcon = document.getElementById('edit-icon');
+            const profilePictureInput = document.getElementById('profile-picture-input');
+            const profilePicture = document.getElementById('profile-picture');
+
+            if (editIcon && profilePictureInput) {
+                editIcon.addEventListener('click', () => {
+                    profilePictureInput.click();
+                });
+
+                profilePictureInput.addEventListener('change', (event) => {
+                    const file = event.target.files[0];
+                    if (file) {
+                        const reader = new FileReader();
+                        reader.onload = (e) => {
+                            if (profilePicture) {
+                                profilePicture.src = e.target.result;
+                            }
+                        };
+                        reader.readAsDataURL(file);
+                    }
+                });
+            }
+
+            // --- State and City Data ---
+            const locationData = {
+                "Gujarat": ["Surat", "Ahmedabad", "Vadodara", "Rajkot"],
+                "Maharashtra": ["Mumbai", "Pune", "Nagpur", "Nashik"],
+                "Rajasthan": ["Jaipur", "Jodhpur", "Udaipur", "Kota"],
+                "Karnataka": ["Bengaluru", "Mysuru", "Mangaluru", "Hubballi"]
+            };
+
+            const stateSelect = document.getElementById('state');
+            const citySelect = document.getElementById('city');
+
+            // Populate states
+            Object.keys(locationData).forEach(state => {
+                const option = document.createElement('option');
+                option.value = state;
+                option.textContent = state;
+                stateSelect.appendChild(option);
+            });
+
+            // Function to update cities based on selected state
+            const updateCities = () => {
+                const selectedState = stateSelect.value;
+                citySelect.innerHTML = ''; // Clear existing options
+
+                if (selectedState && locationData[selectedState]) {
+                    locationData[selectedState].forEach(city => {
+                        const option = document.createElement('option');
+                        option.value = city;
+                        option.textContent = city;
+                        citySelect.appendChild(option);
+                    });
+                }
+            };
+
+            // Set default values and populate cities
+            stateSelect.value = "Gujarat";
+            updateCities();
+            citySelect.value = "Surat";
+
+            // Event listener for state change
+            stateSelect.addEventListener('change', updateCities);
+
+            // --- Form Validation ---
+            const profileForm = document.getElementById('profile-form');
+
+            const firstNameInput = document.getElementById('firstName');
+            const lastNameInput = document.getElementById('lastName');
+            const emailInput = document.getElementById('email');
+            const phoneInput = document.getElementById('phone');
+
+            const clearErrors = () => {
+                document.querySelectorAll('.error-message').forEach(el => el.textContent = '');
+                document.querySelectorAll('.input-error').forEach(el => el.classList.remove('input-error'));
+            };
+
+            const showError = (inputElement, message) => {
+                inputElement.classList.add('input-error');
+                const errorElement = document.getElementById(inputElement.id + 'Error');
+                if (errorElement) {
+                    errorElement.textContent = message;
+                }
+            };
+
+            profileForm.addEventListener('submit', (event) => {
+                event.preventDefault();
+                clearErrors();
+                let isValid = true;
+
+                // First Name Validation
+                if (firstNameInput.value.trim() === '') {
+                    showError(firstNameInput, 'First name is required.');
+                    isValid = false;
+                }
+
+                // Last Name Validation
+                if (lastNameInput.value.trim() === '') {
+                    showError(lastNameInput, 'Last name is required.');
+                    isValid = false;
+                }
+
+                // Email Validation
+                const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                if (!emailRegex.test(emailInput.value.trim())) {
+                    showError(emailInput, 'Please enter a valid email address.');
+                    isValid = false;
+                }
+
+                // Phone Validation (simple 10-digit check for India)
+                const phoneRegex = /^[6-9]\d{9}$/;
+                if (!phoneRegex.test(phoneInput.value.trim().replace('+91', ''))) {
+                    showError(phoneInput, 'Please enter a valid 10-digit phone number.');
+                    isValid = false;
+                }
+
+                if (isValid) {
+                    console.log('Profile updated successfully!');
+                    // In a real application, you would send the data to a server here.
+                }
+            });
+        });
+    </script>
+</body>
+
+</html>

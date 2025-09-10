@@ -17,7 +17,7 @@
     <header th:replace="~{fragments/header::header}"></header>
     <main>
         <div class="login-container">
-            <div class="login-form">
+            <div class="login-form scroll-animate">
                 <h1>Login</h1>
                 <form id="login-form" th:action="@{/login-user}" method="post">
                     <div class="role-selector">
@@ -71,6 +71,15 @@
     <script>
 
         document.addEventListener('DOMContentLoaded', () => {
+
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) { entry.target.classList.add('is-visible'); }
+                });
+            }, { threshold: 0.1 });
+            document.querySelectorAll('.scroll-animate').forEach(el => observer.observe(el));
+
+
             const passwordInput = document.getElementById('password');
             const showPasswordCheckbox = document.getElementById('show-password-checkbox');
 

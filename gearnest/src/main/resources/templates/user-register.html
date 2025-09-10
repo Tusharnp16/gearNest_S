@@ -25,9 +25,9 @@
 
         #password-tooltip {
             position: absolute;
-            background: #f8f9fa;
+            background: #FFFBF5;
             color: #333;
-            border: 1px solid #ccc;
+            border: 1px solid #333;
             padding: 8px;
             border-radius: 5px;
             font-size: 12px;
@@ -42,7 +42,7 @@
     <header th:replace="~{fragments/header::header}"></header>
     <main>
         <section>
-            <div class="container">
+            <div class="container scroll-animate">
                 <div class="title">
                     <p>Register</p>
                 </div>
@@ -142,7 +142,17 @@
     <script th:src="@{/javascript/script.js}"></script>
 
     <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) { entry.target.classList.add('is-visible'); }
+                });
+            }, { threshold: 0.1 });
+            document.querySelectorAll('.scroll-animate').forEach(el => observer.observe(el));
+        });
+
         $(document).ready(function () {
+
             const nameRegex = /^[A-Za-z]{2,30}$/;
             const phoneRegex = /^[0-9]{10}$/;
             const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
