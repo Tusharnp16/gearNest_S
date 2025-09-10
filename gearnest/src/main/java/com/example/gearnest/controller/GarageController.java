@@ -147,6 +147,6 @@ public class GarageController {
     @GetMapping("/garage/dashboard")
     public String dashboard(Model model) {
         // model.addAttribute();
-        return "garage/garage-dashboard";
+        return "dashboard";
     }
 }

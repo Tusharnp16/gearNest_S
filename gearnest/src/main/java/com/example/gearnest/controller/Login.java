@@ -35,6 +35,14 @@ public class Login {
     public String showLoginForm(Model model) {
         return "login-user"; // this should match your login-user.html template file
     }
+    
+    @GetMapping("/login")
+    public String loginPage() {
+        return "login-user"; // login.html render karega
+    }
+
+
+
 
     @PostMapping("/login-user")
     public String login(@RequestParam String email,

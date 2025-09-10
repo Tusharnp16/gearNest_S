@@ -11,3 +11,4 @@ public class GearnestApplication {
 		SpringApplication.run(GearnestApplication.class, args);
 	}
 }
+
