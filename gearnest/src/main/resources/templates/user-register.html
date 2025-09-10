@@ -7,6 +7,11 @@
     <link rel="stylesheet" th:href="@{/css/style.css}" />
     <link rel="stylesheet" th:href="@{/css/user-register.css}" />
 
+    <!-- Google Fonts: Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
     <style>
         .error-message {
             color: red;
@@ -35,100 +40,107 @@
 
 <body>
     <header th:replace="~{fragments/header::header}"></header>
-    <section>
-        <div class="container">
-            <div class="title">
-                <p>Register</p>
-            </div>
-            <form id="registerForm" method="post" autocomplete="off">
-                <div class="user_details">
-                    <div class="input_box" style="width: calc(100% / 2 - 20px);">
-                        <label for="firstname">First Name:</label>
-                        <input type="text" id="firstname" name="firstName" placeholder="Enter your first name"
-                            autocomplete="off" />
-                        <span class="error-message" id="firstnameError"></span>
-                    </div>
-                    <div class="input_box" style="width: calc(100% / 2 - 20px);">
-                        <label for="lastname">Last Name:</label>
-                        <input type="text" id="lastname" name="lastName" placeholder="Enter your last name"
-                            autocomplete="off" />
-                        <span class="error-message" id="lastnameError"></span>
-                    </div>
-                    <div class="input_box">
-                        <label>Address:</label>
-                        <input type="text" id="address" name="address" placeholder="Enter your address"
-                            autocomplete="off" />
-                        <span class="error-message" id="addressError"></span>
-                    </div>
-                    <div class="input_box" style="width: calc(100% / 2 - 20px);">
-                        <label>State</label>
-                        <select name="stateId" id="state">
-                            <option value="">Select</option>
-                        </select>
-                        <span class="error-message" id="stateError"></span>
-                    </div>
-                    <div class="input_box" style="width: calc(100% / 2 - 20px);">
-                        <label>City</label>
-                        <select name="cityId" id="city">
-                            <option value="">Select</option>
-                        </select>
-                        <span class="error-message" id="cityError"></span>
-                    </div>
-                    <div class="input_box">
-                        <label for="phno">Phone no:</label>
-                        <input type="text" id="phno" name="phone" placeholder="Enter your phone no"
-                            autocomplete="off" />
-                        <span class="error-message" id="phnoError"></span>
-                    </div>
-                    <div class="input_box">
-                        <label for="email">Email:</label>
-                        <input type="email" id="email" name="email" placeholder="Enter your Email" autocomplete="off" />
-                        <span class="error-message" id="emailError"></span>
-                    </div>
-                    <div class="input_box" style="width: calc(100% / 2 - 20px);">
-                        <label for="otp">OTP:</label>
-                        <input type="text" id="otp" name="otp" placeholder="Enter your OTP" autocomplete="off" />
-                        <span class="error-message" id="otpError"></span>
-                    </div>
-                    <div class="input_box" style="width: calc(100% / 2 - 20px);margin-top: 20px;">
-                        <button type="button" id="generateOtp" class="btn btn-outline-primary">Generate OTP</button><br>
-                        <p id="resendText" style="display: none;color: #555;">
-                            You can resend OTP in <span id="countdown">120</span>
-                        </p>
-                    </div>
-                    <div class="input_box">
-                        <label for="pass">Password</label>
-                        <input type="password" id="pass" name="password" placeholder="Enter your password"
-                            autocomplete="new-password" />
-                        <span class="error-message" id="passError"></span>
-                    </div>
-                    <div class="input_box">
-                        <label for="confirmPass">Confirm Password</label>
-                        <input type="password" id="confirmPass" placeholder="Confirm your password"
-                            autocomplete="new-password" />
-                        <span class="error-message" id="confirmPassError"></span>
-                    </div>
-                    <div class="input_box" style="display: flex;">
-                        <input type="checkbox" id="terms" style="margin-right: 10px;cursor: pointer;">
-                        <label for="terms">I agree to the <a href="#">Terms and Conditions</a></label>
-                    </div>
+    <main>
+        <section>
+            <div class="container">
+                <div class="title">
+                    <p>Register</p>
                 </div>
-                <div class="reg_btn">
-                    <input type="submit" value="Register">
-                </div>
-                <div class="user_details_login">
-                    <div class="input_box" style="text-align: center;">
-                        <p>Have already an account? <a href="/login" style="text-decoration: none;">Login</a></p>
+                <form id="registerForm" method="post" autocomplete="off">
+                    <div class="user_details">
+                        <div class="input_box" style="width: calc(100% / 2 - 20px);">
+                            <label for="firstname">First Name:</label>
+                            <input type="text" id="firstname" name="firstName" placeholder="Enter your first name"
+                                autocomplete="off" />
+                            <span class="error-message" id="firstnameError"></span>
+                        </div>
+                        <div class="input_box" style="width: calc(100% / 2 - 20px);">
+                            <label for="lastname">Last Name:</label>
+                            <input type="text" id="lastname" name="lastName" placeholder="Enter your last name"
+                                autocomplete="off" />
+                            <span class="error-message" id="lastnameError"></span>
+                        </div>
+                        <div class="input_box">
+                            <label>Address:</label>
+                            <input type="text" id="address" name="address" placeholder="Enter your address"
+                                autocomplete="off" />
+                            <span class="error-message" id="addressError"></span>
+                        </div>
+                        <div class="input_box" style="width: calc(100% / 2 - 20px);">
+                            <label>State</label>
+                            <select name="stateId" id="state">
+                                <option value="">Select</option>
+                            </select>
+                            <span class="error-message" id="stateError"></span>
+                        </div>
+                        <div class="input_box" style="width: calc(100% / 2 - 20px);">
+                            <label>City</label>
+                            <select name="cityId" id="city">
+                                <option value="">Select</option>
+                            </select>
+                            <span class="error-message" id="cityError"></span>
+                        </div>
+                        <div class="input_box">
+                            <label for="phno">Phone no:</label>
+                            <input type="text" id="phno" name="phone" placeholder="Enter your phone no"
+                                autocomplete="off" />
+                            <span class="error-message" id="phnoError"></span>
+                        </div>
+                        <div class="input_box">
+                            <label for="email">Email:</label>
+                            <input type="email" id="email" name="email" placeholder="Enter your Email"
+                                autocomplete="off" />
+                            <span class="error-message" id="emailError"></span>
+                        </div>
+                        <div class="input_box" style="width: calc(100% / 2 - 20px);">
+                            <label for="otp">OTP:</label>
+                            <input type="text" id="otp" name="otp" placeholder="Enter your OTP" autocomplete="off" />
+                            <span class="error-message" id="otpError"></span>
+                        </div>
+                        <div class="input_box" style="width: calc(100% / 2 - 20px);margin-top: 20px;">
+                            <button type="button" id="generateOtp" class="btn btn-outline-primary">Generate
+                                OTP</button><br>
+                            <p id="resendText" style="display: none;color: #555;">
+                                You can resend OTP in <span id="countdown">120</span>
+                            </p>
+                        </div>
+                        <div class="input_box">
+                            <label for="pass">Password</label>
+                            <input type="password" id="pass" name="password" placeholder="Enter your password"
+                                autocomplete="new-password" />
+                            <span class="error-message" id="passError"></span>
+                        </div>
+                        <div class="input_box">
+                            <label for="confirmPass">Confirm Password</label>
+                            <input type="password" id="confirmPass" placeholder="Confirm your password"
+                                autocomplete="new-password" />
+                            <span class="error-message" id="confirmPassError"></span>
+                        </div>
+                        <div class="input_box" style="display: flex;">
+                            <input type="checkbox" id="terms" style="margin-right: 10px;cursor: pointer;">
+                            <label for="terms">I agree to the <a href="#">Terms and Conditions</a></label>
+                        </div>
                     </div>
-                </div>
-            </form>
+                    <div class="reg_btn">
+                        <input type="submit" value="Register">
+                    </div>
+                    <div class="user_details_login">
+                        <div class="input_box" style="text-align: center;">
+                            <p>Have already an account? <a href="/login-user" style="text-decoration: none;">Login</a>
+                            </p>
+                        </div>
+                    </div>
+                </form>
 
-        </div>
-    </section>
+            </div>
+        </section>
+    </main>
     <footer th:replace="~{fragments/footer::footer}"></footer>
 
     <script th:src="@{/javascript/sweetalert2@11.js}"></script>
     <script th:src="@{/javascript/jquery-3.7.1.min.js}"></script>
+    <script th:src="@{/javascript/script.js}"></script>
+
     <script>
         $(document).ready(function () {
             const nameRegex = /^[A-Za-z]{2,30}$/;

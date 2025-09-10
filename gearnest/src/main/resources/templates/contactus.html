@@ -6,41 +6,99 @@
     <title>Contact Us - GearNest</title>
     <link rel="stylesheet" th:href="@{/css/contactus.css}">
     <link rel="stylesheet" th:href="@{/css/style.css}" />
+    <link rel="shortcut icon" th:href="@{/images/logo.png}" type="image/x-icon">
+
+    <!-- Google Fonts: Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 </head>
 
 <body>
 
     <header th:replace="~{fragments/header::header}"></header>
-
-    <section class="contact-section">
-        <div class="container">
-            <div class="title">
-                <p>Contact Us</p>
-            </div>
-            <form th:action="@{/contact}" th:object="${contactMessage}" method="post">
-                <div class="form-group">
-                    <label>Name:</label>
-                    <input type="text" th:field="*{name}" required />
+    <main>
+        <!-- Contact Section -->
+        <section class="page-section">
+            <div class="container">
+                <div class="section-title">
+                    <h2>Get In Touch</h2>
+                    <p>Have a question or feedback? We're here to help. Reach out to us, and we'll get back to you as
+                        soon as possible.</p>
                 </div>
-                <div class="form-group">
-                    <label>Email:</label>
-                    <input type="email" th:field="*{email}" required />
-                </div>
-                <div class="form-group">
-                    <label>Subject:</label>
-                    <input type="text" th:field="*{subject}" required />
-                </div>
-                <div class="form-group">
-                    <label>Message:</label>
-                    <textarea th:field="*{message}" required></textarea>
-                </div>
-                <button type="submit">Send</button>
                 <div th:if="${success}" class="success-msg" th:text="${success}"></div>
-            </form>
-        </div>
-    </section>
-    <footer th:replace="~{fragments/footer::footer}"></footer>
+                <div class="contact-wrapper scroll-animate">
+                    <div class="contact-info">
+                        <h3>Contact Information</h3>
+                        <div class="info-item">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                                <path fill-rule="evenodd"
+                                    d="M11.54 22.351l.07.04.028.016a.76.76 0 00.723 0l.028-.015.071-.041a16.975 16.975 0 005.16-4.242 16.975 16.975 0 002.342-7.444c0-5.885-4.755-10.64-10.64-10.64-5.885 0-10.64 4.755-10.64 10.64 0 2.898 1.154 5.724 3.23 7.842a16.975 16.975 0 007.444 2.342 16.975 16.975 0 004.242-5.161zM12 10.5a2.5 2.5 0 100 5 2.5 2.5 0 000-5z"
+                                    clip-rule="evenodd" />
+                            </svg>
+                            <p>123 Auto Street, Car City, Surat, Gujarat, India</p>
+                        </div>
+                        <div class="info-item">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                                <path
+                                    d="M1.5 4.5a3 3 0 013-3h1.372c.86 0 1.61.586 1.819 1.42l1.105 4.423a1.875 1.875 0 01-.694 1.955l-1.293.97c-.135.101-.164.29-.077.431 1.203 1.635 3.27 3.702 4.905 4.905.14.087.33.058.43-.077l.97-1.293a1.875 1.875 0 011.955-.694l4.423 1.105c.834.209 1.42.959 1.42 1.82V19.5a3 3 0 01-3 3h-2.25C6.542 22.5 2.25 18.458 2.25 12.375V10.5A6 6 0 018.25 4.5h2.25a.75.75 0 010 1.5H8.25A4.5 4.5 0 003.75 10.5v1.875c0 5.042 4.038 9.125 9.125 9.125H15a1.5 1.5 0 001.5-1.5v-1.372c0-.432-.19-.834-.51-1.124l-4.423-1.105a.375.375 0 00-.39.136l-.97 1.293-.01.013c-.113.15-.334.18-.488.075a11.95 11.95 0 01-5.592-5.592.375.375 0 00.075-.488l.013-.01.97-1.293a.375.375 0 00.136-.39L6.623 5.01c-.29-.32-.692-.51-1.124-.51H4.125a1.5 1.5 0 00-1.5 1.5v.375z" />
+                            </svg>
+                            <p>+91 98765 43210</p>
+                        </div>
+                        <div class="info-item">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                                <path
+                                    d="M1.5 8.67v8.58a3 3 0 003 3h15a3 3 0 003-3V8.67l-8.928 5.493a3 3 0 01-3.144 0L1.5 8.67z" />
+                                <path
+                                    d="M22.5 6.908V6.75a3 3 0 00-3-3h-15a3 3 0 00-3 3v.158l9.714 5.978a1.5 1.5 0 001.572 0L22.5 6.908z" />
+                            </svg>
+                            <p>support@gearnest.com</p>
+                        </div>
+                        <div class="map-container">
+                            <img src="https://placehold.co/600x300/e5e7eb/4b5563?text=Map+of+Surat"
+                                alt="Map showing office location">
+                        </div>
+                    </div>
+                    <form id="contact-form" class="contact-form" th:action="@{/contact}" th:object="${contactMessage}"
+                        method="post">
+                        <div class="form-group">
+                            <label for="name">Your Name</label>
+                            <input type="text" id="name" name="name" th:field="*{name}" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="email">Your Email</label>
+                            <input type="email" id="email" name="email" th:field="*{email}" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="subject">Subject</label>
+                            <input type="text" id="subject" name="subject" th:field="*{subject}" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="message">Message</label>
+                            <textarea id="message" name="message" th:field="*{message}" rows="5" required></textarea>
+                        </div>
+                        <div class="form-group" style="margin-bottom: 0;">
+                            <button type="submit" class="btn btn-primary" style="width: 100%;">Send Message</button>
+                        </div>
 
+                    </form>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer th:replace="~{fragments/footer::footer}"></footer>
+    <script th:src="@{/javascript/script.js}"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) { entry.target.classList.add('is-visible'); }
+                });
+            }, { threshold: 0.1 });
+            document.querySelectorAll('.scroll-animate').forEach(el => observer.observe(el));
+        });
+    </script>
 </body>
 
 </html>

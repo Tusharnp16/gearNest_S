@@ -6,82 +6,84 @@
     <link rel="shortcut icon" th:href="@{/images/logo.png}" type="image/x-icon">
     <link rel="stylesheet" th:href="@{/css/style.css}" />
     <link rel="stylesheet" th:href="@{/css/login.css}" />
+
+    <!-- Google Fonts: Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 </head>
 
 <body>
     <header th:replace="~{fragments/header::header}"></header>
-    <section>
-        <div class="container">
-            <div class="title">
-                <p>Login</p>
-            </div>
-
-            <form th:action="@{/login-user}" method="post">
-                <div class="user_details">
-                    <div class="role">
-                        <input type="radio" name="role" id="radio_1" value="ADMIN">
-                        <input type="radio" name="role" id="radio_2" value="GARAGE">
-                        <input type="radio" name="role" id="radio_3" value="USER">
-
-                        <div class="category">
-                            <label for="radio_1">
-                                <span class="dot one"></span>
-                                <span>Admin</span>
-                            </label>
-                            <label for="radio_2">
-                                <span class="dot two"></span>
-                                <span>Garage</span>
-                            </label>
-                            <label for="radio_3">
-                                <span class="dot three"></span>
-                                <span>User</span>
-                            </label>
+    <main>
+        <div class="login-container">
+            <div class="login-form">
+                <h1>Login</h1>
+                <form id="login-form" th:action="@{/login-user}" method="post">
+                    <div class="role-selector">
+                        <div class="role-option">
+                            <input type="radio" id="admin" name="role" value="admin" checked>
+                            <span class="radio-dot"></span>
+                            <label for="admin">Admin</label>
+                        </div>
+                        <div class="role-option">
+                            <input type="radio" id="garage" name="role" value="garage">
+                            <span class="radio-dot"></span>
+                            <label for="garage">Garage</label>
+                        </div>
+                        <div class="role-option">
+                            <input type="radio" id="user" name="role" value="user">
+                            <span class="radio-dot"></span>
+                            <label for="user">User</label>
                         </div>
                     </div>
-                    <div class="input_box">
-                        <label for="email">Email</label>
+                    <div class="form-group">
+                        <label for="email">Email <span>*</span></label>
                         <input type="email" id="email" name="email" placeholder="Enter your email" required>
                     </div>
-
-                    <div class="input_box">
-                        <label for="pass">Password</label>
-                        <input type="password" id="pass" name="password" placeholder="Enter your password" required><br>
-                        <p style="margin-top: 10px; display: flex; justify-content: space-between;">
-                            <span>
-                                <input style="margin-right: 6px;" type="checkbox" onclick="showPassword()">
-                                <span>Show Password</span>
-                            </span>
-                            <span><a href="/reset-password" style="text-decoration: none;">Forgot Password?</a></span>
-                        </p>
+                    <div class="form-group">
+                        <label for="password">Password <span>*</span></label>
+                        <input type="password" id="password" name="password" placeholder="Enter your password" required>
                     </div>
-                </div>
-                <div class="reg_btn">
-                    <input type="submit" value="Login">
-                </div>
-                <div class="user_details">
-                    <div class="input_box" style="text-align: center;">
-                        <p>Don't have an account?
-                            <a href="" onclick="select_role(); return false;"
-                                style="text-decoration: none;">Register</a>
-                        </p>
+                    <div class="form-options">
+                        <label class="show-password">
+                            <input type="checkbox" id="show-password-checkbox">
+                            Show Password
+                        </label>
+                        <div class="forgot-password">
+                            <a href="/reset-password">Forgot Password?</a>
+                        </div>
                     </div>
-                </div>
-            </form>
+                    <button type="submit" class="btn btn-primary">Login</button>
+                    <div class="register-link">
+                        Don't have an account? <a href="" onclick="select_role(); return false;">Register</a>
+                    </div>
+                </form>
+            </div>
         </div>
-    </section>
+    </main>
+
     <footer th:replace="~{fragments/footer::footer}"></footer>
 
     <script th:src="@{/javascript/sweetalert2@11.js}"></script>
-    <script>
-        function showPassword() {
-            var x = document.getElementById("pass");
-            if (x.type === "password") {
-                x.type = "text";
-            } else {
-                x.type = "password";
-            }
-        }
+    <script th:src="@{/javascript/script.js}"></script>
 
+    <script>
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const passwordInput = document.getElementById('password');
+            const showPasswordCheckbox = document.getElementById('show-password-checkbox');
+
+            if (showPasswordCheckbox && passwordInput) {
+                showPasswordCheckbox.addEventListener('change', () => {
+                    if (showPasswordCheckbox.checked) {
+                        passwordInput.type = 'text';
+                    } else {
+                        passwordInput.type = 'password';
+                    }
+                });
+            }
+        });
         async function select_role() {
             const inputOptions = {
                 user: "User",

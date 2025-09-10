@@ -4,17 +4,295 @@
 <head>
     <title>Dashboard</title>
     <link rel="stylesheet" th:href="@{/css/style.css}" />
+    <!-- Google Fonts: Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="shortcut icon" th:href="@{/images/logo.png}" type="image/x-icon">
+
+
+
 </head>
 
 <body>
     <header th:replace="~{fragments/header::header}"></header>
-    <section style="height: 80vh;">
+    <main>
+        <!-- Hero Section -->
+        <section class='hero-section'>
+            <div class='container'>
+                <h1 class='animate-fade-in-up' style='animation-delay: 0.2s;'>Find The Perfect Garage For Your Car</h1>
+                <p class='animate-fade-in-up' style='animation-delay: 0.4s;'>Discover top-rated, verified, and
+                    specialized garages for any service you need.</p>
+                <a href='#filter-section' class='btn btn-primary animate-fade-in-up'
+                    style='animation-delay: 0.6s;'>Start Your Search</a>
+            </div>
+        </section>
 
-        <h1>Welcome to Dashboard!</h1>
-        <a href="/logout">Logout</a>
-    </section>
+        <!-- Filter Section -->
+        <section id='filter-section' class='filter-section scroll-animate'>
+            <div class='container'>
+                <div class="filter-header">
+                    <h2>Find the best service for your vehicle</h2>
+                    <p>Tell us what you're looking for, and we'll find the perfect match.</p>
+                </div>
+                <form id='filter-form'>
+                    <div class='form-group location-group'>
+                        <label for='location-filter'>Location (City)</label>
+                        <div class='input-wrapper'>
+                            <svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='currentColor'>
+                                <path fill-rule='evenodd'
+                                    d='M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z'
+                                    clip-rule='evenodd' />
+                            </svg>
+                            <input type='text' id='location-filter' placeholder='e.g., Surat'>
+                        </div>
+                    </div>
+
+                    <div class='form-group vehicle-type-group'>
+                        <label>Vehicle Type</label>
+                        <div class="vehicle-options">
+                            <label class="vehicle-option selected">
+                                <input type="radio" name="vehicle-type" value="all" checked>
+                                <span>All</span>
+                            </label>
+                            <label class="vehicle-option">
+                                <input type="radio" name="vehicle-type" value="car">
+                                <span>Car</span>
+                            </label>
+                            <label class="vehicle-option">
+                                <input type="radio" name="vehicle-type" value="bike">
+                                <span>Bike</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class='form-group rating-group'>
+                        <label for='rating-filter'>Minimum Rating</label>
+                        <select id='rating-filter'>
+                            <option value='0'>All Ratings</option>
+                            <option value='4.5'>★★★★½ & Up</option>
+                            <option value='4'>★★★★ & Up</option>
+                            <option value='3'>★★★ & Up</option>
+                        </select>
+                    </div>
+
+                    <div class='form-group actions-group'>
+                        <label style="opacity: 0;">Reset</label> <!-- Spacer for alignment -->
+                        <button type='button' id='reset-filters-btn' class='btn btn-secondary'
+                            style="width: 100%;">Reset</button>
+                    </div>
+
+                    <div class='form-group services-group'>
+                        <label>Select Services (Optional)</label>
+                        <div id='services-filter-container'>
+                            <!-- Service checkboxes will be dynamically inserted here -->
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </section>
+
+        <!-- Garage Listings -->
+        <section id='listings' class='garage-listings'>
+            <div class='container' id='garage-container'>
+
+                <!-- Garage Card 1 -->
+                <div class='garage-card scroll-animate' data-city='Surat' data-rating='4.8'
+                    data-services='general-service car-wash ac-repair battery-service' data-vehicle="car">
+                    <div class="card-image-wrapper">
+                        <img src='https://s3.amazonaws.com/ideas-after/3e641c35-1be7-42e1-9c5c-5f113100637c.jpeg'
+                            alt='Interior of a modern auto garage'>
+                    </div>
+                    <div class='card-content'>
+                        <h3>Surat Premium Motors</h3>
+                        <p class='card-location'>
+                            <svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='currentColor'>
+                                <path fill-rule='evenodd'
+                                    d='M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z'
+                                    clip-rule='evenodd' />
+                            </svg>
+                            <span>123, Adajan Patiya, Surat</span>
+                        </p>
+                        <div class='rating-display' data-rating-display='4.8'></div>
+                        <div class='service-tags'>
+                            <span class='service-tag' data-service-value='general-service'>General Service</span>
+                            <span class='service-tag' data-service-value='car-wash'>Car Wash</span>
+                            <span class='service-tag' data-service-value='ac-repair'>AC Repair</span>
+                            <span class='service-tag' data-service-value='battery-service'>Battery Service</span>
+                        </div>
+                        <button class='btn btn-primary view-details-btn'>View Details</button>
+                    </div>
+                </div>
+
+                <!-- Garage Card 2 -->
+                <div class='garage-card scroll-animate delay-100' data-city='Mumbai' data-rating='4.2'
+                    data-services='denting-painting tyre-alignment' data-vehicle="car">
+                    <div class="card-image-wrapper">
+                        <img src='https://images.squarespace-cdn.com/content/v1/635b2b8c52d4e8330236dd2e/669ccaa7-7c85-4902-a36f-493270d6c2ed/Jon+6.jpg?format=2500w'
+                            alt='Mechanic working on car body'>
+                    </div>
+                    <div class='card-content'>
+                        <h3>Classic Car Repairs</h3>
+                        <p class='card-location'>
+                            <svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='currentColor'>
+                                <path fill-rule='evenodd'
+                                    d='M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z'
+                                    clip-rule='evenodd' />
+                            </svg>
+                            <span>45, Andheri West, Mumbai</span>
+                        </p>
+                        <div class='rating-display' data-rating-display='4.2'></div>
+                        <div class='service-tags'>
+                            <span class='service-tag' data-service-value='denting-painting'>Denting/Painting</span>
+                            <span class='service-tag' data-service-value='tyre-alignment'>Tyre Alignment</span>
+                        </div>
+                        <button class='btn btn-primary view-details-btn'>View Details</button>
+                    </div>
+                </div>
+
+                <!-- More cards follow the same pattern... -->
+                <div class='garage-card scroll-animate delay-200' data-city='Surat' data-rating='3.9'
+                    data-services='general-service car-wash' data-vehicle="car">
+                    <div class="card-image-wrapper">
+                        <img src='https://media.istockphoto.com/id/1379161193/photo/professional-worker-cleaning-car-rim.jpg?s=612x612&w=0&k=20&c=aTh9fOWAZer9X2RtE1iIngjMA6wxfUJ6-a6LJlixUZo='
+                            alt='Clean auto care workshop'>
+                    </div>
+                    <div class='card-content'>
+                        <h3>Vesu Auto Care</h3>
+                        <p class='card-location'>
+                            <svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='currentColor'>
+                                <path fill-rule='evenodd'
+                                    d='M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z'
+                                    clip-rule='evenodd' />
+                            </svg>
+                            <span>78, VIP Road, Vesu, Surat</span>
+                        </p>
+                        <div class='rating-display' data-rating-display='3.9'></div>
+                        <div class='service-tags'>
+                            <span class='service-tag' data-service-value='general-service'>General Service</span>
+                            <span class='service-tag' data-service-value='car-wash'>Car Wash</span>
+                        </div>
+                        <button class='btn btn-primary view-details-btn'>View Details</button>
+                    </div>
+                </div>
+
+                <div class='garage-card scroll-animate delay-300' data-city='Ahmedabad' data-rating='4.6'
+                    data-services='general-service denting-painting ac-repair engine-diagnostics' data-vehicle="car">
+                    <div class="card-image-wrapper">
+                        <img src='https://cdn.prod.website-files.com/637d6390b70424b49c14ff1e/640f9b7180be91100cbcbe07_delivery-vehicle-maintenance-hero.webp'
+                            alt='Mechanic inspecting a car engine'>
+                    </div>
+                    <div class='card-content'>
+                        <h3>Speedy Automotive</h3>
+                        <p class='card-location'>
+                            <svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='currentColor'>
+                                <path fill-rule='evenodd'
+                                    d='M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z'
+                                    clip-rule='evenodd' />
+                            </svg>
+                            <span>Plot 9, SG Highway, Ahmedabad</span>
+                        </p>
+                        <div class='rating-display' data-rating-display='4.6'></div>
+                        <div class='service-tags'>
+                            <span class='service-tag' data-service-value='general-service'>General Service</span>
+                            <span class='service-tag' data-service-value='denting-painting'>Denting/Painting</span>
+                            <span class='service-tag' data-service-value='ac-repair'>AC Repair</span>
+                            <span class='service-tag' data-service-value='engine-diagnostics'>Engine Diagnostics</span>
+                        </div>
+                        <button class='btn btn-primary view-details-btn'>View Details</button>
+                    </div>
+                </div>
+
+                <div class='garage-card scroll-animate delay-400' data-city='Surat' data-rating='2.5'
+                    data-services='car-wash' data-vehicle="car">
+                    <div class="card-image-wrapper">
+                        <img src='https://www.shutterstock.com/image-photo/automotive-detailer-washing-away-smart-600nw-2287564871.jpg'
+                            alt='A car being washed with soap and water'>
+                    </div>
+                    <div class='card-content'>
+                        <h3>Budget Car Wash</h3>
+                        <p class='card-location'>
+                            <svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='currentColor'>
+                                <path fill-rule='evenodd'
+                                    d='M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z'
+                                    clip-rule='evenodd' />
+                            </svg>
+                            <span>Opp. Railway Station, Varachha, Surat</span>
+                        </p>
+                        <div class='rating-display' data-rating-display='2.5'></div>
+                        <div class='service-tags'>
+                            <span class='service-tag' data-service-value='car-wash'>Car Wash</span>
+                        </div>
+                        <button class='btn btn-primary view-details-btn'>View Details</button>
+                    </div>
+                </div>
+
+                <div class='garage-card scroll-animate delay-500' data-city='Mumbai' data-rating='4.9'
+                    data-services='custom-modification car-wrapping' data-vehicle="car">
+                    <div class="card-image-wrapper">
+                        <img src='https://images.unsplash.com/photo-1581291518633-83b4ebd1d83e?w=400&h=250&fit=crop&q=80'
+                            alt='Custom modified sports car'>
+                    </div>
+                    <div class='card-content'>
+                        <h3>Mumbai Modders</h3>
+                        <p class='card-location'>
+                            <svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='currentColor'>
+                                <path fill-rule='evenodd'
+                                    d='M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z'
+                                    clip-rule='evenodd' />
+                            </svg>
+                            <span>Gala 12, Kurla Industrial Estate, Mumbai</span>
+                        </p>
+                        <div class='rating-display' data-rating-display='4.9'></div>
+                        <div class='service-tags'>
+                            <span class='service-tag' data-service-value='custom-modification'>Custom
+                                Modification</span>
+                            <span class='service-tag' data-service-value='car-wrapping'>Car Wrapping</span>
+                        </div>
+                        <button class='btn btn-primary view-details-btn'>View Details</button>
+                    </div>
+                </div>
+
+                <!-- New Bike Garage Card -->
+                <div class='garage-card scroll-animate delay-100' data-city='Surat' data-rating='4.7'
+                    data-services='general-service' data-vehicle="bike">
+                    <div class="card-image-wrapper">
+                        <img src='https://apnamechanic.com/blog/wp-content/uploads/2021/11/bike-service-at-home-735x396-1.jpg'
+                            alt='Motorcycle being serviced'>
+                    </div>
+                    <div class='card-content'>
+                        <h3>Surat Bike Works</h3>
+                        <p class='card-location'>
+                            <svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='currentColor'>
+                                <path fill-rule='evenodd'
+                                    d='M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z'
+                                    clip-rule='evenodd' />
+                            </svg>
+                            <span>88, Ring Road, Surat</span>
+                        </p>
+                        <div class='rating-display' data-rating-display='4.7'></div>
+                        <div class='service-tags'>
+                            <span class='service-tag' data-service-value='general-service'>General Service</span>
+                        </div>
+                        <button class='btn btn-primary view-details-btn'>View Details</button>
+                    </div>
+                </div>
+
+                <div id='no-results'>
+                    <h3>No Garages Found</h3>
+                    <p>Try adjusting your filters to find what you're looking for.</p>
+                </div>
+            </div>
+        </section>
+    </main>
     <footer th:replace="~{fragments/footer::footer}"></footer>
-
+    <!-- Details Modal -->
+    <div id='details-modal' class='modal-overlay'>
+        <div id='modal-content' class='modal-content'>
+            <!-- Modal content will be populated by JavaScript -->
+        </div>
+    </div>
+    <script th:src="@{/javascript/script.js}"></script>
 </body>
 
 </html>

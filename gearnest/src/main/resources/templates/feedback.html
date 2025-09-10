@@ -6,98 +6,125 @@
     <title>Feedback - GearNest</title>
     <link rel="stylesheet" th:href="@{/css/style.css}">
     <link rel="stylesheet" th:href="@{/css/feedback.css}">
+    <link rel="shortcut icon" th:href="@{/images/logo.png}" type="image/x-icon">
+
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500&display=swap" rel="stylesheet">
     <!-- Font Awesome for star icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+    <!-- Google Fonts: Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 </head>
 
 <body>
 
-<header th:replace="~{fragments/header :: header}"></header>
-
-<section class="feedback-section">
-    <div class="container">
-        <div class="title">
-            <p>Feedback Form</p>
-        </div>
-
-        <form th:action="@{/feedback}" th:object="${feedback}" method="post">
-
-            <div th:if="${success}" class="success" th:text="${success}"></div>
-            <div th:if="${error}" class="error" th:text="${error}"></div>
-
-            <div class="form-group">
-                <label for="name">Name:</label>
-                <input type="text" id="name" th:field="*{name}" placeholder="Your Name" required>
-            </div>
-
-             <div class="form-group">
-                <label for="email">Email:</label>
-                <input type="text" id="email" th:field="*{email}" placeholder="Your Email" required>
-            </div>
-
-            <div class="form-group">
-                <label>Rating:</label>
-                <div class="rating-stars" th:field="*{rating}">
-                    <input type="radio" id="star5" name="rating" value="5" />
-                    <label for="star5" title="5 stars - Excellent"><i class="fas fa-star"></i></label>
-
-                    <input type="radio" id="star4" name="rating" value="4" />
-                    <label for="star4" title="4 stars - Very Good"><i class="fas fa-star"></i></label>
-
-                    <input type="radio" id="star3" name="rating" value="3" />
-                    <label for="star3" title="3 stars - Good"><i class="fas fa-star"></i></label>
-
-                    <input type="radio" id="star2" name="rating" value="2" />
-                    <label for="star2" title="2 stars - Fair"><i class="fas fa-star"></i></label>
-
-                    <input type="radio" id="star1" name="rating" value="1" />
-                    <label for="star1" title="1 star - Poor"><i class="fas fa-star"></i></label>
+    <header th:replace="~{fragments/header :: header}"></header>
+    <main>
+        <!-- Feedback Section -->
+        <section class="page-section">
+            <div class="container">
+                <div class="section-title">
+                    <h2>Share Your Feedback</h2>
+                    <p>We'd love to hear from you. Let us know how we're doing!</p>
                 </div>
-                <span id="rating-text"></span>
+                <form id="feedback-form" class="feedback-form scroll-animate" th:action="@{/feedback}"
+                    th:object="${feedback}" method="post">
+
+                    <div th:if="${success}" class="success" th:text="${success}"></div>
+                    <div th:if="${error}" class="error" th:text="${error}"></div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="name">Your Name</label>
+                            <input type="text" id="name" th:field="*{name}" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="email">Your Email</label>
+                            <input type="email" id="email" name="email" th:field="*{email}" required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Your Rating</label>
+                        <div class="rating-wrapper">
+                            <div class="rating-stars">
+                                <input type="radio" id="star5" name="rating" value="5" required /><label for="star5"
+                                    title="Excellent"></label>
+                                <input type="radio" id="star4" name="rating" value="4" /><label for="star4"
+                                    title="Very Good"></label>
+                                <input type="radio" id="star3" name="rating" value="3" /><label for="star3"
+                                    title="Good"></label>
+                                <input type="radio" id="star2" name="rating" value="2" /><label for="star2"
+                                    title="Fair"></label>
+                                <input type="radio" id="star1" name="rating" value="1" /><label for="star1"
+                                    title="Poor"></label>
+                            </div>
+                            <span id="rating-text"></span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="feedback">Your Feedback</label>
+                        <textarea id="feedback" name="feedback" rows="5" th:field="*{message}" required></textarea>
+                    </div>
+                    <div class="form-group" style="margin-bottom: 0;">
+                        <button type="submit" class="btn btn-primary" style="width: 100%;">Submit Feedback</button>
+                    </div>
+                </form>
             </div>
+        </section>
+    </main>
 
-            <div class="form-group">
-                <label for="message">Feedback:</label>
-                <textarea id="message" th:field="*{message}" placeholder="Write your feedback..." required></textarea>
-            </div>
 
-            <button type="submit">Submit</button>
-        </form>
-    </div>
-</section>
+    <footer th:replace="~{fragments/footer :: footer}"></footer>
+    <script th:src="@{/javascript/script.js}"></script>
 
-<footer th:replace="~{fragments/footer :: footer}"></footer>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) { entry.target.classList.add('is-visible'); }
+                });
+            }, { threshold: 0.1 });
+            document.querySelectorAll('.scroll-animate').forEach(el => observer.observe(el));
 
-<script>
-    document.addEventListener('DOMContentLoaded', function () {
-        const ratingStars = document.querySelectorAll('.rating-stars input[type="radio"]');
-        const ratingText = document.getElementById('rating-text');
-        const ratingLabels = {
-            1: 'Poor',
-            2: 'Fair',
-            3: 'Good',
-            4: 'Very Good',
-            5: 'Excellent'
-        };
+            // Feedback form rating text logic
+            const ratingStarsContainer = document.querySelector('.rating-stars');
+            const ratingInputs = document.querySelectorAll('.rating-stars input');
+            const ratingTextDisplay = document.getElementById('rating-text');
+            let currentRatingText = '';
 
-        function updateRatingText() {
-            let selectedValue = null;
-            ratingStars.forEach(star => {
-                if (star.checked) {
-                    selectedValue = star.value;
-                }
-            });
-            ratingText.textContent = selectedValue ? ratingLabels[selectedValue] : '';
-        }
+            const ratingMap = {
+                1: 'Poor',
+                2: 'Fair',
+                3: 'Good',
+                4: 'Very Good',
+                5: 'Excellent'
+            };
 
-        ratingStars.forEach(star => {
-            star.addEventListener('change', updateRatingText);
+            if (ratingStarsContainer) {
+                ratingStarsContainer.addEventListener('mouseleave', () => {
+                    ratingTextDisplay.textContent = currentRatingText;
+                });
+
+                ratingInputs.forEach(input => {
+                    const label = document.querySelector(`label[for="${input.id}"]`);
+
+                    if (label) {
+                        label.addEventListener('mouseenter', () => {
+                            ratingTextDisplay.textContent = ratingMap[input.value];
+                        });
+                    }
+
+                    input.addEventListener('change', () => {
+                        currentRatingText = ratingMap[input.value];
+                        ratingTextDisplay.textContent = currentRatingText;
+                    });
+                });
+            }
         });
-
-        updateRatingText();
-    });
-</script>
+    </script>
 
 </body>
+
 </html>

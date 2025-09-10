@@ -7,6 +7,12 @@
     <title>About Us - GearNest</title>
     <link rel="stylesheet" th:href="@{/css/aboutus.css}" />
     <link rel="stylesheet" th:href="@{/css/style.css}" />
+    <link rel="shortcut icon" th:href="@{/images/logo.png}" type="image/x-icon">
+
+    <!-- Google Fonts: Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 </head>
 
 <body>
@@ -14,65 +20,129 @@
 
     <header th:replace="~{fragments/header :: header}"></header>
 
-    <main class="about-container">
-        <div class="temp">
-            <section class="about-section">
-                <h2>Our Vision</h2>
-                <p>
-                    At <strong>GearNest</strong>, we envision a smarter, more connected ecosystem for vehicle services.
-                    We strive to be the most trusted garage management platform that bridges the gap between garage
-                    owners
-                    and customers with transparency, efficiency, and ease.
-                </p>
-            </section>
+    <main>
+        <!-- About Hero Section -->
+        <section class='about-hero'>
+            <div class='container'>
+                <h1 class='animate-fade-in-up'>We're GearNest</h1>
+                <p class='animate-fade-in-up' style="animation-delay: 0.2s;">Revolutionizing the way you find and book
+                    vehicle services.</p>
+            </div>
+        </section>
 
-            <section class="about-section">
-                <h2>Our Mission</h2>
-                <p>
-                    Our mission is to empower garages with a digital presence and streamlined operations. We provide
-                    customers
-                    with a reliable way to discover, book, and interact with verified garages. From registration to
-                    feedback,
-                    GearNest simplifies the entire vehicle service journey.
-                </p>
-            </section>
-
-            <section class="about-section">
-                <h2>Our Core Values</h2>
-                <ul>
-                    <div class="detailes">
-                        <li><strong>Transparency</strong> – Clear service details, no hidden charges.</li>
-                        <li><strong>Trust</strong> – Verified garages, real customer reviews.</li>
-                        <li><strong>Efficiency</strong> – Instant bookings, real-time updates.</li>
-                        <li><strong>Innovation</strong> – Tech-driven tools to manage and monitor vehicle care.</li>
-                    </div>
-                </ul>
-            </section>
-        </div>
-        <section class="about-section">
-            <h2>Meet Our Team</h2>
-            <div class="team">
-
-                <div class="team-member">
-                    <img th:src="@{/images/logo.png}" alt="Tushar Parmar - Founder" loading="lazy" class="team-photo">
-                    <h3>Tushar Parmar</h3>
-                    <p>Founder & Backend Developer</p>
-                    <p>Specializes in Spring Boot, API design, and database integration. Tushar laid the foundation of
-                        GearNest's core logic and architecture.</p>
+        <!-- Our Vision & Mission Section -->
+        <section class="page-section">
+            <div class="container vision-mission-grid">
+                <div class="vision-text scroll-animate">
+                    <h3>Our Vision</h3>
+                    <p>At GearNest, we envision a smarter, more connected ecosystem for vehicle services. We strive to
+                        be the most trusted garage management platform that bridges the gap between garage owners and
+                        customers with transparency, efficiency, and ease.</p>
                 </div>
-
-                <div class="team-member">
-                    <img th:src="@{/images/logo.png}" alt="Akash Kumar - UI/UX" loading="lazy" class="team-photo">
-                    <h3>Nilesh Sonvane</h3>
-                    <p>Founder & CEO & Frontend Developer</p>
-                    <p>Focuses on user-centered design with modern frontend frameworks. Nilesh is the creative mind
-                        behind the interface you see.</p>
+                <div class="mission-text scroll-animate" style="transition-delay: 0.1s;">
+                    <h3>Our Mission</h3>
+                    <p>Our mission is to empower garages with a digital presence and streamlined operations. We provide
+                        customers with a reliable way to discover, book, and interact with verified garages. From
+                        registration to feedback, GearNest simplifies the entire vehicle service journey.</p>
                 </div>
             </div>
         </section>
-    </main>
-    <footer th:replace="fragments/footer::footer"></footer>
 
+        <!-- Core Values Section -->
+        <section class="page-section" style="background-color: var(--color-gray-100);">
+            <div class="container">
+                <div class="section-title">
+                    <h2>Our Core Values</h2>
+                </div>
+                <div class="core-values-grid">
+                    <div class="core-value-card scroll-animate">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                            stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round"
+                                d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.432 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z" />
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                        </svg>
+                        <h3>Transparency</h3>
+                        <p>Clear service details, no hidden charges.</p>
+                    </div>
+                    <div class="core-value-card scroll-animate" style="transition-delay: 0.1s;">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                            stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round"
+                                d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                        <h3>Trust</h3>
+                        <p>Verified garages, real customer reviews.</p>
+                    </div>
+                    <div class="core-value-card scroll-animate" style="transition-delay: 0.2s;">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                            stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round"
+                                d="M3.75 13.5l10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75z" />
+                        </svg>
+                        <h3>Efficiency</h3>
+                        <p>Instant bookings, real-time updates.</p>
+                    </div>
+                    <div class="core-value-card scroll-animate" style="transition-delay: 0.3s;">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                            stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round"
+                                d="M12 18v-5.25m0 0a6.01 6.01 0 001.5-.189m-1.5.189a6.01 6.01 0 01-1.5-.189m3.75 7.478a12.06 12.06 0 01-4.5 0m3.75 2.311a15.045 15.045 0 01-7.5 0C4.508 19.64 2.25 15.184 2.25 10.5 2.25 5.816 4.508 1.36 8.25 1.36c3.742 0 6 4.456 6 9.14 0 4.684-2.258 9.14-6 9.14z" />
+                        </svg>
+                        <h3>Innovation</h3>
+                        <p>Tech-driven tools to manage and monitor vehicle care.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Our Team Section -->
+        <section class="page-section">
+            <div class="container">
+                <div class="section-title">
+                    <h2>Meet Our Team</h2>
+                </div>
+                <div class="team-grid">
+                    <div class="team-card scroll-animate">
+                        <img src="https://placehold.co/300x300/F37A65/FFFFFF?text=TP" alt="Tushar Parmar">
+                        <h3>Tushar Parmar</h3>
+                        <p class="role">Founder & Backend Developer</p>
+                        <p class="description">Specializes in Spring Boot, API design, and database integration. Tushar
+                            laid the foundation of GearNest's core logic and architecture.</p>
+                    </div>
+                    <div class="team-card scroll-animate" style="transition-delay: 0.1s;">
+                        <img src="https://placehold.co/300x300/1f2937/FFFFFF?text=NS" alt="Nilesh Sonvane">
+                        <h3>Nilesh Sonvane</h3>
+                        <p class="role">Founder & CEO & Frontend Developer</p>
+                        <p class="description">Focuses on user-centered design with modern frontend frameworks. Nilesh
+                            is the creative mind behind the interface you see.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- CTA Section -->
+        <div class="container scroll-animate">
+            <section class="cta-section">
+                <h2>Ready to experience the best?</h2>
+                <a href="/dashboard#filter-section" class="btn">Find a Garage Now</a>
+            </section>
+        </div>
+
+    </main>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) { entry.target.classList.add('is-visible'); }
+                });
+            }, { threshold: 0.1 });
+            document.querySelectorAll('.scroll-animate').forEach(el => observer.observe(el));
+        });
+    </script>
+    <footer th:replace="fragments/footer::footer"></footer>
+    <script th:src="@{/javascript/script.js}"></script>
 </body>
 
 </html>

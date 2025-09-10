@@ -1,10 +1,10 @@
-body {
+/* body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     background-color: #f4f6f9;
     margin: 0 !important;
     padding: 0 !important;
     height: 100vh !important;
-}
+} */
 
 /* .garage-list-section {
     padding-top: 50px;
@@ -13,11 +13,11 @@ body {
 
 } */
 
-.container {
+/* .container {
     width: 90%;
     max-width: 1200px;
 
-}
+} */
 
 h1 {
     text-align: center;

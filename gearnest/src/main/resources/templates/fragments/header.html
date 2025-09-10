@@ -9,7 +9,7 @@
 </head>
 
 <body>
-    <header>
+    <!-- <header>
         <nav class="navbar">
             <div class="navbar-container container">
                 <input type="checkbox" name="" id="">
@@ -48,7 +48,74 @@
 
             </div>
         </nav>
+    </header> -->
+    <!-- Header -->
+    <header class='site-header'>
+        <nav class='container'>
+            <a href='/' class='logo'>
+                <img th:src="@{/images/logo.png}" alt="GearNest Logo" class="logo-img">
+                <span>GearNest</span>
+            </a>
+            <div class="nav-right">
+                <div class='desktop-nav'>
+                    <a href='/dashboard'>Home</a>
+                    <a href='/about'>About</a>
+                    <a href='/garages'>Garages</a>
+                    <!-- <a href='#listings'>Garages</a> -->
+                    <a href='/feedback'>Feedback</a>
+                    <a href="/contact">Contact</a>
+                    <a href="/login-user">Login</a>
+                </div>
+                <!-- Logged in user state -->
+                <div class="user-profile">
+                    <div class="user-info">
+                        <img src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=80&h=80&fit=crop&q=80"
+                            alt="User profile image">
+                        <span>John Doe</span>
+                        <svg class="dropdown-arrow" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"
+                            fill="currentColor">
+                            <path fill-rule="evenodd"
+                                d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                                clip-rule="evenodd" />
+                        </svg>
+                    </div>
+                    <ul class="dropdown-menu">
+                        <li><a href="#">Profile</a></li>
+                        <li><a href="#">Setting</a></li>
+                        <li><a href="#">Logout</a></li>
+                    </ul>
+                </div>
+            </div>
+            <button id='mobile-menu-button' class='mobile-menu-button'>
+                <svg fill='none' stroke='currentColor' viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg'>
+                    <path stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M4 6h16M4 12h16m-7 6h7'>
+                    </path>
+                </svg>
+            </button>
+        </nav>
+        <!-- Mobile Menu -->
+        <div id='mobile-menu' class='mobile-menu'>
+            <a href='/dashboard'>Home</a>
+            <a href='/about'>About</a>
+            <a href='/garages'>Garages</a>
+            <!-- <a href='#listings'>Garages</a> -->
+            <a href='/feedback'>Feedback</a>
+            <a href="/contact">Contact</a>
+            <a href="/login-user">Login</a>
+            <hr style="border: none; border-top: 1px solid var(--color-gray-200); margin: 0.5rem 1.5rem;">
+            <div class="user-info">
+                <img src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=80&h=80&fit=crop&q=80"
+                    alt="User profile image">
+                <span>John Doe</span>
+            </div>
+            <ul class="dropdown-menu">
+                <li><a href="#">Profile</a></li>
+                <li><a href="#">Setting</a></li>
+                <li><a href="#">Logout</a></li>
+            </ul>
+        </div>
     </header>
+
     <script src="script.js"></script>
 </body>
 
