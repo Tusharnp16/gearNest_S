@@ -290,6 +290,188 @@
         </div>
     </div>
     <script th:src="@{/javascript/script.js}"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+
+            const locationFilter = document.getElementById('location-filter');
+            const ratingFilter = document.getElementById('rating-filter');
+            const resetFiltersBtn = document.getElementById('reset-filters-btn');
+            const garageCards = document.querySelectorAll('.garage-card');
+            const noResultsMessage = document.getElementById('no-results');
+            const servicesFilterContainer = document.getElementById('services-filter-container');
+            const vehicleTypeOptions = document.querySelectorAll('.vehicle-option');
+            let serviceCheckboxes = [];
+
+            // --- Star Rating Generation ---
+            function generateStars(rating) {
+                const fullStar = `<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='currentColor'><path d='M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z' /></svg>`;
+                const halfStar = `<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='currentColor'><path d='M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292zM10 12.956L12.247 14.4l-.585-2.51 1.823-1.66-2.52-.36L10 7.427v5.529z' /></svg>`;
+                const emptyStar = `<svg style='color: var(--color-gray-300);' xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='currentColor'><path d='M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z' /></svg>`;
+                let starsHTML = '';
+                for (let i = 1; i <= 5; i++) {
+                    if (rating >= i) { starsHTML += fullStar; }
+                    else if (rating >= i - 0.5) { starsHTML += halfStar; }
+                    else { starsHTML += emptyStar; }
+                }
+                return `<div class='stars-container'>${starsHTML}</div><span class='rating-value'>${rating}</span>`;
+            }
+
+            document.querySelectorAll('[data-rating-display]').forEach(el => {
+                const rating = parseFloat(el.dataset.ratingDisplay);
+                el.innerHTML = generateStars(rating);
+            });
+
+            function initializeDynamicFilters() {
+                const serviceMap = new Map();
+                garageCards.forEach(card => {
+                    card.querySelectorAll('.service-tag').forEach(tag => {
+                        const value = tag.dataset.serviceValue;
+                        const displayName = tag.textContent;
+                        if (!serviceMap.has(value)) {
+                            serviceMap.set(value, displayName);
+                        }
+                    });
+                });
+
+                const sortedServices = new Map([...serviceMap.entries()].sort((a, b) => a[1].localeCompare(b[1])));
+                servicesFilterContainer.innerHTML = '';
+
+                sortedServices.forEach((displayName, value) => {
+                    const checkboxHTML = `
+                            <label class='service-label'>
+                                <input type='checkbox' name='service' value='${value}'>
+                                <span>${displayName}</span>
+                            </label>`;
+                    servicesFilterContainer.insertAdjacentHTML('beforeend', checkboxHTML);
+                });
+
+                serviceCheckboxes = document.querySelectorAll('input[name="service"]');
+                serviceCheckboxes.forEach(checkbox => {
+                    checkbox.addEventListener('change', () => {
+                        checkbox.closest('.service-label').classList.toggle('selected', checkbox.checked);
+                        applyFilters();
+                    });
+                });
+            }
+
+            function applyFilters() {
+                const locationQuery = locationFilter.value.toLowerCase().trim();
+                const minRating = parseFloat(ratingFilter.value);
+                const selectedVehicle = document.querySelector('input[name="vehicle-type"]:checked').value;
+                const selectedServices = Array.from(serviceCheckboxes)
+                    .filter(checkbox => checkbox.checked)
+                    .map(checkbox => checkbox.value);
+                let visibleCards = 0;
+
+                garageCards.forEach(card => {
+                    const cardCity = card.dataset.city.toLowerCase();
+                    const cardRating = parseFloat(card.dataset.rating);
+                    const cardServices = card.dataset.services.split(' ');
+                    const cardVehicle = card.dataset.vehicle;
+
+                    const locationMatch = cardCity.includes(locationQuery);
+                    const ratingMatch = cardRating >= minRating;
+                    const vehicleMatch = selectedVehicle === 'all' || cardVehicle === selectedVehicle;
+                    const serviceMatch = selectedServices.length === 0 || selectedServices.every(service => cardServices.includes(service));
+
+                    if (locationMatch && ratingMatch && vehicleMatch && serviceMatch) {
+                        card.classList.remove('hidden-card');
+                        visibleCards++;
+                    } else {
+                        card.classList.add('hidden-card');
+                    }
+                });
+
+                noResultsMessage.style.display = visibleCards === 0 ? 'block' : 'none';
+            }
+
+            function resetFilters() {
+                locationFilter.value = '';
+                ratingFilter.value = '0';
+
+                vehicleTypeOptions.forEach(opt => opt.classList.remove('selected'));
+                const allVehicleOption = document.querySelector('input[name="vehicle-type"][value="all"]');
+                allVehicleOption.checked = true;
+                allVehicleOption.parentElement.classList.add('selected');
+
+                serviceCheckboxes.forEach(checkbox => {
+                    checkbox.checked = false;
+                    checkbox.closest('.service-label').classList.remove('selected');
+                });
+                applyFilters();
+            }
+
+            // --- Modal Logic ---
+            const modal = document.getElementById('details-modal');
+            const modalContent = document.getElementById('modal-content');
+
+            function showModal(card) {
+                const title = card.querySelector('h3').textContent;
+                const address = card.querySelector('.card-location span').textContent.trim();
+                const rating = parseFloat(card.dataset.rating);
+                const services = Array.from(card.querySelectorAll('.service-tag')).map(tag =>
+                    `<span class='service-tag' data-service-value='${tag.dataset.serviceValue}'>${tag.textContent}</span>`
+                ).join('');
+
+                modalContent.innerHTML = `
+                        <div class='modal-body'>
+                            <div class='modal-header'>
+                                <h2 style='font-size: 1.5rem; font-weight: 700; margin-bottom: 0.5rem;'>${title}</h2>
+                                <button id='close-modal-btn'>&times;</button>
+                            </div>
+                            <p style='color: var(--color-text-light); margin-bottom: 1rem;'>${address}</p>
+                            <div class='rating-display' style='margin-bottom: 1rem;'>${generateStars(rating)}</div>
+                            <h4 style='font-weight: 600; color: var(--color-gray-700); margin-bottom: 0.5rem;'>Services Offered:</h4>
+                            <div class='service-tags' style='margin-bottom: 1rem;'>${services}</div>
+                        </div>
+                        <div class='modal-footer'>
+                            <a href="/bookservice" class='btn btn-primary'>Book Service</a>
+                        </div>`;
+
+                modal.classList.add('is-visible');
+                document.getElementById('close-modal-btn').addEventListener('click', hideModal);
+            }
+
+            function hideModal() {
+                modal.classList.remove('is-visible');
+            }
+
+            document.querySelectorAll('.view-details-btn').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    const card = e.target.closest('.garage-card');
+                    showModal(card);
+                });
+            });
+
+            modal.addEventListener('click', (e) => { if (e.target === modal) { hideModal(); } });
+            document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && modal.classList.contains('is-visible')) { hideModal(); } });
+
+            // --- Scroll Animation Observer ---
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) { entry.target.classList.add('is-visible'); }
+                });
+            }, { threshold: 0.1 });
+            document.querySelectorAll('.scroll-animate').forEach(el => observer.observe(el));
+
+            // --- Event Listeners ---
+            locationFilter.addEventListener('keyup', applyFilters);
+            ratingFilter.addEventListener('change', applyFilters);
+            resetFiltersBtn.addEventListener('click', resetFilters);
+
+            vehicleTypeOptions.forEach(option => {
+                option.addEventListener('click', () => {
+                    vehicleTypeOptions.forEach(opt => opt.classList.remove('selected'));
+                    option.classList.add('selected');
+                    option.querySelector('input').checked = true;
+                    applyFilters();
+                });
+            });
+
+            // --- Initializations ---
+            initializeDynamicFilters();
+        });
+    </script>
 </body>
 
 </html>

@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <title>My Bookings - GearNest</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}" />
+    <link rel="stylesheet" th:href="@{/css/mybookings.css}" />
+    <!-- Google Fonts: Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="shortcut icon" th:href="@{/images/logo.png}" type="image/x-icon">
+</head>
+
+<body>
+    <header th:replace="~{fragments/header::header}"></header>
+    <main>
+        <section class="page-section">
+            <div class="container">
+                <div class="section-title">
+                    <h1>My Bookings</h1>
+                </div>
+
+                <div class="service-filters">
+                    <button class="filter-btn active" data-filter="all">All</button>
+                    <button class="filter-btn" data-filter="scheduled">Scheduled</button>
+                    <button class="filter-btn" data-filter="completed">Completed</button>
+                    <button class="filter-btn" data-filter="cancelled">Cancelled</button>
+                </div>
+
+                <div class="service-list">
+                    <!-- Service Card 1 -->
+                    <div class="service-card scroll-animate" data-status="completed">
+                        <div class="service-card-header">
+                            <div>
+                                <p class="booking-id">BOOKING ID: #GNS123456789</p>
+                                <p class="booking-date">Booked on: 08 Sep 2025</p>
+                            </div>
+                            <div>
+                                <p>Payment: VISA **** 1234</p>
+                                <p class="service-total"><strong>Total: ₹1,499.00</strong></p>
+                            </div>
+                        </div>
+                        <div class="service-card-body">
+                            <img src="https://images.unsplash.com/photo-1517524206127-48bbd363f369?w=120&h=120&fit=crop&q=80"
+                                alt="Car Service" class="service-card-img">
+                            <div class="service-details">
+                                <h3>Surat Premium Motors</h3>
+                                <p>123, Adajan Patiya, Surat</p>
+                                <p><strong>Service:</strong> General Service</p>
+                                <p><strong>Vehicle:</strong> Maruti Suzuki Swift (GJ05 AB 1234)</p>
+                            </div>
+                        </div>
+                        <div class="service-timeline">
+                            <div class="timeline">
+                                <div class="timeline-step completed">
+                                    <div class="timeline-dot"></div>
+                                    <div class="timeline-step-label">Booked</div>
+                                </div>
+                                <div class="timeline-step completed">
+                                    <div class="timeline-dot"></div>
+                                    <div class="timeline-step-label">In Progress</div>
+                                </div>
+                                <div class="timeline-step completed">
+                                    <div class="timeline-dot"></div>
+                                    <div class="timeline-step-label">Completed</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="service-actions">
+                            <a href="#" class="btn">View Invoice</a>
+                            <a href="feedback.html" class="btn">Rate & Review</a>
+                            <a href="index.html#filter-section" class="btn btn-primary">Book Again</a>
+                        </div>
+                    </div>
+                    <!-- Service Card 2 -->
+                    <div class="service-card scroll-animate delay-100" data-status="scheduled">
+                        <div class="service-card-header">
+                            <div>
+                                <p class="booking-id">BOOKING ID: #GNS987654321</p>
+                                <p class="booking-date">Booked on: 12 Sep 2025</p>
+                            </div>
+                            <div>
+                                <p>Payment: Pay at Garage</p>
+                                <p class="service-total"><strong>Total: ₹799.00</strong></p>
+                            </div>
+                        </div>
+                        <div class="service-card-body">
+                            <img src="https://images.unsplash.com/photo-1626247123932-b69856345479?w=120&h=120&fit=crop&q=80"
+                                alt="Bike Service" class="service-card-img">
+                            <div class="service-details">
+                                <h3>Surat Bike Works</h3>
+                                <p>88, Ring Road, Surat</p>
+                                <p><strong>Service:</strong> Tyre Alignment</p>
+                                <p><strong>Vehicle:</strong> Honda Activa (GJ05 XY 5678)</p>
+                            </div>
+                        </div>
+                        <div class="service-timeline">
+                            <div class="timeline">
+                                <div class="timeline-step completed">
+                                    <div class="timeline-dot"></div>
+                                    <div class="timeline-step-label">Booked</div>
+                                </div>
+                                <div class="timeline-step">
+                                    <div class="timeline-dot"></div>
+                                    <div class="timeline-step-label">In Progress</div>
+                                </div>
+                                <div class="timeline-step">
+                                    <div class="timeline-dot"></div>
+                                    <div class="timeline-step-label">Completed</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="service-actions">
+                            <a href="#" class="btn">Need Help?</a>
+                            <a href="#" class="btn btn-primary">Cancel Booking</a>
+                        </div>
+                    </div>
+                    <!-- Service Card 3 -->
+                    <div class="service-card scroll-animate delay-200" data-status="cancelled">
+                        <div class="service-card-header">
+                            <div>
+                                <p class="booking-id">BOOKING ID: #GNS112233445</p>
+                                <p class="booking-date">Booked on: 01 Sep 2025</p>
+                            </div>
+                            <div>
+                                <p>Payment: UPI</p>
+                                <p class="service-total"><strong>Total: ₹250.00</strong></p>
+                            </div>
+                        </div>
+                        <div class="service-card-body">
+                            <img src="https://images.unsplash.com/photo-1607954941324-b9a242f3e8f8?w=120&h=120&fit=crop&q=80"
+                                alt="Car Wash" class="service-card-img">
+                            <div class="service-details">
+                                <h3>Budget Car Wash</h3>
+                                <p>Opp. Railway Station, Varachha, Surat</p>
+                                <p><strong>Service:</strong> Car Wash</p>
+                                <p><strong>Vehicle:</strong> Tata Nexon (GJ05 EF 3456)</p>
+                            </div>
+                        </div>
+                        <div class="service-timeline">
+                            <div class="timeline">
+                                <div class="timeline-step completed">
+                                    <div class="timeline-dot"></div>
+                                    <div class="timeline-step-label">Booked</div>
+                                </div>
+                                <div class="timeline-step">
+                                    <div class="timeline-dot"></div>
+                                    <div class="timeline-step-label">Cancelled</div>
+                                </div>
+                                <div class="timeline-step">
+                                    <div class="timeline-dot"></div>
+                                    <div class="timeline-step-label">Completed</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="service-actions">
+                            <a href="index.html#filter-section" class="btn btn-primary">Book Again</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+    <footer th:replace="~{fragments/footer::footer}"></footer>
+
+    <script th:src="@{/javascript/script.js}"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) { entry.target.classList.add('is-visible'); }
+                });
+            }, { threshold: 0.1 });
+            document.querySelectorAll('.scroll-animate').forEach(el => observer.observe(el));
+
+            // Service page filter logic
+            const filterButtons = document.querySelectorAll('.filter-btn');
+            const serviceCards = document.querySelectorAll('.service-card');
+
+            filterButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    filterButtons.forEach(btn => btn.classList.remove('active'));
+                    button.classList.add('active');
+                    const filter = button.dataset.filter;
+
+                    serviceCards.forEach(card => {
+                        if (filter === 'all' || card.dataset.status === filter) {
+                            card.style.display = 'flex';
+                        } else {
+                            card.style.display = 'none';
+                        }
+                    });
+                });
+            });
+        });
+    </script>
+
+</body>
+
+</html>
