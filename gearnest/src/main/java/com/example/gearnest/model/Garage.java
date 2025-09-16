@@ -1,18 +1,13 @@
 package com.example.gearnest.model;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.JoinTable;
-import jakarta.persistence.ManyToMany;
 import jakarta.persistence.PrePersist;
-import jakarta.persistence.Transient;
 
 @Entity
 public class Garage {
@@ -30,12 +25,12 @@ public class Garage {
   private String city;
   private String state;
 
-  private String location;
-  private Double latitude;
-  private Double longitude;
+  // private String location;
+  // private Double latitude;
+  // private Double longitude;
 
-  private String logoPath;
-  private String price;
+  // private String logoPath;
+  // private String price;
 
   @Column(length = 1000)
   private String description;
@@ -43,9 +38,7 @@ public class Garage {
   private boolean isApproved = false;
   private String openingHours;
   private String status = "pending";
-  private double rating = 5.0;
- 
- 
+  // private double rating = 5.0;
 
   private LocalDateTime createdAt;
 
@@ -53,17 +46,18 @@ public class Garage {
   private Boolean verified = false;
   private String otp;
 
-  @ManyToMany
-  @JoinTable(name = "garage_services_offered", joinColumns = @JoinColumn(name = "garage_id"), inverseJoinColumns = @JoinColumn(name = "service_id"))
-  private List<GarageServices> servicesOffered;
+  // @ManyToMany
+  // @JoinTable(name = "garage_services_offered", joinColumns = @JoinColumn(name =
+  // "garage_id"), inverseJoinColumns = @JoinColumn(name = "service_id"))
+  // private List<GarageServices> servicesOffered;
 
   @PrePersist
   public void onCreate() {
     this.createdAt = LocalDateTime.now();
   }
 
-  @Transient
-  private List<Long> serviceIds;
+  // @Transient
+  // private List<Long> serviceIds;
 
   // Getters and Setters
 
@@ -131,45 +125,45 @@ public class Garage {
     this.state = state;
   }
 
-  public String getLocation() {
-    return location;
-  }
+  // public String getLocation() {
+  // return location;
+  // }
 
-  public void setLocation(String location) {
-    this.location = location;
-  }
+  // public void setLocation(String location) {
+  // this.location = location;
+  // }
 
-  public Double getLatitude() {
-    return latitude;
-  }
+  // public Double getLatitude() {
+  // return latitude;
+  // }
 
-  public void setLatitude(Double latitude) {
-    this.latitude = latitude;
-  }
+  // public void setLatitude(Double latitude) {
+  // this.latitude = latitude;
+  // }
 
-  public Double getLongitude() {
-    return longitude;
-  }
+  // public Double getLongitude() {
+  // return longitude;
+  // }
 
-  public void setLongitude(Double longitude) {
-    this.longitude = longitude;
-  }
+  // public void setLongitude(Double longitude) {
+  // this.longitude = longitude;
+  // }
 
-  public String getLogoPath() {
-    return logoPath;
-  }
+  // public String getLogoPath() {
+  // return logoPath;
+  // }
 
-  public void setLogoPath(String logoPath) {
-    this.logoPath = logoPath;
-  }
+  // public void setLogoPath(String logoPath) {
+  // this.logoPath = logoPath;
+  // }
 
-  public String getPrice() {
-    return price;
-  }
+  // public String getPrice() {
+  // return price;
+  // }
 
-  public void setPrice(String price) {
-    this.price = price;
-  }
+  // public void setPrice(String price) {
+  // this.price = price;
+  // }
 
   public String getDescription() {
     return description;
@@ -203,13 +197,13 @@ public class Garage {
     this.status = status;
   }
 
-  public double getRating() {
-    return rating;
-  }
+  // public double getRating() {
+  // return rating;
+  // }
 
-  public void setRating(double rating) {
-    this.rating = rating;
-  }
+  // public void setRating(double rating) {
+  // this.rating = rating;
+  // }
 
   public LocalDateTime getCreatedAt() {
     return createdAt;
@@ -243,20 +237,20 @@ public class Garage {
     this.otp = otp;
   }
 
-  public List<GarageServices> getServicesOffered() {
-    return servicesOffered;
-  }
+  // public List<GarageServices> getServicesOffered() {
+  // return servicesOffered;
+  // }
 
-  public void setServicesOffered(List<GarageServices> servicesOffered) {
-    this.servicesOffered = servicesOffered;
-  }
+  // public void setServicesOffered(List<GarageServices> servicesOffered) {
+  // this.servicesOffered = servicesOffered;
+  // }
 
-  public List<Long> getServiceIds() {
-    return serviceIds;
-  }
+  // public List<Long> getServiceIds() {
+  // return serviceIds;
+  // }
 
-  public void setServiceIds(List<Long> serviceIds) {
-    this.serviceIds = serviceIds;
-  }
+  // public void setServiceIds(List<Long> serviceIds) {
+  // this.serviceIds = serviceIds;
+  // }
 
 }

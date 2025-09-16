@@ -157,7 +157,7 @@
                         <label for="servicesOffered">Services Offered:</label>
                         <input type="text" name="servicesOffered" placeholder="Oil change, Car wash, Brake check" />
                     </div> -->
-                    <div class="input_box" style="width: 100%;">
+                    <!-- <div class="input_box" style="width: 100%;">
                         <label for="servicesOffered">Services Offered:</label>
                         <div class="multi-select-container" onclick="focusInput()">
                             <div id="selected-items" class="selected-items">
@@ -169,16 +169,16 @@
                         </div>
                         <span class="error-message" id="servicesOfferedError"></span>
 
-                    </div>
+                    </div> -->
 
-                    <div class="input_box">
+                    <!-- <div class="input_box">
                         <label for="price">Visit Charge:</label>
                         <input type="text" id="price" placeholder="Enter Charge(E.g 500)/Hours" autocomplete="off"
                             required />
                         <span class="error-message" id="priceError"></span>
-                    </div>
+                    </div> -->
 
-                    <div class="input_box">
+                    <div class="input_box" style="width: 100%;">
                         <label for="description">Description:</label>
                         <textarea id="description" placeholder="Brief about your garage..." autocomplete="off"
                             required></textarea>
@@ -202,7 +202,7 @@
                         <span class="error-message" id="confiremPasswordError"></span>
                     </div>
 
-                    <div class="input_box" style="width: 100%;">
+                    <!-- <div class="input_box" style="width: 100%;">
                         <label for="uploadLogo">Upload Logo</label>
                         <div class="file-input">
                             <input type="file" name="file-input" id="file-input" class="file-input__input"
@@ -224,7 +224,7 @@
 
                         <input type="hidden" th:field="*{latitude}" id="latitude">
                         <input type="hidden" th:field="*{longitude}" id="longitude">
-                    </div>
+                    </div> -->
 
                     <div class="input_box" style="display: flex;width: 100%;">
                         <input type="checkbox" id="terms" required style="margin-right: 10px;">
@@ -270,21 +270,6 @@
 
         let emailExists = false;
         let phoneExists = false;
-
-        // Load Services
-        $.ajax({
-            url: "/api/garage-services/services",
-            method: "GET",
-            success: function (services) {
-                $.each(services, function (i, service) {
-                    $('#dropdown').append(
-                        `<div data-id="${service.id}" data-name="${service.name}" onclick="selectOption('${service.id}')">${service.name}</div>`
-                    );
-                });
-            }
-        });
-
-
 
         // Load states
         $.ajax({
@@ -364,127 +349,119 @@
         }
 
         // Services Offered dropdown (multi-select)
-        const selectedItemsContainer = document.getElementById("selected-items");
-        const dropdown = document.getElementById("dropdown");
-        const input = document.getElementById("select-input");
-        const hiddenInput = document.getElementById("servicesOffered");
-        const selectedValues = new Map();
+        // const selectedItemsContainer = document.getElementById("selected-items");
+        // const dropdown = document.getElementById("dropdown");
+        // const input = document.getElementById("select-input");
+        // const hiddenInput = document.getElementById("servicesOffered");
+        // const selectedValues = new Map();
 
-        function showDropdown() {
-            dropdown.style.display = "block";
-            filterOptions();
-        }
+        // function showDropdown() {
+        //     dropdown.style.display = "block";
+        //     filterOptions();
+        // }
 
-        function hideDropdown() {
-            dropdown.style.display = "none";
-        }
+        // function hideDropdown() {
+        //     dropdown.style.display = "none";
+        // }
 
-        function selectOption(id) {
-            const option = Array.from(dropdown.children).find(opt => opt.dataset.id === id);
-            if (!option) return;
+        // function selectOption(id) {
+        //     const option = Array.from(dropdown.children).find(opt => opt.dataset.id === id);
+        //     if (!option) return;
 
-            const name = option.dataset.name;
+        //     const name = option.dataset.name;
 
-            if (selectedValues.has(id)) {
-                removeTag(id);
-                return;
-            }
+        //     if (selectedValues.has(id)) {
+        //         removeTag(id);
+        //         return;
+        //     }
 
-            selectedValues.set(id, name);
+        //     selectedValues.set(id, name);
 
-            const tag = document.createElement("div");
-            tag.className = "tag";
-            tag.innerHTML = `<span>${name}</span><span class="remove" onclick="removeTag('${id}')">×</span>`;
-            selectedItemsContainer.insertBefore(tag, input);
+        //     const tag = document.createElement("div");
+        //     tag.className = "tag";
+        //     tag.innerHTML = `<span>${name}</span><span class="remove" onclick="removeTag('${id}')">×</span>`;
+        //     selectedItemsContainer.insertBefore(tag, input);
 
-            updateHiddenInput();
-            input.value = "";
-            filterOptions();
-            hideDropdown();
-        }
-
-
-        function removeTag(id) {
-            const name = selectedValues.get(id);
-            selectedValues.delete(id);
-
-            const tags = document.querySelectorAll(".tag");
-            tags.forEach(tag => {
-                const span = tag.querySelector("span");
-                if (span && span.textContent.trim() === name) {
-                    tag.remove();
-                }
-            });
-
-            updateHiddenInput();
-            filterOptions();
-        }
+        //     updateHiddenInput();
+        //     input.value = "";
+        //     filterOptions();
+        //     hideDropdown();
+        // }
 
 
-        function updateHiddenInput() {
-            hiddenInput.value = Array.from(selectedValues.keys()).join(",");
-        }
+        // function removeTag(id) {
+        //     const name = selectedValues.get(id);
+        //     selectedValues.delete(id);
 
-        function filterOptions() {
-            const search = input.value.toLowerCase();
-            const options = dropdown.querySelectorAll("div");
-            options.forEach(option => {
-                const name = option.dataset.name.toLowerCase();
-                const id = option.dataset.id;
+        //     const tags = document.querySelectorAll(".tag");
+        //     tags.forEach(tag => {
+        //         const span = tag.querySelector("span");
+        //         if (span && span.textContent.trim() === name) {
+        //             tag.remove();
+        //         }
+        //     });
 
-                option.style.display = name.includes(search) ? "block" : "none";
-                selectedValues.has(id)
-                    ? option.classList.add("selected")
-                    : option.classList.remove("selected");
-            });
-        }
-
-        input.addEventListener("keydown", function (e) {
-            if (e.key === "Enter") {
-                e.preventDefault();
-                const visibleOption = Array.from(dropdown.children).find(opt =>
-                    opt.style.display !== 'none'
-                );
-                if (visibleOption) {
-                    selectOption(visibleOption.dataset.id); // ← use ID, not name
-                }
-            }
-        });
+        //     updateHiddenInput();
+        //     filterOptions();
+        // }
 
 
-        input.addEventListener("input", showDropdown);
-        input.addEventListener("focus", showDropdown);
-        document.addEventListener("click", function (e) {
-            if (!document.querySelector(".multi-select-container").contains(e.target)) {
-                hideDropdown();
-            }
-        });
+        // function updateHiddenInput() {
+        //     hiddenInput.value = Array.from(selectedValues.keys()).join(",");
+        // }
+
+        // function filterOptions() {
+        //     const search = input.value.toLowerCase();
+        //     const options = dropdown.querySelectorAll("div");
+        //     options.forEach(option => {
+        //         const name = option.dataset.name.toLowerCase();
+        //         const id = option.dataset.id;
+
+        //         option.style.display = name.includes(search) ? "block" : "none";
+        //         selectedValues.has(id)
+        //             ? option.classList.add("selected")
+        //             : option.classList.remove("selected");
+        //     });
+        // }
+
+        // input.addEventListener("keydown", function (e) {
+        //     if (e.key === "Enter") {
+        //         e.preventDefault();
+        //         const visibleOption = Array.from(dropdown.children).find(opt =>
+        //             opt.style.display !== 'none'
+        //         );
+        //         if (visibleOption) {
+        //             selectOption(visibleOption.dataset.id); // ← use ID, not name
+        //         }
+        //     }
+        // });
+
+
+        // input.addEventListener("input", showDropdown);
+        // input.addEventListener("focus", showDropdown);
+        // document.addEventListener("click", function (e) {
+        //     if (!document.querySelector(".multi-select-container").contains(e.target)) {
+        //         hideDropdown();
+        //     }
+        // });
 
         // Image preview
-        function previewAndEncodeImage() {
-            const input = document.getElementById('file-input');
-            const file = input.files[0];
+        // function previewAndEncodeImage() {
+        //     const input = document.getElementById('file-input');
+        //     const file = input.files[0];
 
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = function (e) {
-                    const base64String = e.target.result;
-                    document.getElementById('logoBase64').value = base64String;
-                    document.getElementById('previewImage').src = base64String;
-                };
-                reader.readAsDataURL(file);
-            }
-        }
+        //     if (file) {
+        //         const reader = new FileReader();
+        //         reader.onload = function (e) {
+        //             const base64String = e.target.result;
+        //             document.getElementById('logoBase64').value = base64String;
+        //             document.getElementById('previewImage').src = base64String;
+        //         };
+        //         reader.readAsDataURL(file);
+        //     }
+        // }
 
-        // Geolocation
-        if (navigator.geolocation) {
-            navigator.geolocation.getCurrentPosition(function (position) {
-                document.getElementById("latitude").value = position.coords.latitude;
-                document.getElementById("longitude").value = position.coords.longitude;
-            }, function () {
-                console.warn("Geolocation not allowed or available.");
-            });
-        }
+
 
         // jQuery validation and submission
         $(document).ready(function () {
@@ -499,7 +476,6 @@
             const nameRegex = /^[a-zA-Z\s]{3,}$/;
             const phoneRegex = /^[6-9]\d{9}$/;
             const addressRegex = /^.{10,}$/;
-            const priceRegex = /^\d{2,6}$/;
             const passwordRegex = /^(?=.*[A-Z])(?=.*\d).{6,}$/;
 
             $('#owner_name').on('keyup', function () {
@@ -588,12 +564,12 @@
                 else clearError('locationError');
             });
 
-            $('#price').on('keyup', function () {
-                const val = $(this).val().trim();
-                if (val === '') showError('priceError', 'Visit charge is required');
-                else if (!priceRegex.test(val)) showError('priceError', 'Enter a valid number (e.g. 500)');
-                else clearError('priceError');
-            });
+            // $('#price').on('keyup', function () {
+            //     const val = $(this).val().trim();
+            //     if (val === '') showError('priceError', 'Visit charge is required');
+            //     else if (!priceRegex.test(val)) showError('priceError', 'Enter a valid number (e.g. 500)');
+            //     else clearError('priceError');
+            // });
 
             $('#description').on('keyup', function () {
                 const val = $(this).val().trim();
@@ -617,10 +593,10 @@
                 else clearError('confiremPasswordError');
             });
 
-            $('#select-input').on('keyup', function () {
-                if (selectedValues.size === 0) showError('servicesOfferedError', 'Select at least one service');
-                else clearError('servicesOfferedError');
-            });
+            // $('#select-input').on('keyup', function () {
+            //     if (selectedValues.size === 0) showError('servicesOfferedError', 'Select at least one service');
+            //     else clearError('servicesOfferedError');
+            // });
 
             $('#openingHours, #openingHours_am_pm, #closingHours, #closingHours_am_pm').on('change', function () {
                 if ($('#openingHours').val() && $('#openingHours_am_pm').val() &&
@@ -631,10 +607,10 @@
                 }
             });
 
-            $('#file-input').on('change', function () {
-                if (this.files.length > 0) clearError('uploadImgError');
-                else showError('uploadImgError', 'Logo file is required');
-            });
+            // $('#file-input').on('change', function () {
+            //     if (this.files.length > 0) clearError('uploadImgError');
+            //     else showError('uploadImgError', 'Logo file is required');
+            // });
 
             $('#terms').on('change', function () {
                 $(this).is(':checked') ? clearError('termsError') : showError('termsError', 'You must agree to the terms');
@@ -643,16 +619,14 @@
             // SUBMIT
             $('.reg_btn input[type="submit"]').click(function (e) {
                 e.preventDefault();
-                $('#owner_name, #garage_name, #phno, #email, #otp, #address, #location, #price, #description, #password, #confiremPassword, #select-input').trigger('keyup');
-                $('#openingHours, #openingHours_am_pm, #closingHours, #closingHours_am_pm, #file-input, #terms').trigger('change');
+                $('#owner_name, #garage_name, #phno, #email, #otp, #address, #description, #password, #confiremPassword, #select-input').trigger('keyup');
+                $('#openingHours, #openingHours_am_pm, #closingHours, #closingHours_am_pm, #terms').trigger('change');
 
                 const state = $('#state').val();
                 const city = $('#city').val();
                 state ? clearError('stateError') : showError('stateError', 'Please select a state');
                 city ? clearError('cityError') : showError('cityError', 'Please select a city');
 
-                if (selectedValues.size === 0) showError('servicesOfferedError', 'Select at least one service');
-                else clearError('servicesOfferedError');
 
                 if ($('.error-message:visible').length > 0) {
                     Swal.fire({ icon: 'error', title: 'Please fix all errors before submitting.' });
@@ -668,15 +642,10 @@
                     address: $('#address').val(),
                     state: state,
                     city: city,
-                    location: $('#location').val(),
                     openingHours: $('#openingHours').val() + ' ' + $('#openingHours_am_pm').val() + ' to ' + $('#closingHours').val() + ' ' + $('#closingHours_am_pm').val(),
-                    serviceIds: $('#servicesOffered').val().split(','),
-                    price: $('#price').val(),
                     description: $('#description').val(),
-                    password: $('#password').val(),
-                    logoPath: $('#logoBase64').val(),
-                    latitude: $('#latitude').val(),
-                    longitude: $('#longitude').val()
+                    password: $('#password').val()
+
                 };
 
                 Swal.fire({ title: 'Submitting...', allowOutsideClick: false, didOpen: () => Swal.showLoading() });
