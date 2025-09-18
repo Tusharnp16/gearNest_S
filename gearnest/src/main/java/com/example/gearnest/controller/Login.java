@@ -67,7 +67,10 @@ public class Login {
 
         if (user == null) {
             model.addAttribute("error", "User not found.");
-            return "login-user";
+           // return "login-user";
+
+           return "redirect:/admin/dashboard";
+
         }
 
         /*
