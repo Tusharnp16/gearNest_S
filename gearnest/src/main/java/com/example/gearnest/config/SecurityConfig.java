@@ -1,98 +1,65 @@
 package com.example.gearnest.config;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.Customizer;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
 public class SecurityConfig {
 
-    @Bean
-    public BCryptPasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
-    }
+        @Autowired
+        private CustomAuthenticationSuccessHandler successHandler;
 
-    @Bean
-    public UserDetailsService userDetailsService() {
-        UserDetails admin = User.builder()
-                .username("admin")
-                .password(passwordEncoder().encode("admin123"))
-                .roles("ADMIN")
-                .build();
+        @Bean
+        public BCryptPasswordEncoder passwordEncoder() {
+                return new BCryptPasswordEncoder();
+        }
 
-        return new InMemoryUserDetailsManager(admin);
-    }
+        @Bean
+        public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+                http
+                                .csrf(csrf -> csrf.disable())
+                                .authorizeHttpRequests(auth -> auth
+                                                // Allow public access to homepage, contact page, static resources, etc.
+                                                .requestMatchers(
+                                                                "/", // Permit homepage
+                                                                "/user/dashboard",
+                                                                "/dashboard", // Permit homepage alias
+                                                                "/contact", // Permit contact page
+                                                                "/about", // Permit about page alias
+                                                                "/login",
+                                                                "/css/**",
+                                                                "/javascript/**",
+                                                                "/images/**",
+                                                                "/user-register",
+                                                                "/garage-register",
+                                                                "/api/**",
+                                                                "/reset-password",
+                                                                "/reset-password-form")
+                                                .permitAll()
 
-    // ✅ Restrict access to admin URLs
+                                                // Secure your application based on role-specific URL prefixes
+                                                .requestMatchers("/admin/**").hasRole("ADMIN")
+                                                .requestMatchers("/garage/**").hasRole("GARAGE")
+                                                .requestMatchers("/user/**").hasRole("USER") // All user pages are now
+                                                                                             // under /user/
 
- //.formLogin(Customizer.withDefaults())
-//
-    // @Bean
-    // public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-    //     http
-    //             .csrf(csrf -> csrf.disable())
-    //             .authorizeHttpRequests(auth -> auth
-    //                     .requestMatchers("/admin/**").hasRole("ADMIN")
-    //                     .anyRequest().permitAll())
-    //             .formLogin(form -> form
-    //                     .loginPage("/admin/dashboard")
-    //                     .defaultSuccessUrl("/admin/dashboard") // 👈 custom login page
-    //                     .permitAll())
-    //             .logout(logout -> logout.permitAll());
+                                                // All other requests must be authenticated
+                                                .anyRequest().authenticated())
+                                .formLogin(form -> form
+                                                .loginPage("/login")
+                                                .loginProcessingUrl("/login-user")
+                                                .successHandler(successHandler)
+                                                .failureUrl("/login?error=true")
+                                                .permitAll())
+                                .logout(logout -> logout
+                                                .logoutUrl("/logout")
+                                                .logoutSuccessUrl("/login?logout=true")
+                                                .permitAll());
 
-    //     return http.build();
-    // }
-
-
-    //  @Bean
-    // public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-    //     http
-    //             .csrf(csrf -> csrf.disable())
-    //             .authorizeHttpRequests(auth -> auth
-    //                     .requestMatchers("/admin/**").permitAll() 
-    //                     .anyRequest().permitAll())
-    //             .formLogin(form -> form.disable()) 
-    //             .logout(logout -> logout.disable());
-
-    //     return http.build();
-    // }
-
-
-    @Bean
-public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-    http
-        .csrf(csrf -> csrf.disable())
-        .authorizeHttpRequests(auth -> auth
-            .requestMatchers("/admin/**").permitAll() // abhi ke liye sab allowed
-            .anyRequest().authenticated())
-        .formLogin(Customizer.withDefaults()); // 👈 yeh line default login page enable karegi
-
-    return http.build();
-}
-
-
-
-//     @Bean
-// public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-//     http
-//         .csrf(csrf -> csrf.disable())
-//         .authorizeHttpRequests(auth -> auth
-//             .requestMatchers("/admin/**").permitAll() // 👈 direct access for now
-//             .anyRequest().permitAll())
-//         .formLogin(form -> form
-//             .loginPage("/login")   // 👈 point to your custom login page
-//             .defaultSuccessUrl("/admin/dashboard") // after login redirect here
-//             .permitAll())
-//         .logout(logout -> logout.permitAll());
-
-//     return http.build();
-// }
-
-
+                return http.build();
+        }
 }

@@ -14,15 +14,13 @@ public class GarageServices {
 
     private String name;
 
-    // Constructors
+    // The @ManyToOne link to VehicleType has been removed from this master service
+    // entity.
+
+    // Constructors, Getters & Setters remain...
     public GarageServices() {
     }
 
-    public GarageServices(String name) {
-        this.name = name;
-    }
-
-    // Getters & Setters
     public long getId() {
         return id;
     }
@@ -38,5 +36,4 @@ public class GarageServices {
     public void setName(String name) {
         this.name = name;
     }
-
 }

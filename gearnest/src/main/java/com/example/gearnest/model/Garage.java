@@ -7,6 +7,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.PrePersist;
 
 @Entity
@@ -22,15 +23,17 @@ public class Garage {
   private String phno;
 
   private String address;
-  private String city;
-  private String state;
 
-  // private String location;
-  // private Double latitude;
-  // private Double longitude;
+  @ManyToOne
+  private Cities city;
 
-  // private String logoPath;
-  // private String price;
+  @ManyToOne
+  private States state;
+
+  private String profileImage;
+
+  // Field for the card display image
+  private String cardImage;
 
   @Column(length = 1000)
   private String description;
@@ -38,28 +41,18 @@ public class Garage {
   private boolean isApproved = false;
   private String openingHours;
   private String status = "pending";
-  // private double rating = 5.0;
-
   private LocalDateTime createdAt;
 
   private String password;
   private Boolean verified = false;
   private String otp;
 
-  // @ManyToMany
-  // @JoinTable(name = "garage_services_offered", joinColumns = @JoinColumn(name =
-  // "garage_id"), inverseJoinColumns = @JoinColumn(name = "service_id"))
-  // private List<GarageServices> servicesOffered;
-
   @PrePersist
   public void onCreate() {
     this.createdAt = LocalDateTime.now();
   }
 
-  // @Transient
-  // private List<Long> serviceIds;
-
-  // Getters and Setters
+  // --- Getters and Setters ---
 
   public Long getId() {
     return id;
@@ -93,6 +86,22 @@ public class Garage {
     this.phno = phno;
   }
 
+  public String getProfileImage() {
+    return profileImage;
+  }
+
+  public void setProfileImage(String profileImage) {
+    this.profileImage = profileImage;
+  }
+
+  public String getCardImage() {
+    return cardImage;
+  }
+
+  public void setCardImage(String cardImage) {
+    this.cardImage = cardImage;
+  }
+
   public String getEmail() {
     return email;
   }
@@ -109,61 +118,21 @@ public class Garage {
     this.address = address;
   }
 
-  public String getCity() {
+  public Cities getCity() {
     return city;
   }
 
-  public void setCity(String city) {
+  public void setCity(Cities city) {
     this.city = city;
   }
 
-  public String getState() {
+  public States getState() {
     return state;
   }
 
-  public void setState(String state) {
+  public void setState(States state) {
     this.state = state;
   }
-
-  // public String getLocation() {
-  // return location;
-  // }
-
-  // public void setLocation(String location) {
-  // this.location = location;
-  // }
-
-  // public Double getLatitude() {
-  // return latitude;
-  // }
-
-  // public void setLatitude(Double latitude) {
-  // this.latitude = latitude;
-  // }
-
-  // public Double getLongitude() {
-  // return longitude;
-  // }
-
-  // public void setLongitude(Double longitude) {
-  // this.longitude = longitude;
-  // }
-
-  // public String getLogoPath() {
-  // return logoPath;
-  // }
-
-  // public void setLogoPath(String logoPath) {
-  // this.logoPath = logoPath;
-  // }
-
-  // public String getPrice() {
-  // return price;
-  // }
-
-  // public void setPrice(String price) {
-  // this.price = price;
-  // }
 
   public String getDescription() {
     return description;
@@ -197,14 +166,6 @@ public class Garage {
     this.status = status;
   }
 
-  // public double getRating() {
-  // return rating;
-  // }
-
-  // public void setRating(double rating) {
-  // this.rating = rating;
-  // }
-
   public LocalDateTime getCreatedAt() {
     return createdAt;
   }
@@ -236,21 +197,4 @@ public class Garage {
   public void setOtp(String otp) {
     this.otp = otp;
   }
-
-  // public List<GarageServices> getServicesOffered() {
-  // return servicesOffered;
-  // }
-
-  // public void setServicesOffered(List<GarageServices> servicesOffered) {
-  // this.servicesOffered = servicesOffered;
-  // }
-
-  // public List<Long> getServiceIds() {
-  // return serviceIds;
-  // }
-
-  // public void setServiceIds(List<Long> serviceIds) {
-  // this.serviceIds = serviceIds;
-  // }
-
 }

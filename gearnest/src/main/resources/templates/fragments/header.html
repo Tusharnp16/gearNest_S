@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 
 <head>
     <meta charset="UTF-8">
@@ -9,70 +9,30 @@
 </head>
 
 <body>
-    <!-- <header>
-        <nav class="navbar">
-            <div class="navbar-container container">
-                <input type="checkbox" name="" id="">
-                <div class="hamburger-lines">
-                    <span class="line line1"></span>
-                    <span class="line line2"></span>
-                    <span class="line line3"></span>
-                </div>
-                <ul class="menu-items">
-                    <li><a href="/dashboard">Home</a></li>
-                    <li><a href="/about">About</a></li>
-                    <li><a href="/garages">Garages</a></li>
-                    <li><a href="/feedback">Feedback</a></li>
-                    <li><a href="/contact">Contact</a></li>
-                    <li><a href="/login-user">Login</a></li>
-                    <li th:if="${session.role == 'ADMIN'}">
-                        <a href="/admin/dashboard">Admin Panel</a>
-                        <ul class="dropdown-content">
-                            <li><a th:href="@{/admin/garages}">Manage Garages</a></li>
-                            <li><a th:href="@{/admin/users}">Manage Users</a></li>
-                            <li><a th:href="@{/admin/feedback}">View Feedback</a></li>
-                            <li><a th:href="@{/admin/settings}">Settings</a></li>
-                        </ul>
-                    </li>
-                    <li th:if="${session.role == 'GARAGE'}">
-                        <a href="/garage/dashboard">Garage Panel</a>
-                    </li>
-                    <li th:if="${session.role == 'USER'}">
-                        <a href="/dashboard">User Panel</a>
-                    </li>
-
-                </ul>
-                <div class="logo">
-                    <a href="/"><img th:src="@{/images/logo.png}" alt="" srcset=""><span>GearNest</span></a>
-                </div>
-
-            </div>
-        </nav>
-    </header> -->
-    <!-- Header -->
     <header class='site-header'>
         <nav class='container'>
-            <a href='/' class='logo'>
+            <a th:href="${session.loggedInUser == null} ? @{/} : @{/user/dashboard}" class='logo'>
                 <img th:src="@{/images/logo.png}" alt="GearNest Logo" class="logo-img">
                 <span>GearNest</span>
             </a>
             <div class="nav-right">
                 <div class='desktop-nav'>
-                    <a href='/dashboard'>Home</a>
+                    <a th:href="${session.loggedInUser == null} ? @{/} : @{/user/dashboard}">Home</a>
                     <a href='/about'>About</a>
-                    <a href='/garages'>Garages</a>
-                    <!-- <a href='#listings'>Garages</a> -->
-                    <a href='/feedback'>Feedback</a>
                     <a href="/contact">Contact</a>
-                    <a href="/login-user">Login</a>
+                    <a th:if="${session.loggedInUser == null}" href="/login">Login</a>
                 </div>
-                <!-- Logged in user state -->
-                <div class="user-profile">
+
+                <div th:if="${session.loggedInUser != null}" class="user-profile">
                     <div class="user-info">
-                        <img src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=80&h=80&fit=crop&q=80"
+                        <!-- <img th:src="${session.loggedInUser?.profilePic != null} ? @{'/images/' + ${session.loggedInUser.profilePic}} : 'https://placehold.co/80x80/EFEFEF/333333?text=G'"
+                            alt="User profile image"> -->
+                        <img th:src="@{${#strings.equals(session.loggedInUser.profilePic, 'default.png')} ? '/images/default.png' : '/uploads/user-profiles/' + ${session.loggedInUser.profilePic}}"
                             alt="User profile image">
-                        <span>John Doe</span>
-                        <svg class="dropdown-arrow" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"
+                        <span>
+                            <span style="font-weight: 400; color: #4a5568;">Hello, </span>
+                            <strong th:text="${session.loggedInUser?.firstName}"></strong>
+                        </span> <svg class="dropdown-arrow" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"
                             fill="currentColor">
                             <path fill-rule="evenodd"
                                 d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
@@ -80,10 +40,10 @@
                         </svg>
                     </div>
                     <ul class="dropdown-menu">
-                        <li><a href="/profile">Profile</a></li>
-                        <li><a href="/mybookings">My Bookings</a></li>
+                        <li><a href="/user/profile">Profile</a></li>
+                        <li><a href="/user/my-bookings">My Bookings</a></li>
                         <li><a href="#">Setting</a></li>
-                        <li><a href="/logout">Logout</a></li>
+                        <li><a th:href="@{/logout}">Logout</a></li>
                     </ul>
                 </div>
             </div>
@@ -94,31 +54,36 @@
                 </svg>
             </button>
         </nav>
-        <!-- Mobile Menu -->
+
         <div id='mobile-menu' class='mobile-menu'>
-            <a href='/dashboard'>Home</a>
+            <a th:href="${session.loggedInUser == null} ? @{/} : @{/user/dashboard}">Home</a>
             <a href='/about'>About</a>
-            <a href='/garages'>Garages</a>
-            <!-- <a href='#listings'>Garages</a> -->
-            <a href='/feedback'>Feedback</a>
             <a href="/contact">Contact</a>
-            <a href="/login-user">Login</a>
-            <hr style="border: none; border-top: 1px solid var(--color-gray-200); margin: 0.5rem 1.5rem;">
-            <div class="user-info">
-                <img src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=80&h=80&fit=crop&q=80"
-                    alt="User profile image">
-                <span>John Doe</span>
+
+            <a th:if="${session.loggedInUser == null}" href="/login">Login</a>
+
+            <hr th:if="${session.loggedInUser != null}">
+
+            <div th:if="${session.loggedInUser != null}">s
+                <div class="user-info" style="padding: 0 1.5rem;">
+                    <!-- <img th:src="${session.loggedInUser?.profilePic != null} ? @{'/images/' + ${session.loggedInUser.profilePic}} : 'https://placehold.co/80x80/EFEFEF/333333?text=G'"
+                        alt="User profile image"> -->
+                    <img th:src="@{${#strings.equals(session.loggedInUser.profilePic, 'default.png')} ? '/images/default.png' : '/uploads/user-profiles/' + ${session.loggedInUser.profilePic}}"
+                        alt="User profile image">
+                    <span th:text="${session.loggedInUser?.firstName}">User</span>
+                </div>
+                <ul class="dropdown-menu"
+                    style="display: block; position: static; box-shadow: none; border: none; margin-top: 0;">
+                    <li><a href="/user/profile">Profile</a></li>
+                    <li><a href="/user/my-bookings">My Bookings</a></li>
+                    <li><a href="#">Setting</a></li>
+                    <li><a th:href="@{/logout}">Logout</a></li>
+                </ul>
             </div>
-            <ul class="dropdown-menu">
-                <li><a href="/profile">Profile</a></li>
-                <li><a href="/mybookings">My Bookings</a></li>
-                <li><a href="#">Setting</a></li>
-                <li><a href="#">Logout</a></li>
-            </ul>
         </div>
     </header>
 
-    <script src="script.js"></script>
+    <script th:src="@{/javascript/script.js}"></script>
 </body>
 
 </html>

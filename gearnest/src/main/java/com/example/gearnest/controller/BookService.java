@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 @Controller
 public class BookService {
 
-    @GetMapping("bookservice")
+    @GetMapping("/user/bookservice")
     public String bookservice() {
         return "bookservice";
     }

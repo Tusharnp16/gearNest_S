@@ -69,6 +69,12 @@
                     <span class="text">Services</span>
                 </a>
             </li>
+            <li th:classappend="${activePage} == 'vehicletypes' ? 'active'">
+                <a th:href="@{/admin/vehicletypes}">
+                    <i class="fas fa-car-side"></i>
+                    <span class="text">Vehicle Types</span>
+                </a>
+            </li>
             <li th:classappend="${activePage} == 'feedback' ? 'active'">
                 <a href="feedback">
                     <i class="fas fa-solid fa-thumbs-up"></i>

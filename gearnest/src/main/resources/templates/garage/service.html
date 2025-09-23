@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" th:replace="~{garage/fragments/base::layout(~{::main})}">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <!-- DataTables CSS -->
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/2.0.8/css/dataTables.dataTables.css">
+    <!-- Boxicons for icons -->
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <style>
+        /* CSS for the small toggle switch */
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 40px;
+            /* Smaller width */
+            height: 24px;
+            /* Smaller height */
+        }
+
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            -webkit-transition: .4s;
+            transition: .4s;
+            border-radius: 24px;
+            /* Smaller border-radius */
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 16px;
+            /* Smaller height */
+            width: 16px;
+            /* Smaller width */
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            -webkit-transition: .4s;
+            transition: .4s;
+            border-radius: 50%;
+        }
+
+        input:checked+.slider {
+            background-color: #2196F3;
+        }
+
+        input:focus+.slider {
+            box-shadow: 0 0 1px #2196F3;
+        }
+
+        input:checked+.slider:before {
+            -webkit-transform: translateX(16px);
+            /* Adjusted transform value */
+            -ms-transform: translateX(16px);
+            transform: translateX(16px);
+        }
+    </style>
+</head>
+
+<main>
+    <div class="head-title">
+        <div class="left">
+            <h1>Services</h1>
+            <ul class="breadcrumb">
+                <li><a href="#">Services</a></li>
+                <li><i class='bx bx-chevron-right'></i></li>
+                <li><a class="active" href="#">Manage</a></li>
+            </ul>
+        </div>
+    </div>
+
+    <span id="success-message" th:if="${success}" th:text="${success}" style="display: none;"></span>
+    <div th:if="${error}" class="alert alert-danger" th:text="${error}"></div>
+
+    <div class="card shadow mb-4">
+        <div class="card-header py-3">
+            <h6 class="m-0 font-weight-bold text-primary">Add a New Service</h6>
+        </div>
+        <div class="card-body">
+            <form id="add-service-form" th:action="@{/garage/services/add}" th:object="${newService}" method="post">
+                <div class="row">
+                    <div class="col-md-4 mb-3">
+                        <label for="serviceSelect" class="form-label">Service</label>
+                        <select id="serviceSelect" class="form-select" th:field="*{service}" required>
+                            <option value="">-- Choose --</option>
+                            <option th:each="s : ${availableServices}" th:value="${s.id}"
+                                th:text="${#strings.capitalizeWords(s.name)}"></option>
+                        </select>
+                        <span id="serviceError" class="text-danger small"></span>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label for="vehicleType" class="form-label">Vehicle Type</label>
+                        <select id="vehicleType" class="form-select" th:field="*{vehicleType}" required>
+                            <option value="">-- Choose --</option>
+                            <option th:each="type : ${vehicleTypes}" th:value="${type.id}"
+                                th:text="${#strings.capitalizeWords(type.name)}"></option>
+                        </select>
+                        <span id="vehicleTypeError" class="text-danger small"></span>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label for="fee" class="form-label">Your Fee (₹)</label>
+                        <input type="number" id="fee" class="form-control" th:field="*{fee}" step="0.01" min="0"
+                            placeholder="e.g., 499.00" required />
+                        <span id="feeError" class="text-danger small"></span>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12 d-flex justify-content-end">
+                        <button type="submit" id="submit-btn" class="btn btn-primary">Add Service</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="card shadow mb-4">
+        <div class="card-header py-3">
+            <h6 class="m-0 font-weight-bold text-primary">Your Offered Services</h6>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table id="offeredServicesTable" class="table table-bordered" width="100%" cellspacing="0">
+                    <thead>
+                        <tr>
+                            <th>Service Name</th>
+                            <th>Vehicle Type</th>
+                            <th>Your Fee</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="servicesTableBody">
+                        <tr th:each="ps : ${offeredServices}">
+                            <td th:text="${#strings.capitalizeWords(ps.service.name)}">Oil Change</td>
+                            <td th:text="${#strings.capitalizeWords(ps.vehicleType.name)}">Car</td>
+                            <td th:text="'₹' + ${#numbers.formatDecimal(ps.fee, 1, 2)}">₹500.00</td>
+                            <td>
+                                <div class="d-flex align-items-center">
+                                    <label class="switch">
+                                        <input type="checkbox" th:checked="${ps.isActive}"
+                                            th:onclick="'toggleServiceStatus(this, ' + ${ps.id} + ')'">
+                                        <span class="slider round"></span>
+                                    </label>
+                                    <span th:if="${ps.isActive}" class="ms-2 text-success fw-bold">Active</span>
+                                    <span th:unless="${ps.isActive}" class="ms-2 text-secondary fw-bold">Inactive</span>
+                                </div>
+                            </td>
+                            <td>
+                                <a href="#" class="btn btn-danger btn-sm ms-1 service-delete-btn" th:data-id="${ps.id}"
+                                    th:data-name="${ps.service.name} + ' (' + ${ps.vehicleType.name} + ')'"
+                                    data-bs-toggle="tooltip" title="Delete">
+                                    <i class='bx bx-trash'></i> Delete
+                                </a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</main>
+
+<!-- jQuery and DataTables JS -->
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<script src="https://cdn.datatables.net/2.0.8/js/dataTables.js"></script>
+<!-- SweetAlert2 -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<!-- Your custom script -->
+<script th:src="@{/js/service-script.js}"></script>
+<script>
+    $(document).ready(function () {
+        $('#offeredServicesTable').DataTable();
+    });
+
+    async function toggleServiceStatus(checkbox, serviceId) {
+        try {
+            const response = await fetch(`/garage/services/toggle/${serviceId}`, {
+                method: 'GET', // The controller is set up for a GET request
+            });
+            const text = await response.text();
+            if (response.ok) {
+                // A successful response from the backend should trigger a redirect
+                window.location.href = `/garage/services`;
+            } else {
+                checkbox.checked = !checkbox.checked;
+                Swal.fire({
+                    toast: true,
+                    position: 'top-end',
+                    icon: 'error',
+                    title: 'Failed to update status',
+                    text: text,
+                    showConfirmButton: false,
+                    timer: 3000,
+                    timerProgressBar: true,
+                });
+            }
+        } catch (error) {
+            checkbox.checked = !checkbox.checked;
+            Swal.fire({
+                toast: true,
+                position: 'top-end',
+                icon: 'error',
+                title: 'Network error',
+                text: 'Could not connect to the server.',
+                showConfirmButton: false,
+                timer: 3000,
+                timerProgressBar: true,
+            });
+        }
+    }
+</script>
+
+</html>

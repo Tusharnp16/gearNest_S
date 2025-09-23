@@ -15,4 +15,9 @@ public class HomeController {
     public String Home() {
         return "dashboard";
     }
+
+    @GetMapping("/user/dashboard")
+    public String home() {
+        return "dashboard";
+    }
 }

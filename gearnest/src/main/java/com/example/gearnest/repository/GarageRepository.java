@@ -11,7 +11,4 @@ public interface GarageRepository extends JpaRepository<Garage, Long> {
     boolean existsByEmail(String email);
 
     boolean existsByPhno(String phno);
-    // boolean existsByPhone(String );
-
-
 }

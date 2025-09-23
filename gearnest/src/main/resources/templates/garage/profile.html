@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" th:replace="garage/fragments/base::layout(~{::main})">
+
+<main>
+    <div class="head-title">
+        <div class="left">
+            <h1>Profile Management</h1>
+            <ul class="breadcrumb">
+                <li><a href="#">Garage</a></li>
+                <li><i class='bx bx-chevron-right'></i></li>
+                <li><a class="active" href="#">Profile</a></li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- Success/Error Messages -->
+    <span id="success-message" th:if="${success}" th:text="${success}" style="display: none;"></span>
+    <div th:if="${error}" class="alert alert-danger" th:text="${error}"></div>
+
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="card shadow mb-4">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary">Your Profile</h6>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <!-- Profile Image -->
+                        <div class="col-lg-4 text-center">
+                            <h6 class="m-0 font-weight-bold text-primary mb-3">Profile Picture</h6>
+                            <div class="profile-image-wrapper mb-3" style="position: relative; display: inline-block;">
+                                <img th:src="${garage.profileImage != null} ? @{/uploads/garage-profiles/{file}(file=${garage.profileImage})} : @{/images/default.png}"
+                                    class="rounded-circle" alt="Profile"
+                                    style="width:150px;height:150px;object-fit:cover;">
+
+                                <label for="profileImageFileInput" class="edit-icon"
+                                    style="position: absolute; bottom: 0; right: 0; background-color: #007bff; color: white; border-radius: 50%; padding: 8px; cursor: pointer; display: flex; align-items: center; justify-content: center; width: 36px; height: 36px;">
+                                    <i class='bx bx-pencil' style="font-size: 18px;"></i>
+                                </label>
+                            </div>
+                            <div>
+                                <span th:text="${garage.email}">nrsonawane200@ga</span?>
+                            </div>
+                            <form th:action="@{/garage/profile/upload-profile-image}" method="post"
+                                enctype="multipart/form-data">
+                                <input class="form-control form-control-sm" type="file" name="profileImageFile"
+                                    id="profileImageFileInput" accept="image/*" style="display: none;"
+                                    onchange="this.form.submit()">
+                            </form>
+                        </div>
+
+                        <!-- Profile Details -->
+                        <div class="col-lg-8">
+                            <h6 class="m-0 font-weight-bold text-primary mb-3">Edit Your Details</h6>
+                            <form id="profileForm" method="post">
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <label for="garageName" class="form-label">Garage Name</label>
+                                        <input type="text" id="garageName" name="garageName" class="form-control"
+                                            th:value="${garage.garageName}" required>
+                                        <small id="garageNameError" class="text-danger error-message"></small>
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <label for="ownerName" class="form-label">Owner Name</label>
+                                        <input type="text" id="ownerName" name="ownerName" class="form-control"
+                                            th:value="${garage.ownerName}" required>
+                                        <small id="ownerNameError" class="text-danger error-message"></small>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <label for="phno" class="form-label">Phone Number</label>
+                                        <input type="text" id="phno" name="phno" class="form-control"
+                                            th:value="${garage.phno}" required>
+                                        <small id="phnoError" class="text-danger error-message"></small>
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <label class="form-label">Opening Hours</label>
+                                        <div class="d-flex align-items-center">
+                                            <select name="openHour" class="form-control me-2">
+                                                <option th:each="i : ${#numbers.sequence(1, 12)}" th:value="${i}"
+                                                    th:text="${i}"
+                                                    th:selected="${T(java.lang.String).valueOf(i)} == ${openHour}">
+                                                </option>
+                                            </select>
+                                            <select name="openPeriod" class="form-control me-2">
+                                                <option value="AM" th:selected="${openPeriod == 'AM'}">AM</option>
+                                                <option value="PM" th:selected="${openPeriod == 'PM'}">PM</option>
+                                            </select>
+                                            <span class="text-muted mx-2">To</span>
+                                            <select name="closeHour" class="form-control me-2">
+                                                <option th:each="i : ${#numbers.sequence(1, 12)}" th:value="${i}"
+                                                    th:text="${i}"
+                                                    th:selected="${T(java.lang.String).valueOf(i)} == ${closeHour}">
+                                                </option>
+                                            </select>
+                                            <select name="closePeriod" class="form-control">
+                                                <option value="AM" th:selected="${closePeriod == 'AM'}">AM</option>
+                                                <option value="PM" th:selected="${closePeriod == 'PM'}">PM</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <label for="state" class="form-label">State</label>
+                                        <select id="state" name="state" class="form-control"
+                                            th:data-selected-state-id="${savedState}"
+                                            th:data-states-json="${allStatesJson}">
+                                            <option value="">Select</option>
+                                        </select>
+                                        <small id="stateError" class="text-danger error-message"></small>
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <label for="city" class="form-label">City</label>
+                                        <select id="city" name="city" class="form-control"
+                                            th:data-selected-city-id="${savedCity}"
+                                            th:data-cities-json="${allCitiesJson}">
+                                            <option value="">Select</option>
+                                        </select>
+                                        <small id="cityError" class="text-danger error-message"></small>
+                                    </div>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label for="address" class="form-label">Address</label>
+                                    <input type="text" id="address" name="address" class="form-control"
+                                        th:value="${garage.address}" required>
+                                    <small id="addressError" class="text-danger error-message"></small>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="description" class="form-label">Description</label>
+                                    <textarea id="description" name="description" class="form-control" rows="4"
+                                        th:text="${garage.description}"></textarea>
+                                    <small id="descriptionError" class="text-danger error-message"></small>
+                                </div>
+                                <button type="submit" class="btn btn-success w-100">Save All Details</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Card Image -->
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="card shadow mb-4">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary">Card Display Image</h6>
+                </div>
+                <div class="card-body text-center">
+                    <img th:src="@{${#strings.equals(garage.cardImage, 'default.png')} 
+                                    ? '/images/default.png' 
+                                    : '/uploads/garage-cards/' + ${garage.cardImage}}"
+                        class="img-fluid rounded shadow mb-3" alt="Card Image" style="max-height:120px;">
+                    <div th:unless="${garage.cardImage != null}"
+                        class="border rounded d-flex align-items-center justify-content-center bg-light mb-3"
+                        style="height: 120px;">
+                        <span class="small text-muted">No image uploaded.</span>
+                    </div>
+
+                    <form th:action="@{/garage/profile/upload-card-image}" method="post" enctype="multipart/form-data">
+                        <div class="mb-3">
+                            <input class="form-control form-control-sm" type="file" name="cardImageFile"
+                                accept="image/*" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary w-100">Update Card Image</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+</html>

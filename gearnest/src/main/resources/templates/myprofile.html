@@ -17,10 +17,12 @@
     <main>
         <section class="page-section">
             <div class="container">
-                <div class="profile-wrapper">
+                <!-- This whole block will only be shown if a user object is present -->
+                <div class="profile-wrapper" th:if="${user != null}">
                     <aside class="profile-sidebar scroll-animate">
                         <div class="profile-picture-container">
-                            <img src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=150&h=150&fit=crop&q=80"
+                            <!-- Dynamically set profile picture -->
+                            <img th:src="@{${#strings.equals(user.profilePic, 'default.png')} ? '/images/default.png' : '/uploads/user-profiles/' + ${user.profilePic}}"
                                 alt="User Profile Picture" class="profile-picture" id="profile-picture">
                             <input type="file" id="profile-picture-input" accept="image/*" style="display: none;">
                             <div class="edit-icon" id="edit-icon">
@@ -31,8 +33,9 @@
                                 </svg>
                             </div>
                         </div>
-                        <h2>John Doe</h2>
-                        <p>john.doe@example.com</p>
+                        <!-- Dynamically set user's full name and email -->
+                        <h2 th:text="${user.firstName + ' ' + user.lastName}">John Doe</h2>
+                        <p th:text="${user.email}">john.doe@example.com</p>
                     </aside>
                     <div class="profile-content scroll-animate" style="transition-delay: 0.1s;">
                         <form id="profile-form">
@@ -40,39 +43,48 @@
                             <div class="form-row">
                                 <div class="form-group">
                                     <label for="firstName">First Name</label>
-                                    <input type="text" id="firstName" value="John">
+                                    <input type="text" id="firstName" name="firstName" th:value="${user.firstName}">
                                     <div class="error-message" id="firstNameError"></div>
                                 </div>
                                 <div class="form-group">
                                     <label for="lastName">Last Name</label>
-                                    <input type="text" id="lastName" value="Doe">
+                                    <input type="text" id="lastName" name="lastName" th:value="${user.lastName}">
                                     <div class="error-message" id="lastNameError"></div>
                                 </div>
                             </div>
                             <div class="form-row">
                                 <div class="form-group">
                                     <label for="email">Email Address</label>
-                                    <input type="email" id="email" value="john.doe@example.com">
+                                    <input type="email" id="email" name="email" th:value="${user.email}" readonly
+                                        title="Email address cannot be changed.">
                                     <div class="error-message" id="emailError"></div>
                                 </div>
                                 <div class="form-group">
                                     <label for="phone">Phone Number</label>
-                                    <input type="text" id="phone" value="+91 98765 43210">
+                                    <input type="text" id="phone" name="phone" th:value="${user.phone}">
                                     <div class="error-message" id="phoneError"></div>
                                 </div>
                             </div>
                             <div class="form-group">
                                 <label for="address">Address</label>
-                                <input type="text" id="address" value="123 Auto Street, Car City">
+                                <input type="text" id="address" name="address" th:value="${user.address}">
                             </div>
                             <div class="form-row">
                                 <div class="form-group">
                                     <label for="state">State</label>
-                                    <select id="state"></select>
+                                    <select id="state" name="state">
+                                        <option value="">Select State</option>
+                                    </select>
+                                    <!-- Error message container for state -->
+                                    <div class="error-message" id="stateError"></div>
                                 </div>
                                 <div class="form-group">
                                     <label for="city">City</label>
-                                    <select id="city"></select>
+                                    <select id="city" name="city">
+                                        <option value="">Select City</option>
+                                    </select>
+                                    <!-- Error message container for city -->
+                                    <div class="error-message" id="cityError"></div>
                                 </div>
                             </div>
 
@@ -82,13 +94,23 @@
                         </form>
                     </div>
                 </div>
+                <!-- Fallback content if user is not found -->
+                <div class="profile-wrapper" th:unless="${user != null}">
+                    <p>User profile could not be loaded. Please log in again.</p>
+                </div>
             </div>
         </section>
     </main>
     <footer th:replace="~{fragments/footer::footer}"></footer>
 
+    <script th:src="@{/javascript/sweetalert2@11.js}"></script>
+    <script th:src="@{/javascript/jquery-3.7.1.min.js}"></script>
     <script th:src="@{/javascript/script.js}"></script>
-    <script>
+    <script th:inline="javascript">
+        /* Store user's state and city IDs from the backend model */
+        const userStateId = /*[[${user?.state?.id}]]*/ null;
+        const userCityId = /*[[${user?.city?.id}]]*/ null;
+
         document.addEventListener('DOMContentLoaded', () => {
             const observer = new IntersectionObserver((entries) => {
                 entries.forEach(entry => {
@@ -121,104 +143,193 @@
             }
 
             // --- State and City Data ---
-            const locationData = {
-                "Gujarat": ["Surat", "Ahmedabad", "Vadodara", "Rajkot"],
-                "Maharashtra": ["Mumbai", "Pune", "Nagpur", "Nashik"],
-                "Rajasthan": ["Jaipur", "Jodhpur", "Udaipur", "Kota"],
-                "Karnataka": ["Bengaluru", "Mysuru", "Mangaluru", "Hubballi"]
-            };
-
-            const stateSelect = document.getElementById('state');
-            const citySelect = document.getElementById('city');
-
-            // Populate states
-            Object.keys(locationData).forEach(state => {
-                const option = document.createElement('option');
-                option.value = state;
-                option.textContent = state;
-                stateSelect.appendChild(option);
+            $.ajax({
+                url: "/api/location/states",
+                method: "GET",
+                success: function (states) {
+                    const stateSelect = $('#state');
+                    stateSelect.empty().append('<option value="">Select State</option>');
+                    $.each(states, function (i, state) {
+                        stateSelect.append('<option value="' + state.id + '">' + state.name + '</option>');
+                    });
+                    if (userStateId) {
+                        stateSelect.val(userStateId).trigger('change');
+                    }
+                }
             });
 
-            // Function to update cities based on selected state
-            const updateCities = () => {
-                const selectedState = stateSelect.value;
-                citySelect.innerHTML = ''; // Clear existing options
-
-                if (selectedState && locationData[selectedState]) {
-                    locationData[selectedState].forEach(city => {
-                        const option = document.createElement('option');
-                        option.value = city;
-                        option.textContent = city;
-                        citySelect.appendChild(option);
+            $("#state").on("change", function () {
+                let stateId = $(this).val();
+                const citySelect = $('#city');
+                citySelect.empty().append('<option value="">Select City</option>');
+                if (stateId) {
+                    $.ajax({
+                        url: "/api/location/cities/" + stateId,
+                        method: "GET",
+                        success: function (cities) {
+                            $.each(cities, function (i, city) {
+                                citySelect.append('<option value="' + city.id + '">' + city.name + '</option>');
+                            });
+                            if (userCityId && stateId == userStateId) {
+                                citySelect.val(userCityId);
+                            }
+                        }
                     });
                 }
-            };
-
-            // Set default values and populate cities
-            stateSelect.value = "Gujarat";
-            updateCities();
-            citySelect.value = "Surat";
-
-            // Event listener for state change
-            stateSelect.addEventListener('change', updateCities);
-
-            // --- Form Validation ---
-            const profileForm = document.getElementById('profile-form');
-
-            const firstNameInput = document.getElementById('firstName');
-            const lastNameInput = document.getElementById('lastName');
-            const emailInput = document.getElementById('email');
-            const phoneInput = document.getElementById('phone');
-
-            const clearErrors = () => {
-                document.querySelectorAll('.error-message').forEach(el => el.textContent = '');
-                document.querySelectorAll('.input-error').forEach(el => el.classList.remove('input-error'));
-            };
-
-            const showError = (inputElement, message) => {
-                inputElement.classList.add('input-error');
-                const errorElement = document.getElementById(inputElement.id + 'Error');
-                if (errorElement) {
-                    errorElement.textContent = message;
-                }
-            };
-
-            profileForm.addEventListener('submit', (event) => {
-                event.preventDefault();
-                clearErrors();
-                let isValid = true;
-
-                // First Name Validation
-                if (firstNameInput.value.trim() === '') {
-                    showError(firstNameInput, 'First name is required.');
-                    isValid = false;
-                }
-
-                // Last Name Validation
-                if (lastNameInput.value.trim() === '') {
-                    showError(lastNameInput, 'Last name is required.');
-                    isValid = false;
-                }
-
-                // Email Validation
-                const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-                if (!emailRegex.test(emailInput.value.trim())) {
-                    showError(emailInput, 'Please enter a valid email address.');
-                    isValid = false;
-                }
-
-                // Phone Validation (simple 10-digit check for India)
-                const phoneRegex = /^[6-9]\d{9}$/;
-                if (!phoneRegex.test(phoneInput.value.trim().replace('+91', ''))) {
-                    showError(phoneInput, 'Please enter a valid 10-digit phone number.');
-                    isValid = false;
-                }
-
-                if (isValid) {
-                    console.log('Profile updated successfully!');
-                    // In a real application, you would send the data to a server here.
-                }
             });
+
+            const profileForm = document.getElementById('profile-form');
+            if (profileForm) {
+                const firstNameInput = document.getElementById('firstName');
+                const lastNameInput = document.getElementById('lastName');
+                const phoneInput = document.getElementById('phone');
+                const addressInput = document.getElementById('address');
+                const stateSelect = document.getElementById('state');
+                const citySelect = document.getElementById('city');
+
+                const showError = (inputElement, message) => {
+                    const errorElement = document.getElementById(inputElement.id + 'Error');
+                    if (errorElement) {
+                        errorElement.textContent = message;
+                    }
+                    inputElement.classList.add('input-error');
+                };
+
+                const clearError = (inputElement) => {
+                    const errorElement = document.getElementById(inputElement.id + 'Error');
+                    if (errorElement) {
+                        errorElement.textContent = '';
+                    }
+                    inputElement.classList.remove('input-error');
+                };
+
+                const validateFirstName = () => {
+                    const nameValue = firstNameInput.value.trim();
+                    if (nameValue === '') {
+                        showError(firstNameInput, 'First name is required.');
+                        return false;
+                    }
+                    if (nameValue.length < 2 || nameValue.length > 50) {
+                        showError(firstNameInput, 'Must be between 2 and 50 characters.');
+                        return false;
+                    }
+                    if (!/^[a-zA-Z]+$/.test(nameValue)) {
+                        showError(firstNameInput, 'Only letters are allowed.');
+                        return false;
+                    }
+                    clearError(firstNameInput);
+                    return true;
+                };
+
+                const validateLastName = () => {
+                    const nameValue = lastNameInput.value.trim();
+                    if (nameValue === '') {
+                        showError(lastNameInput, 'Last name is required.');
+                        return false;
+                    }
+                    if (nameValue.length < 2 || nameValue.length > 50) {
+                        showError(lastNameInput, 'Must be between 2 and 50 characters.');
+                        return false;
+                    }
+                    if (!/^[a-zA-Z]+$/.test(nameValue)) {
+                        showError(lastNameInput, 'Only letters are allowed.');
+                        return false;
+                    }
+                    clearError(lastNameInput);
+                    return true;
+                };
+
+                const validatePhone = () => {
+                    const phoneRegex = /^[6-9]\d{9}$/;
+                    const phoneValue = phoneInput.value.trim().replace(/\D/g, '');
+                    if (!phoneRegex.test(phoneValue)) {
+                        showError(phoneInput, 'Please enter a valid 10-digit phone number.');
+                        return false;
+                    }
+                    clearError(phoneInput);
+                    return true;
+                };
+
+                const validateState = () => {
+                    if (stateSelect.value === '') {
+                        showError(stateSelect, 'Please select a state.');
+                        return false;
+                    }
+                    clearError(stateSelect);
+                    return true;
+                };
+
+                const validateCity = () => {
+                    if (citySelect.value === '') {
+                        showError(citySelect, 'Please select a city.');
+                        return false;
+                    }
+                    clearError(citySelect);
+                    return true;
+                };
+
+
+                // Add event listeners for real-time validation
+                firstNameInput.addEventListener('keyup', validateFirstName);
+                lastNameInput.addEventListener('keyup', validateLastName);
+                phoneInput.addEventListener('keyup', validatePhone);
+                stateSelect.addEventListener('change', validateState);
+                citySelect.addEventListener('change', validateCity);
+
+                // Handle form submission
+                profileForm.addEventListener('submit', function (event) {
+                    event.preventDefault();
+
+                    // Run all validations to catch empty fields before submitting
+                    const isFirstNameValid = validateFirstName();
+                    const isLastNameValid = validateLastName();
+                    const isPhoneValid = validatePhone();
+                    const isStateValid = validateState();
+                    const isCityValid = validateCity();
+
+                    if (isFirstNameValid && isLastNameValid && isPhoneValid && isStateValid && isCityValid) {
+
+                        // --- THIS IS THE FIX ---
+                        // Trim the input values before sending them to the server.
+                        firstNameInput.value = firstNameInput.value.trim();
+                        lastNameInput.value = lastNameInput.value.trim();
+                        phoneInput.value = phoneInput.value.trim();
+                        addressInput.value = addressInput.value.trim();
+
+                        const formData = new FormData(this);
+                        const profilePictureFile = document.getElementById('profile-picture-input').files[0];
+                        if (profilePictureFile) {
+                            formData.append('profilePictureFile', profilePictureFile);
+                        }
+
+                        $.ajax({
+                            url: "/user/profile/update",
+                            method: "POST",
+                            data: formData,
+                            processData: false,
+                            contentType: false,
+                            success: function (response) {
+                                Swal.fire({
+                                    icon: 'success',
+                                    title: 'Success!',
+                                    text: response,
+                                    timer: 2000,
+                                    showConfirmButton: false
+                                }).then(() => {
+                                    window.location.reload();
+                                });
+                            },
+                            error: function (xhr) {
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Oops...',
+                                    text: xhr.responseText || 'Something went wrong!',
+                                });
+                            }
+                        });
+                    }
+                });
+            }
         });
     </script>
 </body>

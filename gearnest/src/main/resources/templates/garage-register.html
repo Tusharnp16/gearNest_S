@@ -103,8 +103,6 @@
 
                     <div class="input_box">
                         <label for="openingHours">Opening Hours:</label>
-                        <!-- <input type="text" th:field="*{openingHours}" placeholder="e.g., 9AM - 8PM" /> -->
-
                         <div style="display: flex;justify-content: space-between; align-items: center;">
                             <select name="openingHours" id="openingHours" style="margin: 5px;">
                                 <option value="">-</option>
@@ -152,32 +150,6 @@
 
                     </div>
 
-
-                    <!-- <div class="input_box">
-                        <label for="servicesOffered">Services Offered:</label>
-                        <input type="text" name="servicesOffered" placeholder="Oil change, Car wash, Brake check" />
-                    </div> -->
-                    <!-- <div class="input_box" style="width: 100%;">
-                        <label for="servicesOffered">Services Offered:</label>
-                        <div class="multi-select-container" onclick="focusInput()">
-                            <div id="selected-items" class="selected-items">
-                                <input type="text" id="select-input" placeholder="Select or type services..." />
-                            </div>
-                            <div id="dropdown" class="dropdown">
-                            </div>
-                            <input type="hidden" id="servicesOffered" name="servicesOffered" />
-                        </div>
-                        <span class="error-message" id="servicesOfferedError"></span>
-
-                    </div> -->
-
-                    <!-- <div class="input_box">
-                        <label for="price">Visit Charge:</label>
-                        <input type="text" id="price" placeholder="Enter Charge(E.g 500)/Hours" autocomplete="off"
-                            required />
-                        <span class="error-message" id="priceError"></span>
-                    </div> -->
-
                     <div class="input_box" style="width: 100%;">
                         <label for="description">Description:</label>
                         <textarea id="description" placeholder="Brief about your garage..." autocomplete="off"
@@ -201,30 +173,6 @@
                             required />
                         <span class="error-message" id="confiremPasswordError"></span>
                     </div>
-
-                    <!-- <div class="input_box" style="width: 100%;">
-                        <label for="uploadLogo">Upload Logo</label>
-                        <div class="file-input">
-                            <input type="file" name="file-input" id="file-input" class="file-input__input"
-                                accept="image/*" onchange="previewAndEncodeImage()" />
-                            <label class="file-input__label" for="file-input">
-                                <svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="upload"
-                                    class="svg-inline--fa fa-upload fa-w-16" role="img"
-                                    xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
-                                    <path fill="currentColor"
-                                        d="M296 384h-80c-13.3 0-24-10.7-24-24V192h-87.7c-17.8 0-26.7-21.5-14.1-34.1L242.3 5.7c7.5-7.5 19.8-7.5 27.3 0l152.2 152.2c12.6 12.6 3.7 34.1-14.1 34.1H320v168c0 13.3-10.7 24-24 24zm216-8v112c0 13.3-10.7 24-24 24H24c-13.3 0-24-10.7-24-24V376c0-13.3 10.7-24 24-24h136v8c0 30.9 25.1 56 56 56h80c30.9 0 56-25.1 56-56v-8h136c13.3 0 24 10.7 24 24zm-124 88c0-11-9-20-20-20s-20 9-20 20 9 20 20 20 20-9 20-20zm64 0c0-11-9-20-20-20s-20 9-20 20 9 20 20 20 20-9 20-20z">
-                                    </path>
-                                </svg>
-                                <span>Upload file</span></label>
-                        </div>
-                        <span class="error-message" id="uploadImgError"></span>
-
-                        <input type="hidden" name="logoBase64" id="logoBase64">
-                        <img id="previewImage" style="max-height:100px;" />
-
-                        <input type="hidden" th:field="*{latitude}" id="latitude">
-                        <input type="hidden" th:field="*{longitude}" id="longitude">
-                    </div> -->
 
                     <div class="input_box" style="display: flex;width: 100%;">
                         <input type="checkbox" id="terms" required style="margin-right: 10px;">
@@ -348,121 +296,6 @@
             }, 1000);
         }
 
-        // Services Offered dropdown (multi-select)
-        // const selectedItemsContainer = document.getElementById("selected-items");
-        // const dropdown = document.getElementById("dropdown");
-        // const input = document.getElementById("select-input");
-        // const hiddenInput = document.getElementById("servicesOffered");
-        // const selectedValues = new Map();
-
-        // function showDropdown() {
-        //     dropdown.style.display = "block";
-        //     filterOptions();
-        // }
-
-        // function hideDropdown() {
-        //     dropdown.style.display = "none";
-        // }
-
-        // function selectOption(id) {
-        //     const option = Array.from(dropdown.children).find(opt => opt.dataset.id === id);
-        //     if (!option) return;
-
-        //     const name = option.dataset.name;
-
-        //     if (selectedValues.has(id)) {
-        //         removeTag(id);
-        //         return;
-        //     }
-
-        //     selectedValues.set(id, name);
-
-        //     const tag = document.createElement("div");
-        //     tag.className = "tag";
-        //     tag.innerHTML = `<span>${name}</span><span class="remove" onclick="removeTag('${id}')">×</span>`;
-        //     selectedItemsContainer.insertBefore(tag, input);
-
-        //     updateHiddenInput();
-        //     input.value = "";
-        //     filterOptions();
-        //     hideDropdown();
-        // }
-
-
-        // function removeTag(id) {
-        //     const name = selectedValues.get(id);
-        //     selectedValues.delete(id);
-
-        //     const tags = document.querySelectorAll(".tag");
-        //     tags.forEach(tag => {
-        //         const span = tag.querySelector("span");
-        //         if (span && span.textContent.trim() === name) {
-        //             tag.remove();
-        //         }
-        //     });
-
-        //     updateHiddenInput();
-        //     filterOptions();
-        // }
-
-
-        // function updateHiddenInput() {
-        //     hiddenInput.value = Array.from(selectedValues.keys()).join(",");
-        // }
-
-        // function filterOptions() {
-        //     const search = input.value.toLowerCase();
-        //     const options = dropdown.querySelectorAll("div");
-        //     options.forEach(option => {
-        //         const name = option.dataset.name.toLowerCase();
-        //         const id = option.dataset.id;
-
-        //         option.style.display = name.includes(search) ? "block" : "none";
-        //         selectedValues.has(id)
-        //             ? option.classList.add("selected")
-        //             : option.classList.remove("selected");
-        //     });
-        // }
-
-        // input.addEventListener("keydown", function (e) {
-        //     if (e.key === "Enter") {
-        //         e.preventDefault();
-        //         const visibleOption = Array.from(dropdown.children).find(opt =>
-        //             opt.style.display !== 'none'
-        //         );
-        //         if (visibleOption) {
-        //             selectOption(visibleOption.dataset.id); // ← use ID, not name
-        //         }
-        //     }
-        // });
-
-
-        // input.addEventListener("input", showDropdown);
-        // input.addEventListener("focus", showDropdown);
-        // document.addEventListener("click", function (e) {
-        //     if (!document.querySelector(".multi-select-container").contains(e.target)) {
-        //         hideDropdown();
-        //     }
-        // });
-
-        // Image preview
-        // function previewAndEncodeImage() {
-        //     const input = document.getElementById('file-input');
-        //     const file = input.files[0];
-
-        //     if (file) {
-        //         const reader = new FileReader();
-        //         reader.onload = function (e) {
-        //             const base64String = e.target.result;
-        //             document.getElementById('logoBase64').value = base64String;
-        //             document.getElementById('previewImage').src = base64String;
-        //         };
-        //         reader.readAsDataURL(file);
-        //     }
-        // }
-
-
-
         // jQuery validation and submission
         $(document).ready(function () {
             function showError(id, message) {
@@ -564,13 +397,6 @@
                 else clearError('locationError');
             });
 
-            // $('#price').on('keyup', function () {
-            //     const val = $(this).val().trim();
-            //     if (val === '') showError('priceError', 'Visit charge is required');
-            //     else if (!priceRegex.test(val)) showError('priceError', 'Enter a valid number (e.g. 500)');
-            //     else clearError('priceError');
-            // });
-
             $('#description').on('keyup', function () {
                 const val = $(this).val().trim();
                 if (val === '') showError('descriptionError', 'Description is required');
@@ -593,11 +419,6 @@
                 else clearError('confiremPasswordError');
             });
 
-            // $('#select-input').on('keyup', function () {
-            //     if (selectedValues.size === 0) showError('servicesOfferedError', 'Select at least one service');
-            //     else clearError('servicesOfferedError');
-            // });
-
             $('#openingHours, #openingHours_am_pm, #closingHours, #closingHours_am_pm').on('change', function () {
                 if ($('#openingHours').val() && $('#openingHours_am_pm').val() &&
                     $('#closingHours').val() && $('#closingHours_am_pm').val()) {
@@ -609,7 +430,7 @@
 
             // $('#file-input').on('change', function () {
             //     if (this.files.length > 0) clearError('uploadImgError');
-            //     else showError('uploadImgError', 'Logo file is required');
+            //     else showError('uploadImgError', 'Logo file is required');s
             // });
 
             $('#terms').on('change', function () {
@@ -640,8 +461,8 @@
                     email: $('#email').val(),
                     otp: $('#otp').val(),
                     address: $('#address').val(),
-                    state: state,
-                    city: city,
+                    state: { id: $('#state').val() },  // object with id
+                    city: { id: $('#city').val() },    // object with id
                     openingHours: $('#openingHours').val() + ' ' + $('#openingHours_am_pm').val() + ' to ' + $('#closingHours').val() + ' ' + $('#closingHours_am_pm').val(),
                     description: $('#description').val(),
                     password: $('#password').val()

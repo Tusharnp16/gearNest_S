@@ -26,6 +26,143 @@
 
     <!-- My CSS -->
     <link rel="stylesheet" th:href="@{/css/admin/style.css}" />
+    <style>
+        /* =================================================
+    NAVBAR PROFILE DROPDOWN STYLES
+==================================================== */
+
+        nav .profile {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-left: 24px;
+            /* Space from the theme switcher */
+            position: relative;
+        }
+
+        nav .profile img {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        nav .profile .dropdown-toggle {
+            display: flex;
+            align-items: center;
+            text-decoration: none;
+            color: var(--dark);
+            /* Uses your existing CSS variable */
+            cursor: pointer;
+            gap: 10px;
+        }
+
+        /* Hides Bootstrap's default arrow icon for a cleaner look */
+        nav .profile .dropdown-toggle::after {
+            display: none;
+        }
+
+        nav .profile .dropdown-menu {
+            border-radius: 10px;
+            box-shadow: 4px 4px 16px rgba(0, 0, 0, .1);
+            border: none;
+            padding: 8px 0;
+            margin-top: 15px !important;
+            /* Pushes the dropdown down slightly */
+        }
+
+        nav .profile .dropdown-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 15px;
+            font-size: 14px;
+        }
+
+        nav .profile .dropdown-item:active {
+            background: var(--grey);
+        }
+
+        nav .profile .dropdown-item i {
+            font-size: 18px;
+        }
+
+        /* CSS for the small toggle switch */
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 40px;
+            /* Smaller width */
+            height: 24px;
+            /* Smaller height */
+        }
+
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            -webkit-transition: .4s;
+            transition: .4s;
+            border-radius: 24px;
+            /* Smaller border-radius */
+        }
+
+        /* Add text to the slider */
+        .slider:after {
+
+            color: white;
+            display: block;
+            position: absolute;
+            transform: translate(-50%, -50%);
+            top: 50%;
+            left: 50%;
+            font-size: 10px;
+            font-weight: bold;
+            font-family: Arial, sans-serif;
+            transition: .4s;
+        }
+
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 16px;
+            /* Smaller height */
+            width: 16px;
+            /* Smaller width */
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            -webkit-transition: .4s;
+            transition: .4s;
+            border-radius: 50%;
+        }
+
+        input:checked+.slider {
+            background-color: #2196F3;
+        }
+
+        input:focus+.slider {
+            box-shadow: 0 0 1px #2196F3;
+        }
+
+        input:checked+.slider:before {
+            -webkit-transform: translateX(16px);
+            /* Adjusted transform value */
+            -ms-transform: translateX(16px);
+            transform: translateX(16px);
+        }
+    </style>
 
     <title th:text="'GearNest-Garage-'+${title}"></title>
 </head>
@@ -33,7 +170,7 @@
 <body>
     <!-- SIDEBAR -->
     <section id="sidebar">
-        <a href="#" class="brand">
+        <a href="/garage/dashboard" class="brand">
             <i class='bx bx-lg'> <img th:src="@{/images/logo.png}" style="height: 55px;width: 55px;" alt=""></i>
             <span class="text">Garage</span>
         </a>
@@ -41,26 +178,7 @@
             <li th:classappend="${activePage} == 'dashboard' ? 'active'">
                 <a href="dashboard">
                     <i class='bx bxs-dashboard bx-sm'></i>
-                    <!-- <i class="fas fa-tachometer-alt me-2"></i> -->
                     <span class="text">Dashboard</span>
-                </a>
-            </li>
-            <li th:classappend="${activePage} == 'users' ? 'active'">
-                <a href="users">
-                    <i class="fas fa-solid fa-users"></i>
-                    <span class="text">Customers</span>
-                </a>
-            </li>
-            <li th:classappend="${activePage} == 'garages' ? 'active'">
-                <a href="garages">
-                    <i class="fas fa-screwdriver-wrench"></i>
-                    <span class="text">Garages</span>
-                </a>
-            </li>
-            <li th:classappend="${activePage} == 'bookings' ? 'active'">
-                <a href="bookings">
-                    <i class="fas fa-solid fa-calendar-check"></i>
-                    <span class="text">Bookings</span>
                 </a>
             </li>
             <li th:classappend="${activePage} == 'services' ? 'active'">
@@ -69,35 +187,7 @@
                     <span class="text">Services</span>
                 </a>
             </li>
-            <li th:classappend="${activePage} == 'feedback' ? 'active'">
-                <a href="feedback">
-                    <i class="fas fa-solid fa-thumbs-up"></i>
-                    <span class="text">Feedbacks</span>
-                </a>
-            </li>
-            <li th:classappend="${activePage} == 'contact-us' ? 'active'">
-                <a href="contact">
-                    <i class="fas fa-headset"></i> <span class="text">Contact Us</span>
-                </a>
-            </li>
-            <!-- <li>
-                <a href="#">
-                    <i class='bx bxs-doughnut-chart bx-sm'></i>
-                    <span class="text">Analytics</span>
-                </a>
-            </li>
-            <li>
-                <a href="#">
-                    <i class='bx bxs-message-dots bx-sm'></i>
-                    <span class="text">Message</span>
-                </a>
-            </li>
-            <li>
-                <a href="#">
-                    <i class='bx bxs-group bx-sm'></i>
-                    <span class="text">Team</span>
-                </a>
-            </li> -->
+
         </ul>
         <ul class="side-menu bottom">
             <li>
@@ -118,14 +208,16 @@
 
     <!-- CONTENT -->
     <section id="content">
+
         <!-- NAVBAR -->
         <nav>
+
+
             <i class='bx bx-menu bx-sm'></i>
-            <a href="#" class="nav-link">Categories</a>
-            <form action="#">
+            <form action="#" style="margin: auto;">
                 <div class="form-input">
-                    <input type="search" placeholder="Search...">
-                    <button type="submit" class="search-btn"><i class='bx bx-search'></i></button>
+                    <h5 style="margin: auto;font-weight: 700;color: var(--blue);" th:text="${garage.garageName}">Garage
+                        Name</h5>
                 </div>
             </form>
             <input type="checkbox" class="checkbox" id="switch-mode" hidden />
@@ -135,32 +227,23 @@
                 <div class="ball"></div>
             </label>
 
-            <!-- Notification Bell -->
-            <a href="#" class="notification" id="notificationIcon">
-                <i class='bx bxs-bell bx-tada-hover'></i>
-                <span class="num">8</span>
-            </a>
-            <div class="notification-menu" id="notificationMenu">
-                <ul>
-                    <li>New message from John</li>
-                    <li>Your order has been shipped</li>
-                    <li>New comment on your post</li>
-                    <li>Update available for your app</li>
-                    <li>Reminder: Meeting at 3PM</li>
+            <div class="dropdown profile">
+                <a href="#" class="dropdown-toggle d-flex align-items-center" id="profileDropdown" role="button"
+                    data-bs-toggle="dropdown" aria-expanded="false">
+
+                    <img class="rounded-circle me-2"
+                        th:src="${garage.profileImage != null} ? @{/uploads/garage-profiles/{file}(file=${garage.profileImage})} : @{/images/default.png}"
+                        alt="Profile Picture" width="40" height="40">
+
+                    <span style="font-weight: 400; color: #4a5568;">Hello, </span>
+                    <strong th:text="${garage.ownerName}">Owner Name</strong>
+                </a>
+                <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="profileDropdown">
+                    <li><a class="dropdown-item" th:href="@{/garage/profile}">Profile</a></li>
+                    <li><a class="dropdown-item" th:href="@{/logout}">Logout</a></li>
                 </ul>
             </div>
 
-            <!-- Profile Menu -->
-            <a href="#" class="profile" id="profileIcon">
-                <img src="https://placehold.co/600x400/png" alt="Profile">
-            </a>
-            <div class="profile-menu" id="profileMenu">
-                <ul>
-                    <li><a href="#">My Profile</a></li>
-                    <li><a href="#">Settings</a></li>
-                    <li><a href="#">Log Out</a></li>
-                </ul>
-            </div>
         </nav>
         <!-- NAVBAR -->
 
@@ -171,17 +254,19 @@
         </main>
 
         <!-- MAIN -->
-    </section>
-    <!-- CONTENT -->
 
+        <!-- CONTENT -->
+    </section>
 
     <!-- jQuery + DataTables Scripts -->
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
     <script src="https://cdn.datatables.net/responsive/2.5.0/js/dataTables.responsive.min.js"></script>
+    <script src="https://cdn.datatables.net/2.0.8/js/dataTables.js"></script>
 
     <script th:src="@{/javascript/sweetalert2@11.js}"></script>
-    <script th:src="@{/javascript/admin/script.js}"></script>
+    <script th:src="@{/javascript/garage/script.js}"></script>
+
 
 </body>
 

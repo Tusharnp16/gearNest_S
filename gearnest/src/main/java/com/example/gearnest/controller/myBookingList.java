@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 @Controller
 public class myBookingList {
 
-    @GetMapping("/mybookings")
+    @GetMapping("/user/my-bookings")
     public String myBookings() {
         return "myBookings";
     }

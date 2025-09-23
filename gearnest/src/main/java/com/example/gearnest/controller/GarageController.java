@@ -27,9 +27,6 @@ public class GarageController {
     @Autowired
     private OtpService otpService;
 
-    // @Autowired
-    // private GarageServicesRepository garageServicesRepository;
-
     // ==== Page Rendering ====
 
     @GetMapping("/garage-register")
@@ -80,13 +77,6 @@ public class GarageController {
                 return ResponseEntity.badRequest().body("Invalid OTP");
             }
 
-            // Handle logo
-            // String base64 = garage.getLogoPath();
-            // if (base64 != null && base64.startsWith("data:image")) {
-            // String logoPath = saveBase64ImageToFile(base64, "uploads/logos/");
-            // garage.setLogoPath(logoPath);
-            // }
-
             // Encrypt password
             garage.setPassword(new BCryptPasswordEncoder().encode(garage.getPassword()));
 
@@ -95,12 +85,6 @@ public class GarageController {
             garage.setApproved(false);
             garage.setStatus("Pending");
             garage.setVerified(true);
-            // garage.setRating(5.0);
-
-            // Lookup and assign services
-            // if (garage.getServiceIds() != null && !garage.getServiceIds().isEmpty()) {
-            // garage.setServicesOffered(garageServicesRepository.findAllById(garage.getServiceIds()));
-            // }
 
             garageRepository.save(garage);
 
@@ -115,35 +99,4 @@ public class GarageController {
         }
     }
 
-    // ==== Utility: Save Base64 image to file ====
-
-    // private String saveBase64ImageToFile(String base64Image, String uploadDir)
-    // throws IOException {
-    // if (base64Image == null || base64Image.isBlank())
-    // return null;
-
-    // if (!base64Image.contains(",")) {
-    // throw new IllegalArgumentException("Invalid Base64 image format");
-    // }
-
-    // String[] parts = base64Image.split(",");
-    // String imageData = parts[1];
-    // byte[] decoded = Base64.getDecoder().decode(imageData);
-
-    // String fileName = "logo_" + System.currentTimeMillis() + ".png";
-    // File uploadPath = new File(uploadDir);
-    // if (!uploadPath.exists())
-    // uploadPath.mkdirs();
-
-    // File file = new File(uploadPath, fileName);
-    // java.nio.file.Files.write(file.toPath(), decoded);
-
-    // return "/" + uploadDir + fileName;
-    // }
-
-    @GetMapping("/garage/dashboard")
-    public String dashboard(Model model) {
-        // model.addAttribute();
-        return "dashboard";
-    }
 }

@@ -537,3 +537,252 @@ $('#updateServiceForm').on('submit', function (e) {
     });
 });
 
+
+$(function () { // Shorthand for $(document).ready()
+
+    // --- TEMPLATE-WIDE LOGIC (SIDEBAR, DARK MODE) ---
+
+    // Sidebar active link logic
+    const allSideMenu = document.querySelectorAll('#sidebar .side-menu.top li a');
+    allSideMenu.forEach(item => {
+        // Highlight the link that matches the current page URL
+        if (item.href === window.location.href) {
+            item.parentElement.classList.add('active');
+        }
+    });
+
+    // Sidebar toggle
+    const menuBar = document.querySelector('#content nav .bx.bx-menu');
+    const sidebar = document.getElementById('sidebar');
+    if (menuBar) {
+        menuBar.addEventListener('click', function () {
+            sidebar.classList.toggle('hide');
+        });
+    }
+
+    // Dark Mode Switcher
+    const switchMode = document.getElementById('switch-mode');
+    if (localStorage.getItem('theme') === 'dark') {
+        document.body.classList.add('dark');
+        if (switchMode) switchMode.checked = true;
+    }
+    if (switchMode) {
+        switchMode.addEventListener('change', function () {
+            document.body.classList.toggle('dark', this.checked);
+            localStorage.setItem('theme', this.checked ? 'dark' : 'light');
+        });
+    }
+
+    // --- REUSABLE SWEETALERT FUNCTIONS ---
+
+    // 1. Success Toast Notification
+    const successMessageSpan = $('#success-message');
+    if (successMessageSpan.length && successMessageSpan.text()) {
+        const Toast = Swal.mixin({
+            toast: true,
+            position: 'top-end',
+            showConfirmButton: false,
+            timer: 3000,
+            timerProgressBar: true
+        });
+        Toast.fire({
+            icon: 'success',
+            title: successMessageSpan.text()
+        });
+    }
+
+    // 2. Reusable Delete Confirmation Modal
+    $(document).on('click', '.swal-delete-link', function (e) {
+        e.preventDefault();
+        const deleteUrl = $(this).attr('href');
+        const itemName = $(this).data('name') || 'this item';
+
+        Swal.fire({
+            title: 'Are you sure?',
+            text: `You are about to delete "${itemName}". This cannot be undone!`,
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#d33',
+            cancelButtonColor: '#6c757d',
+            confirmButtonText: 'Yes, delete it!'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                window.location.href = deleteUrl;
+            }
+        });
+    });
+
+
+    // --- PAGE-SPECIFIC LOGIC: ADMIN VEHICLE TYPES --- 
+    $(function () { // Shorthand for $(document).ready()
+
+        // --- TEMPLATE-WIDE LOGIC (SIDEBAR, DARK MODE) ---
+
+        const allSideMenu = document.querySelectorAll('#sidebar .side-menu.top li a');
+        allSideMenu.forEach(item => {
+            if (item.href === window.location.href) {
+                item.parentElement.classList.add('active');
+            }
+        });
+
+        const menuBar = document.querySelector('#content nav .bx.bx-menu');
+        const sidebar = document.getElementById('sidebar');
+        if (menuBar) {
+            menuBar.addEventListener('click', function () {
+                sidebar.classList.toggle('hide');
+            });
+        }
+
+        const switchMode = document.getElementById('switch-mode');
+        if (localStorage.getItem('theme') === 'dark') {
+            document.body.classList.add('dark');
+            if (switchMode) switchMode.checked = true;
+        }
+        if (switchMode) {
+            switchMode.addEventListener('change', function () {
+                document.body.classList.toggle('dark', this.checked);
+                localStorage.setItem('theme', this.checked ? 'dark' : 'light');
+            });
+        }
+
+        // --- REUSABLE SWEETALERT FUNCTIONS ---
+
+        function showSuccessToast(message) {
+            Swal.fire({
+                position: "top-end",
+                icon: "success",
+                title: message,
+                showConfirmButton: false,
+                timer: 2000
+            }).then(() => {
+                location.reload();
+            });
+        }
+
+        const successMessageSpan = $('#success-message');
+        if (successMessageSpan.length && successMessageSpan.text()) {
+            Swal.fire({
+                position: "top-end",
+                icon: "success",
+                title: successMessageSpan.text(),
+                showConfirmButton: false,
+                timer: 2000
+            });
+        }
+
+        // --- PAGE-SPECIFIC LOGIC: ADMIN VEHICLE TYPES ---
+
+        // 1. Validation and AJAX Submission for ADD form
+        $('#add-vehicle-type-form').on('submit', function (e) {
+            e.preventDefault();
+            const form = $(this);
+            const nameInput = $('#add-name');
+            const name = nameInput.val().trim();
+            const errorSpan = $('#add-name-error');
+            const nameRegex = /^[a-zA-Z\s]+$/;
+
+            if (name.length < 2) {
+                errorSpan.text('Name must be at least 2 characters.'); return;
+            }
+            if (!nameRegex.test(name)) {
+                errorSpan.text('Only letters and spaces are allowed.'); return;
+            }
+
+            errorSpan.text('');
+
+            $.ajax({
+                type: 'POST',
+                url: form.attr('action'),
+                data: form.serialize(),
+                success: function (res) {
+                    showSuccessToast(res.message);
+                },
+                error: function (xhr) {
+                    const errorMsg = xhr.responseJSON ? xhr.responseJSON.error : "Could not add vehicle type.";
+                    errorSpan.text(errorMsg);
+                }
+            });
+        });
+
+        // 2. Open and Populate the UPDATE modal
+        $(document).on('click', '.update-vehicle-type-btn', function () {
+            const typeId = $(this).data('id');
+            const typeName = $(this).data('name');
+
+            $('#update-id').val(typeId);
+            $('#update-name').val(typeName);
+            $('#update-name-error').text('');
+
+            $('#updateVehicleTypeModal').modal('show');
+        });
+
+        // 3. Validation and AJAX Submission for UPDATE form
+        $('#update-vehicle-type-form').on('submit', function (e) {
+            e.preventDefault();
+            const form = $(this);
+            const name = $('#update-name').val().trim();
+            const id = $('#update-id').val();
+            const errorSpan = $('#update-name-error');
+            const originalName = $(`.update-vehicle-type-btn[data-id='${id}']`).data('name');
+            const nameRegex = /^[a-zA-Z\s]+$/;
+
+            if (name.length < 2) {
+                errorSpan.text('Name must be at least 2 characters.'); return;
+            }
+            if (!nameRegex.test(name)) {
+                errorSpan.text('Only letters and spaces are allowed.'); return;
+            }
+            if (name.toLowerCase() === originalName.toLowerCase()) {
+                $('#updateVehicleTypeModal').modal('hide'); return;
+            }
+
+            errorSpan.text('');
+
+            $.ajax({
+                type: 'POST',
+                url: '/admin/vehicletypes/update',
+                data: form.serialize(),
+                success: function (res) {
+                    $('#updateVehicleTypeModal').modal('hide');
+                    showSuccessToast(res.message);
+                },
+                error: function (xhr) {
+                    const errorMsg = xhr.responseJSON ? xhr.responseJSON.error : "Could not update vehicle type.";
+                    errorSpan.text(errorMsg);
+                }
+            });
+        });
+
+        // 4. AJAX Delete with Toast for Vehicle Types
+        $(document).on('click', '.vehicle-type-delete-btn', function (e) {
+            e.preventDefault();
+            const typeId = $(this).data('id');
+            const typeName = $(this).data('name');
+
+            Swal.fire({
+                title: 'Are you sure?',
+                text: `You are about to delete "${typeName}". This cannot be undone!`,
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#6c757d',
+                confirmButtonText: 'Yes, delete it!'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        url: `/admin/vehicletypes/delete/${typeId}`,
+                        type: 'DELETE',
+                        success: function (res) {
+                            showSuccessToast(res.message);
+                        },
+                        error: function (xhr) {
+                            const errorMsg = xhr.responseJSON ? xhr.responseJSON.error : "Could not delete item.";
+                            Swal.fire('Error!', errorMsg, 'error');
+                        }
+                    });
+                }
+            });
+        });
+
+    });
+});
