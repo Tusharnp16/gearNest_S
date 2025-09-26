@@ -93,6 +93,7 @@
         border: 1px solid var(--color-gray-200);
         display: flex;
         flex-direction: column;
+        margin-bottom: 30px;
     }
 
     .service-card-header {
@@ -260,4 +261,84 @@
         .service-card-body {
             grid-template-columns: 120px 1fr;
         }
+    }
+
+
+
+    .service-timeline {
+        position: relative;
+        padding: 1rem 0;
+    }
+
+    .timeline {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        position: relative;
+        width: 100%;
+    }
+
+    .timeline-group {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        position: relative;
+        width: 100%;
+        margin: 1rem 0;
+    }
+
+    .timeline-group.cancelled {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        position: relative;
+        width: 100%;
+        margin: 1rem 0;
+    }
+
+    .timeline-group::before {
+        content: '';
+        position: absolute;
+        top: 6px;
+        left: 0;
+        right: 0;
+        height: 2px;
+        background-color: #e2e8f0;
+        z-index: 1;
+    }
+
+    .timeline-step {
+        text-align: center;
+        position: relative;
+        flex-grow: 1;
+        flex-basis: 33.33%;
+        margin: 0 10px;
+    }
+
+    .timeline-group.cancelled .timeline-step {
+        flex-basis: 50%;
+    }
+
+    .timeline-dot {
+        width: 12px;
+        height: 12px;
+        background-color: #e2e8f0;
+        border-radius: 50%;
+        margin: 0 auto 0.5rem;
+        position: relative;
+        z-index: 2;
+        transition: background-color 0.3s ease-in-out;
+    }
+
+    .timeline-step.completed .timeline-dot {
+        background-color: #2ecc71;
+    }
+
+    .timeline-step.cancelled-step .timeline-dot {
+        background-color: #e74c3c;
+    }
+
+    .timeline-step-label {
+        font-size: 0.75rem;
+        color: #718096;
     }

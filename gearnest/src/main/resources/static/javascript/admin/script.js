@@ -204,7 +204,6 @@ $(document).ready(function () {
         });
     }
 
-
 });
 
 
@@ -786,3 +785,4 @@ $(function () { // Shorthand for $(document).ready()
 
     });
 });
+

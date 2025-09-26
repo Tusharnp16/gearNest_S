@@ -162,6 +162,163 @@
             -ms-transform: translateX(16px);
             transform: translateX(16px);
         }
+
+        /* manage bookings */
+
+        /* Style for the booking table container */
+        .booking-table-container {
+            width: 100%;
+            overflow-x: auto;
+        }
+
+        /* Base table styling */
+        .booking-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            font-size: 14px;
+            text-align: left;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+            background-color: #ffffff;
+        }
+
+        /* Table headers and cells padding and borders */
+        .booking-table th,
+        .booking-table td {
+            padding: 12px 15px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        /* Table header styling */
+        .booking-table th {
+            background-color: #3498db;
+            color: white;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        /* Alternate row colors for readability */
+        .booking-table tr:nth-child(even) {
+            background-color: #f8f8f8;
+        }
+
+        /* Hover effect for rows to indicate interactivity */
+        .booking-table tr:hover {
+            background-color: #f1f1f1;
+            cursor: pointer;
+        }
+
+        /* Style for status badges */
+        .status-badge {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 500;
+            color: white;
+        }
+
+        /* Specific colors for different statuses */
+        .status-badge.confirmed {
+            background-color: #2ecc71;
+        }
+
+        .status-badge.pending {
+            background-color: #f39c12;
+        }
+
+        .status-badge.cancelled {
+            background-color: #e74c3c;
+        }
+
+        /* Styles for SweetAlert2 select dropdown */
+        .swal2-select {
+            width: 100%;
+            max-width: 200px;
+            font-size: 14px;
+            padding: 8px;
+            border-radius: 5px;
+            border: 1px solid #dcdcdc;
+            margin-top: 10px;
+        }
+
+        /* style for manage bookings */
+        .booking-table-container {
+            width: 100%;
+            overflow-x: auto;
+        }
+
+        .booking-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            font-size: 14px;
+            text-align: left;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+            background-color: #ffffff;
+        }
+
+        .booking-table th,
+        .booking-table td {
+            padding: 12px 15px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .booking-table th {
+            background-color: #3498db;
+            color: white;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .booking-table tr:nth-child(even) {
+            background-color: #f8f8f8;
+        }
+
+        .booking-table tr:hover {
+            background-color: #f1f1f1;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 500;
+            color: white;
+            height: max-content;
+        }
+
+        .status-badge.booked {
+            background-color: #3498db;
+        }
+
+        .status-badge.in,
+        .progress {
+            background-color: #f39c12;
+        }
+
+        .status-badge.completed {
+            background-color: #2ecc71;
+        }
+
+        .status-badge.cancelled {
+            background-color: #e74c3c;
+        }
+
+        .swal2-select {
+            width: 100%;
+            max-width: 200px !important;
+            font-size: 14px !important;
+            padding: 8px !important;
+            border-radius: 5px;
+            border: 1px solid #dcdcdc;
+            margin-top: 10px;
+        }
     </style>
 
     <title th:text="'GearNest-Garage-'+${title}"></title>
@@ -185,6 +342,12 @@
                 <a href="services">
                     <i class='bx bxs-cog bx-sm'></i>
                     <span class="text">Services</span>
+                </a>
+            </li>
+            <li th:classappend="${activePage} == 'bookings' ? 'active'">
+                <a href="bookings">
+                    <i class='bx bxs-calendar-check bx-sm'></i>
+                    <span class="text">Bookings</span>
                 </a>
             </li>
 

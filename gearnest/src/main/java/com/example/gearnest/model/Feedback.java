@@ -7,6 +7,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.PrePersist;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -22,8 +23,16 @@ public class Feedback {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String name;
-    private String email;
+    // Establishes a many-to-one relationship with the User entity.
+    // Each feedback is linked to a single user.
+    @ManyToOne
+    private User user;
+
+    // Establishes a many-to-one relationship with the Garage entity.
+    // Each feedback is given to a single garage.
+    @ManyToOne
+    private Garage garage;
+
     private Integer rating;
 
     @Column(length = 1000)

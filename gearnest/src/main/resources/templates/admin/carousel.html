@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" th:replace="~{admin/fragments/base::layout(~{::main})}">
+
+<main>
+    <div class="head-title">
+        <div class="left">
+            <h1>Carousel</h1>
+            <ul class="breadcrumb">
+                <li><a href="#">Admin</a></li>
+                <li><i class='bx bx-chevron-right'></i></li>
+                <li><a class="active" href="#">Carousel</a></li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="card shadow mb-4">
+        <div class="card-header py-3">
+            <h6 class="m-0 font-weight-bold text-primary">Upload New Carousel Image</h6>
+        </div>
+        <div class="card-body">
+            <form th:action="@{/admin/carousel/upload}" method="post" enctype="multipart/form-data">
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label for="carouselImageFile" class="form-label">Image File</label>
+                        <input type="file" id="carouselImageFile" name="carouselImageFile" class="form-control" required
+                            accept="image/png, image/jpeg, image/jpg, image/gif">
+                    </div>
+                    <div class="col-md-6 mb-3 d-flex align-items-end">
+                        <button type="submit" class="btn btn-primary w-100">Upload Image</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="card shadow mb-4">
+        <div class="card-header py-3">
+            <h6 class="m-0 font-weight-bold text-primary">Current Carousel Images</h6>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0"
+                    th:if="${not #lists.isEmpty(carouselImages)}">
+                    <thead>
+                        <tr>
+                            <th>Image</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="image : ${carouselImages}">
+                            <td><img th:src="@{/uploads/carousel-images/{filename}(filename=${image.filename})}"
+                                    alt="Carousel Image" style="width: 150px;">
+                            </td>
+                            <td>
+                                <a th:href="@{/admin/carousel/delete/{id}(id=${image.id})}"
+                                    class="btn btn-danger btn-sm ms-1">
+                                    <i class='bx bx-trash'></i> Delete
+                                </a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div th:if="${#lists.isEmpty(carouselImages)}" class="alert alert-info" role="alert">
+                    No carousel images have been uploaded yet.
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/responsive/2.5.0/js/dataTables.responsive.min.js"></script>
+<script th:src="@{/javascript/admin/script.js}"></script>
+
+</html>

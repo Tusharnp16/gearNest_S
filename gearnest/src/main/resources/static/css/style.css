@@ -274,7 +274,7 @@
      color: var(--color-white);
      padding: 6rem 1.5rem;
      text-align: center;
-     background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('https://images.unsplash.com/photo-1542838686-37da4a9fd1b3?w=1920&h=1080&fit=crop&q=80') no-repeat center center/cover;
+     /* background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('https://images.unsplash.com/photo-1542838686-37da4a9fd1b3?w=1920&h=1080&fit=crop&q=80') no-repeat center center/cover; */
  }
 
  .hero-section h1 {
@@ -772,6 +772,7 @@
      display: flex;
      justify-content: space-between;
      align-items: flex-start;
+     padding: 0rem 0rem 0rem 1.5rem;
  }
 
  .modal-body {

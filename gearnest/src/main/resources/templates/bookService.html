@@ -7,11 +7,11 @@
     <link rel="stylesheet" th:href="@{/css/style.css}" />
     <link rel="stylesheet" th:href="@{/css/bookservice.css}">
     <link rel="shortcut icon" th:href="@{/images/logo.png}" type="image/x-icon">
-
-    <!-- Google Fonts: Inter -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- SweetAlert2 CDN for modern popups -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 
 <body>
@@ -22,64 +22,86 @@
             <div class="container">
                 <div class="section-title">
                     <h1>Book a Service</h1>
-                    <p>Complete the details below to schedule your service with Surat Premium Motors.</p>
+                    <p>Complete the details below to schedule your service with <span
+                            th:text="${garage.garageName}"></span>.</p>
                 </div>
 
                 <div class="booking-wrapper">
                     <div class="booking-details scroll-animate">
                         <h2>Booking Details</h2>
                         <form id="booking-form">
+                            <!-- HIDDEN FIELDS TO PASS DATA TO JAVASCRIPT -->
+                            <input type="hidden" id="garageId" th:value="${garage.id}">
+                            <input type="hidden" id="garageName" th:value="${garage.garageName}">
+                            <input type="hidden" id="userFullName"
+                                th:value="${user.firstName} + ' ' + ${user.lastName}">
+                            <input type="hidden" id="userEmail" th:value="${user.email}">
+                            <input type="hidden" id="razorpayKeyId" th:value="${razorpayKeyId}">
+                            <input type="hidden" id="garageStateId" th:value="${garage.state?.id}">
+                            <input type="hidden" id="garageCityId" th:value="${garage.city?.id}">
+                            <input type="hidden" id="userPhone" th:value="${user.phone}">
+                            <input type="hidden" id="userAddress" th:value="${user.address}">
+
                             <div class="form-row">
                                 <div class="form-group">
                                     <label for="vehicle-make">Vehicle Make</label>
                                     <input type="text" id="vehicle-make" name="vehicle-make"
-                                        placeholder="e.g., Maruti Suzuki" value="Maruti Suzuki">
+                                        placeholder="e.g., Maruti Suzuki" required>
                                 </div>
                                 <div class="form-group">
                                     <label for="vehicle-model">Vehicle Model</label>
                                     <input type="text" id="vehicle-model" name="vehicle-model" placeholder="e.g., Swift"
-                                        value="Swift">
+                                        required>
                                 </div>
                             </div>
                             <div class="form-row">
                                 <div class="form-group">
                                     <label for="vehicle-number">Vehicle Number</label>
                                     <input type="text" id="vehicle-number" name="vehicle-number"
-                                        placeholder="e.g., GJ05 AB 1234" value="GJ05 AB 1234">
+                                        placeholder="e.g., GJ05 AB 1234" required>
                                 </div>
                                 <div class="form-group">
                                     <label for="vehicle-type">Vehicle Type</label>
-                                    <select id="vehicle-type" name="vehicle-type">
-                                        <option value="Car">Car</option>
-                                        <option value="Bike">Bike</option>
+                                    <select id="vehicle-type" name="vehicle-type" required>
+                                        <option th:each="type : ${vehicleTypes}" th:value="${type.id}"
+                                            th:text="${#strings.capitalize(type.name)}"
+                                            th:selected="${type.name.equalsIgnoreCase('Car')}">
+                                        </option>
                                     </select>
                                 </div>
                             </div>
                             <div class="form-group">
                                 <label for="address">Pickup Address</label>
-                                <input type="text" id="address" name="address" value="123 Auto Street">
+                                <input type="text" id="address" name="address" th:value="${user.address}" required>
                             </div>
                             <div class="form-row">
                                 <div class="form-group">
                                     <label for="state">State</label>
-                                    <select id="state"></select>
+                                    <select id="state" name="state" required>
+                                        <option value="">-- Select State --</option>
+                                        <option th:each="state : ${states}" th:value="${state.id}"
+                                            th:text="${state.name}"></option>
+                                    </select>
                                 </div>
                                 <div class="form-group">
                                     <label for="city">City</label>
-                                    <select id="city"></select>
+                                    <select id="city" name="city" required>
+                                        <option value="">-- Select City --</option>
+                                    </select>
                                 </div>
                             </div>
                             <div class="form-group">
                                 <label for="service-search-input">Select Service(s)</label>
                                 <input type="text" id="service-search-input" placeholder="Search for a service...">
                                 <div id="service-options-container" class="service-options-container">
-                                    <!-- Service checkboxes will be dynamically inserted here -->
                                 </div>
+                                <span id="service-error" class="error-message" style="color: red; display: none;">Please
+                                    select at least one service.</span>
                             </div>
                             <div class="form-row">
                                 <div class="form-group">
                                     <label for="service-date">Select Date</label>
-                                    <input type="date" id="service-date" name="service-date">
+                                    <input type="date" id="service-date" name="service-date" required>
                                 </div>
                                 <div class="form-group">
                                     <label>Select Time Slot</label>
@@ -99,7 +121,7 @@
                         <h2>Order Summary</h2>
                         <div class="summary-item">
                             <span class="label">Garage:</span>
-                            <span class="value">Surat Premium Motors</span>
+                            <span class="value" th:text="${garage.garageName}"></span>
                         </div>
                         <div class="summary-item">
                             <span class="label">Vehicle Type:</span>
@@ -107,7 +129,7 @@
                         </div>
                         <div class="summary-item">
                             <span class="label">Vehicle:</span>
-                            <span class="value" id="summary-vehicle"></span>
+                            <span class="value" id="summary-vehicle">N/A</span>
                         </div>
                         <div class="summary-item">
                             <span class="label">Service(s):</span>
@@ -132,7 +154,7 @@
                             <span class="label">Total Amount:</span>
                             <span class="value" id="summary-total">₹50.00</span>
                         </div>
-                        <button type="submit" form="booking-form" class="btn btn-primary"
+                        <button id="proceed-to-payment-btn" class="btn btn-primary"
                             style="width: 100%; margin-top: 2rem;">Proceed to Payment</button>
                     </aside>
                 </div>
@@ -140,14 +162,20 @@
         </section>
     </main>
     <footer th:replace="~{fragments/footer::footer}"></footer>
+
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
     <script th:src="@{/javascript/script.js}"></script>
-    <script>
+    <script th:inline="javascript">
         document.addEventListener('DOMContentLoaded', () => {
             const observer = new IntersectionObserver((entries) => {
                 entries.forEach(entry => {
-                    if (entry.isIntersecting) { entry.target.classList.add('is-visible'); }
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('is-visible');
+                    }
                 });
-            }, { threshold: 0.1 });
+            }, {
+                threshold: 0.1
+            });
             document.querySelectorAll('.scroll-animate').forEach(el => observer.observe(el));
 
             // Set min date for date picker to today
@@ -157,7 +185,19 @@
                 dateInput.setAttribute('min', today);
             }
 
-            // --- Booking Form Logic ---
+            // --- Accessing data from hidden fields ---
+            const garageId = document.getElementById('garageId').value;
+            const garageName = document.getElementById('garageName').value;
+            const userFullName = document.getElementById('userFullName').value;
+            const userEmail = document.getElementById('userEmail').value;
+            const razorpayKeyId = document.getElementById('razorpayKeyId').value;
+            const garageStateId = document.getElementById('garageStateId').value;
+            const garageCityId = document.getElementById('garageCityId').value;
+            const userPhone = document.getElementById('userPhone').value;
+            const userAddress = document.getElementById('userAddress').value;
+
+            const garageServices = /*[[${garageServices}]]*/[];
+
             const vehicleMakeInput = document.getElementById('vehicle-make');
             const vehicleModelInput = document.getElementById('vehicle-model');
             const vehicleNumberInput = document.getElementById('vehicle-number');
@@ -166,6 +206,7 @@
             const serviceOptionsContainer = document.getElementById('service-options-container');
             const stateSelect = document.getElementById('state');
             const citySelect = document.getElementById('city');
+            const proceedToPaymentBtn = document.getElementById('proceed-to-payment-btn');
 
             const summaryVehicle = document.getElementById('summary-vehicle');
             const summaryVehicleType = document.getElementById('summary-vehicle-type');
@@ -173,86 +214,58 @@
             const summaryCost = document.getElementById('summary-cost');
             const summaryTaxes = document.getElementById('summary-taxes');
             const summaryTotal = document.getElementById('summary-total');
+            const serviceError = document.getElementById('service-error');
 
-            const services = [
-                { name: "General Service", price: 1499 },
-                { name: "Car Wash", price: 250 },
-                { name: "Tyre Alignment", price: 799 },
-                { name: "AC Repair", price: 1200 },
-                { name: "Denting & Painting", price: 4500 }
-            ];
+            function fetchCities(stateId) {
+                return fetch(`/api/location/cities/${stateId}`)
+                    .then(response => response.json())
+                    .then(cities => {
+                        citySelect.innerHTML = '<option value="">-- Select City --</option>';
+                        cities.forEach(city => {
+                            citySelect.add(new Option(city.name, city.id));
+                        });
+                    })
+                    .catch(error => console.error('Error fetching cities:', error));
+            }
 
-            const locationData = {
-                "Gujarat": ["Surat", "Ahmedabad", "Vadodara", "Rajkot"],
-                "Maharashtra": ["Mumbai", "Pune", "Nagpur", "Nashik"],
-                "Rajasthan": ["Jaipur", "Jodhpur", "Udaipur", "Kota"],
-                "Karnataka": ["Bengaluru", "Mysuru", "Mangaluru", "Hubballi"]
-            };
-
-            // Populate states
-            Object.keys(locationData).forEach(state => {
-                stateSelect.add(new Option(state, state));
-            });
-
-            // Function to update cities based on selected state
-            const updateCities = () => {
-                const selectedState = stateSelect.value;
-                citySelect.innerHTML = ''; // Clear existing options
-
-                if (selectedState && locationData[selectedState]) {
-                    locationData[selectedState].forEach(city => {
-                        citySelect.add(new Option(city, city));
-                    });
+            function populateServices(vehicleTypeId) {
+                serviceOptionsContainer.innerHTML = '';
+                const filteredServices = garageServices.filter(s => s.vehicleType.id == vehicleTypeId);
+                if (filteredServices.length === 0) {
+                    serviceOptionsContainer.innerHTML = '<p>No services found for this vehicle type.</p>';
+                    updateSummary();
+                    return;
                 }
-            };
-
-            // Set default values and populate cities
-            stateSelect.value = "Gujarat";
-            updateCities();
-            citySelect.value = "Surat";
-
-            // Populate services
-            services.forEach(service => {
-                const serviceHTML = `
-                    <label class="service-option">
-                        <input type="checkbox" name="service-type" value="${service.name}" data-price="${service.price}">
-                        <div class="service-info">
-                            <span class="service-name">${service.name}</span>
-                        </div>
-                        <span class="service-price">₹${service.price.toFixed(2)}</span>
-                    </label>
-                `;
-                serviceOptionsContainer.insertAdjacentHTML('beforeend', serviceHTML);
-            });
-
-            const serviceCheckboxes = document.querySelectorAll('input[name="service-type"]');
-            const serviceOptions = document.querySelectorAll('.service-option');
+                filteredServices.forEach(service => {
+                    const serviceHTML = `
+                        <label class="service-option">
+                            <input type="checkbox" name="particularGarageServiceIds" value="${service.id}" data-price="${service.fee}" data-name="${service.service.name}">
+                            <div class="service-info">
+                                <span class="service-name">${service.service.name}</span>
+                            </div>
+                            <span class="service-price">₹${service.fee.toFixed(2)}</span>
+                        </label>`;
+                    serviceOptionsContainer.insertAdjacentHTML('beforeend', serviceHTML);
+                });
+                updateSummary();
+            }
 
             function updateSummary() {
-                // Update vehicle details
                 const make = vehicleMakeInput.value.trim();
                 const model = vehicleModelInput.value.trim();
                 const number = vehicleNumberInput.value.trim();
+                summaryVehicle.textContent = make && model ? `${make} ${model} (${number})` : 'N/A';
+                summaryVehicleType.textContent = vehicleTypeSelect.options[vehicleTypeSelect.selectedIndex].text;
 
-                if (make || model || number) {
-                    summaryVehicle.textContent = `${make} ${model} (${number})`;
-                } else {
-                    summaryVehicle.textContent = 'N/A';
-                }
-
-                // Update vehicle type
-                summaryVehicleType.textContent = vehicleTypeSelect.value;
-
-                // Update service and costs
                 let totalServicePrice = 0;
                 summaryServiceList.innerHTML = '';
-
+                const serviceCheckboxes = document.querySelectorAll('input[name="particularGarageServiceIds"]');
                 serviceCheckboxes.forEach(checkbox => {
                     if (checkbox.checked) {
                         const price = parseFloat(checkbox.dataset.price);
                         totalServicePrice += price;
                         const listItem = document.createElement('li');
-                        listItem.innerHTML = `<span>${checkbox.value}</span><span>₹${price.toFixed(2)}</span>`;
+                        listItem.innerHTML = `<span>${checkbox.dataset.name}</span><span>₹${price.toFixed(2)}</span>`;
                         summaryServiceList.appendChild(listItem);
                     }
                 });
@@ -270,31 +283,194 @@
                 summaryCost.textContent = `₹${totalServicePrice.toFixed(2)}`;
                 summaryTaxes.textContent = `₹${taxes.toFixed(2)}`;
                 summaryTotal.textContent = `₹${total.toFixed(2)}`;
+
+                if (document.querySelectorAll('input[name="particularGarageServiceIds"]:checked').length > 0) {
+                    serviceError.style.display = 'none';
+                }
             }
 
             function filterServices() {
                 const searchTerm = serviceSearchInput.value.toLowerCase();
+                const serviceOptions = document.querySelectorAll('.service-option');
                 serviceOptions.forEach(option => {
                     const serviceName = option.querySelector('.service-name').textContent.toLowerCase();
-                    if (serviceName.includes(searchTerm)) {
-                        option.style.display = 'flex';
-                    } else {
-                        option.style.display = 'none';
-                    }
+                    option.style.display = serviceName.includes(searchTerm) ? 'flex' : 'none';
                 });
             }
 
-            // --- Event Listeners ---
-            vehicleMakeInput.addEventListener('keyup', updateSummary);
-            vehicleModelInput.addEventListener('keyup', updateSummary);
-            vehicleNumberInput.addEventListener('keyup', updateSummary);
-            vehicleTypeSelect.addEventListener('change', updateSummary);
-            serviceCheckboxes.forEach(checkbox => checkbox.addEventListener('change', updateSummary));
+            // Event Listeners
+            vehicleMakeInput.addEventListener('input', updateSummary);
+            vehicleModelInput.addEventListener('input', updateSummary);
+            vehicleNumberInput.addEventListener('input', updateSummary);
+            vehicleTypeSelect.addEventListener('change', (e) => {
+                populateServices(e.target.value);
+            });
+            stateSelect.addEventListener('change', (e) => {
+                const stateId = e.target.value;
+                if (stateId) {
+                    fetchCities(stateId);
+                } else {
+                    citySelect.innerHTML = '<option value="">-- Select City --</option>';
+                }
+            });
+            serviceOptionsContainer.addEventListener('change', (e) => {
+                if (e.target.type === 'checkbox') {
+                    updateSummary();
+                }
+            });
             serviceSearchInput.addEventListener('keyup', filterServices);
-            stateSelect.addEventListener('change', updateCities);
 
-            // Initial call to set default summary
-            updateSummary();
+            proceedToPaymentBtn.addEventListener('click', async (e) => {
+                e.preventDefault();
+
+                // Client-side validation
+                const vehicleMake = vehicleMakeInput.value.trim();
+                const vehicleModel = vehicleModelInput.value.trim();
+                const vehicleNumber = vehicleNumberInput.value.trim();
+                const pickupAddress = document.getElementById('address').value.trim();
+                const serviceDate = document.getElementById('service-date').value;
+                const selectedServices = document.querySelectorAll('input[name="particularGarageServiceIds"]:checked');
+                const selectedDate = new Date(serviceDate);
+                const today = new Date();
+                today.setHours(0, 0, 0, 0);
+
+                if (!vehicleMake || !vehicleModel || !vehicleNumber || !pickupAddress || !serviceDate || !stateSelect.value || !citySelect.value || selectedServices.length === 0) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Validation Error',
+                        text: 'Please fill out all required fields and select at least one service.'
+                    });
+                    return;
+                }
+
+                if (selectedDate < today) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Invalid Date',
+                        text: 'Please select a service date that is not in the past.'
+                    });
+                    return;
+                }
+
+                const bookingData = {
+                    garageId: garageId,
+                    vehicleMake: vehicleMake,
+                    vehicleModel: vehicleModel,
+                    vehicleNumber: vehicleNumber,
+                    pickupAddress: pickupAddress,
+                    stateId: stateSelect.value,
+                    cityId: citySelect.value,
+                    particularGarageServiceIds: Array.from(selectedServices).map(cb => cb.value),
+                    serviceDate: serviceDate,
+                    timeSlot: document.querySelector('input[name="time-slot"]:checked').value,
+                    totalFee: parseFloat(summaryTotal.textContent.replace('₹', ''))
+                };
+
+                try {
+                    // Show a loader while creating the order and verifying payment
+                    Swal.fire({
+                        title: 'Processing Payment',
+                        text: 'Please do not close this window...',
+                        allowOutsideClick: false,
+                        didOpen: () => {
+                            Swal.showLoading();
+                        }
+                    });
+
+                    const orderResponse = await fetch('/user/create-order', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(bookingData)
+                    });
+
+                    if (!orderResponse.ok) {
+                        const errorText = await orderResponse.text();
+                        throw new Error(errorText || 'Failed to create Razorpay order.');
+                    }
+                    const order = await orderResponse.json();
+
+                    const options = {
+                        key: razorpayKeyId,
+                        amount: order.amount,
+                        currency: order.currency,
+                        name: garageName,
+                        description: "Service Booking",
+                        order_id: order.id,
+                        handler: async function (response) {
+                            Swal.fire({
+                                title: 'Verifying Payment...',
+                                text: 'Please wait...',
+                                allowOutsideClick: false,
+                                didOpen: () => {
+                                    Swal.showLoading();
+                                }
+                            });
+
+                            const paymentData = {
+                                ...bookingData,
+                                razorpayPaymentId: response.razorpay_payment_id,
+                                razorpayOrderId: response.razorpay_order_id,
+                                razorpaySignature: response.razorpay_signature
+                            };
+
+                            const verifyResponse = await fetch('/user/verify-payment', {
+                                method: 'POST',
+                                headers: { 'Content-Type': 'application/json' },
+                                body: JSON.stringify(paymentData)
+                            });
+
+                            if (verifyResponse.ok) {
+                                Swal.fire({
+                                    icon: 'success',
+                                    title: 'Success!',
+                                    allowOutsideClick: false,
+                                    text: "Payment successful and booking confirmed!"
+                                }).then((result) => {
+                                    if (result.isConfirmed) {
+                                        window.location.href = '/user/dashboard';
+                                    }
+                                });
+                            } else {
+                                const errorText = await verifyResponse.text();
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Payment Failed',
+                                    text: `Payment verification failed: ${errorText}`
+                                });
+                            }
+                        },
+                        prefill: {
+                            name: userFullName,
+                            email: userEmail
+                        },
+                        theme: {
+                            color: "#3498db"
+                        }
+                    };
+
+                    const rzp = new Razorpay(options);
+                    rzp.open();
+
+                } catch (error) {
+                    console.error('Booking error:', error);
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Booking Error',
+                        text: `An error occurred during the booking process: ${error.message}`
+                    });
+                }
+            });
+
+            // Initial population
+            if (garageStateId) {
+                stateSelect.value = garageStateId;
+                fetchCities(garageStateId).then(() => {
+                    if (garageCityId) {
+                        citySelect.value = garageCityId;
+                    }
+                });
+            }
+            populateServices(vehicleTypeSelect.value);
         });
     </script>
 </body>

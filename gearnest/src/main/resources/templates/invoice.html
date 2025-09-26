@@ -4,206 +4,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Invoice - GearNest</title>
+    <title th:text="${title}">Invoice - GearNest</title>
     <link rel="shortcut icon" th:href="@{/images/logo.png}" type="image/x-icon">
-
+    <link rel="stylesheet" th:href="@{/css/invoice.css}" />
     <!-- Google Fonts: Inter -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-
-    <style>
-        :root {
-            --color-primary: #F37A65;
-            --color-primary-dark: #D64141;
-            --color-secondary: #1f2937;
-            --color-text: #1f2937;
-            --color-text-light: #4b5563;
-            --color-background: #f9fafb;
-            --color-white: #ffffff;
-            --color-gray-100: #f3f4f6;
-            --color-gray-200: #e5e7eb;
-            --color-success: #22c55e;
-            --border-radius-lg: 0.5rem;
-            --transition-fast: all 0.2s ease-in-out;
-        }
-
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: var(--color-background);
-            color: var(--color-text);
-            margin: 0;
-            line-height: 1.6;
-        }
-
-        .invoice-wrapper {
-            max-width: 800px;
-            margin: 2rem auto;
-            background-color: var(--color-white);
-            padding: 3rem;
-            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
-            border-radius: var(--border-radius-lg);
-        }
-
-        .invoice-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            margin-bottom: 2rem;
-            padding-bottom: 1.5rem;
-            border-bottom: 2px solid var(--color-gray-200);
-        }
-
-        .logo {
-            display: flex;
-            align-items: center;
-            gap: 0rem;
-            font-size: 1.75rem;
-            font-weight: 800;
-            color: var(--color-text);
-            text-decoration: none;
-        }
-
-        .logo img {
-            width: 75px;
-            height: 75px;
-            border-radius: 8px;
-        }
-
-        .invoice-title h1 {
-            font-size: 2.5rem;
-            margin: 0;
-            text-align: right;
-            color: var(--color-text-light);
-        }
-
-        .invoice-details {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 2rem;
-            margin-bottom: 2rem;
-        }
-
-        .detail-group h3 {
-            font-size: 1rem;
-            margin: 0 0 0.5rem;
-            color: var(--color-text-light);
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            border-bottom: 1px solid var(--color-gray-200);
-            padding-bottom: 0.5rem;
-        }
-
-        .detail-group p {
-            margin: 0 0 0.25rem;
-            line-height: 1.5;
-        }
-
-        .invoice-table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-bottom: 2rem;
-        }
-
-        .invoice-table thead {
-            background-color: var(--color-gray-100);
-        }
-
-        .invoice-table th,
-        .invoice-table td {
-            padding: 0.75rem 1rem;
-            text-align: left;
-            border-bottom: 1px solid var(--color-gray-200);
-        }
-
-        .invoice-table th {
-            font-weight: 600;
-        }
-
-        .invoice-table .text-right {
-            text-align: right;
-        }
-
-        .invoice-summary-wrapper {
-            display: flex;
-            justify-content: flex-end;
-            align-items: flex-end;
-        }
-
-        .summary-table {
-            width: 50%;
-            max-width: 300px;
-        }
-
-        .summary-row {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 0.75rem;
-        }
-
-        .summary-row.total {
-            font-size: 1.25rem;
-            font-weight: 700;
-            margin-top: 1rem;
-            padding-top: 1rem;
-            border-top: 2px solid var(--color-text);
-        }
-
-        .invoice-footer {
-            margin-top: 3rem;
-            padding-top: 1.5rem;
-            border-top: 1px solid var(--color-gray-200);
-            font-size: 0.875rem;
-            color: var(--color-text-light);
-            text-align: center;
-        }
-
-        .print-button-container {
-            text-align: center;
-            margin: 2rem 0;
-        }
-
-        .btn {
-            display: inline-block;
-            font-weight: 600;
-            padding: 0.6rem 1.5rem;
-            border-radius: var(--border-radius-lg);
-            text-decoration: none;
-            border: none;
-            cursor: pointer;
-            transition: var(--transition-fast);
-        }
-
-        .btn-primary {
-            background: linear-gradient(to right, #F37A65, #D64141);
-            background-size: 200% auto;
-            color: #ffffff;
-            box-shadow: 0 4px 15px 0 rgba(220, 80, 70, 0.35);
-        }
-
-        .btn-primary:hover {
-            background-position: right center;
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px 0 rgba(220, 80, 70, 0.3);
-        }
-
-        @media print {
-            body {
-                background-color: var(--color-white);
-            }
-
-            .invoice-wrapper {
-                box-shadow: none;
-                margin: 0;
-                padding: 0;
-                border-radius: 0;
-            }
-
-            .print-button-container {
-                display: none;
-            }
-        }
-    </style>
 </head>
 
 <body>
@@ -221,29 +28,31 @@
         <section class="invoice-details">
             <div class="detail-group bill-to">
                 <h3>Bill To</h3>
-                <p><strong>John Doe</strong></p>
-                <p>123 Auto Street, Car City</p>
-                <p>Surat, Gujarat, 395006</p>
-                <p>john.doe@example.com</p>
+                <p><strong><span th:text="${booking.user.firstName} + ' ' + ${booking.user.lastName}">John
+                            Doe</span></strong></p>
+                <p><span th:text="${booking.user.address}">123 Auto Street, Car City</span></p>
+                <p><span th:text="${booking.user.email}">john.doe@example.com</span></p>
+                <p><span th:text="${booking.user.phone}">+91 98765 43210</span></p>
             </div>
             <div class="detail-group garage-details" style="text-align: right;">
                 <h3>From</h3>
-                <p><strong>Surat Premium Motors</strong></p>
-                <p>123, Adajan Patiya</p>
-                <p>Surat, Gujarat, 395009</p>
-                <p>contact@spmotors.com</p>
+                <p><strong><span th:text="${booking.garageName}">Surat Premium Motors</span></strong></p>
+                <p><span th:text="${booking.garageAddress}">123, Adajan Patiya</span></p>
+                <p><span th:text="${booking.garageCity}">Surat, Gujarat, 395009</span></p>
+                <p><span th:text="${booking.garageEmail}">contact@spmotors.com</span></p>
             </div>
             <div class="detail-group">
                 <h3>Payment Details</h3>
-                <p><strong>Booking ID:</strong> #GNS123456789</p>
-                <p><strong>Invoice Date:</strong> 12 September 2025</p>
-                <p><strong>Service Date:</strong> 10 September 2025</p>
+                <p><strong>Booking ID:</strong> <span th:text="${booking.id}">#GNS123456789</span></p>
+                <p><strong>Invoice Date:</strong> <span th:text="${booking.invoiceDate}">12 September 2025</span></p>
+                <p><strong>Service Date:</strong> <span th:text="${booking.bookingDate}">10 September 2025</span></p>
             </div>
             <div class="detail-group" style="text-align: right;">
                 <h3>&nbsp;</h3>
-                <p><strong>Payment Method:</strong> VISA **** 1234</p>
-                <p><strong>Transaction ID:</strong> 12345ABCDE</p>
-                <p><strong>Status:</strong> <span style="color: #22c55e; font-weight: bold;">PAID</span></p>
+                <p><strong>Payment Method:</strong> <span th:text="${booking.paymentMethod}">VISA **** 1234</span></p>
+                <p><strong>Transaction ID:</strong> <span th:text="${booking.transactionId}">12345ABCDE</span></p>
+                <p><strong>Status:</strong> <span style="color: #22c55e; font-weight: bold;"
+                        th:text="${booking.status}">PAID</span></p>
             </div>
         </section>
 
@@ -258,10 +67,14 @@
             </thead>
             <tbody>
                 <tr>
-                    <td>General Service</td>
+                    <td th:text="${booking.serviceNames}">General Service</td>
                     <td class="text-right">1</td>
-                    <td class="text-right">₹1,499.00</td>
-                    <td class="text-right">₹1,499.00</td>
+                    <td class="text-right"><span
+                            th:text="'₹' + ${#numbers.formatDecimal(booking.serviceSubtotal, 0, 2)}">₹1,499.00</span>
+                    </td>
+                    <td class="text-right"><span
+                            th:text="'₹' + ${#numbers.formatDecimal(booking.serviceSubtotal, 0, 2)}">₹1,499.00</span>
+                    </td>
                 </tr>
             </tbody>
         </table>
@@ -270,19 +83,22 @@
             <div class="summary-table">
                 <div class="summary-row">
                     <span>Subtotal</span>
-                    <span>₹1,499.00</span>
+                    <span><span
+                            th:text="'₹' + ${#numbers.formatDecimal(booking.serviceSubtotal, 0, 2)}">₹1,499.00</span></span>
                 </div>
                 <div class="summary-row">
                     <span>Taxes (5%)</span>
-                    <span>₹74.95</span>
+                    <span><span th:text="'₹' + ${#numbers.formatDecimal(booking.taxes, 0, 2)}">₹74.95</span></span>
                 </div>
                 <div class="summary-row">
                     <span>Convenience Fee</span>
-                    <span>₹50.00</span>
+                    <span><span
+                            th:text="'₹' + ${#numbers.formatDecimal(booking.convenienceFee, 0, 2)}">₹50.00</span></span>
                 </div>
                 <div class="summary-row total">
                     <span>Total Amount</span>
-                    <span>₹1,623.95</span>
+                    <span><span
+                            th:text="'₹' + ${#numbers.formatDecimal(booking.totalAmount, 0, 2)}">₹1,623.95</span></span>
                 </div>
             </div>
         </section>
