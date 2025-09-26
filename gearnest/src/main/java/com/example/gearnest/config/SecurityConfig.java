@@ -34,6 +34,7 @@ public class SecurityConfig {
                                                                 "/css/**",
                                                                 "/javascript/**",
                                                                 "/images/**",
+                                                                "/uploads/**",
                                                                 "/user-register",
                                                                 "/garage-register",
                                                                 "/api/**",

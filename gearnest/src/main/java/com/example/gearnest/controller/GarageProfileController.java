@@ -90,7 +90,6 @@ public class GarageProfileController {
         // Save State/City IDs for frontend
         model.addAttribute("savedState", garage.getState() != null ? garage.getState().getId() : null);
         model.addAttribute("savedCity", garage.getCity() != null ? garage.getCity().getId() : null);
-
         return "garage/profile";
     }
 

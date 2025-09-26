@@ -3,8 +3,9 @@
 
 <head>
     <title>GearNest</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" th:href="@{/css/style.css}" />
-    <!-- Google Fonts: Inter -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -12,23 +13,27 @@
 </head>
 
 <body>
+    <!-- The header fragment will be included here -->
     <header th:replace="~{fragments/header::header}"></header>
+
     <main>
-        <!-- Hero Section -->
-        <section class='hero-section'>
+        <!-- Hero Section with dynamic background image -->
+        <section class='hero-section'
+            th:style="'background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url(' + ${heroImageUrl} + ') no-repeat center center/cover;'">
             <div class='container'>
-                <h1 class='animate-fade-in-up' style='animation-delay: 0.2s;'>Find The Perfect Garage For Your Car</h1>
-                <p class='animate-fade-in-up' style='animation-delay: 0.4s;'>Discover top-rated, verified, and
-                    specialized garages for any service you need.</p>
+                <h1 class='animate-fade-in-up' style='animation-delay: 0.2s;'>Find The Perfect Garage For Your Vehicle
+                </h1>
+                <p class='animate-fade-in-up' style='animation-delay: 0.4s;'>Discover top-rated, verified garages in
+                    Surat for any service you need.</p>
                 <a href='#filter-section' class='btn btn-primary animate-fade-in-up'
                     style='animation-delay: 0.6s;'>Start Your Search</a>
             </div>
         </section>
 
-        <!-- Filter Section -->
+        <!-- Filter Section (remains the same as your provided code) -->
         <section id='filter-section' class='filter-section scroll-animate'>
             <div class='container'>
-                <div class=" filter-header">
+                <div class="filter-header">
                     <h2>Find the best service for your vehicle</h2>
                     <p>Tell us what you're looking for, and we'll find the perfect match.</p>
                 </div>
@@ -44,25 +49,17 @@
                             <input type='text' id='location-filter' placeholder='e.g., Surat'>
                         </div>
                     </div>
-
                     <div class='form-group vehicle-type-group'>
                         <label>Vehicle Type</label>
                         <div class="vehicle-options">
-                            <label class="vehicle-option selected">
-                                <input type="radio" name="vehicle-type" value="all" checked>
-                                <span>All</span>
-                            </label>
-                            <label class="vehicle-option">
-                                <input type="radio" name="vehicle-type" value="car">
-                                <span>Car</span>
-                            </label>
-                            <label class="vehicle-option">
-                                <input type="radio" name="vehicle-type" value="bike">
-                                <span>Bike</span>
-                            </label>
+                            <label class="vehicle-option selected"><input type="radio" name="vehicle-type" value="all"
+                                    checked><span>All</span></label>
+                            <label class="vehicle-option"><input type="radio" name="vehicle-type"
+                                    value="car"><span>Car</span></label>
+                            <label class="vehicle-option"><input type="radio" name="vehicle-type"
+                                    value="bike"><span>Bike</span></label>
                         </div>
                     </div>
-
                     <div class='form-group rating-group'>
                         <label for='rating-filter'>Minimum Rating</label>
                         <select id='rating-filter'>
@@ -72,406 +69,296 @@
                             <option value='3'>★★★ & Up</option>
                         </select>
                     </div>
-
                     <div class='form-group actions-group'>
-                        <label style="opacity: 0;">Reset</label> <!-- Spacer for alignment -->
+                        <label style="opacity: 0;">Reset</label>
                         <button type='button' id='reset-filters-btn' class='btn btn-secondary'
                             style="width: 100%;">Reset</button>
                     </div>
-
                     <div class='form-group services-group'>
                         <label>Select Services (Optional)</label>
                         <div id='services-filter-container'>
-                            <!-- Service checkboxes will be dynamically inserted here -->
+                            <!-- Service checkboxes will be dynamically inserted here by your script.js -->
                         </div>
                     </div>
                 </form>
             </div>
         </section>
 
-        <!-- Garage Listings -->
+        <!-- DYNAMIC GARAGE LISTINGS -->
         <section id='listings' class='garage-listings'>
             <div class='container' id='garage-container'>
 
-                <!-- Garage Card 1 -->
-                <div class='garage-card scroll-animate' data-city='Surat' data-rating='4.8'
-                    data-services='general-service car-wash ac-repair battery-service' data-vehicle="car">
+                <!--
+                  THYMELEAF LOOP:
+                  This block will repeat for each 'garage' object in the '${garages}' list
+                  provided by the HomeController.
+                -->
+                <div th:each="garage, iterStat : ${garages}" class='garage-card scroll-animate'
+                    th:classappend="${iterStat.index > 0 ? 'delay-' + (iterStat.index * 100) : ''}" th:attr="data-city=${garage.city.name},
+                              data-rating=${garage.averageRating},
+                              data-services=${#strings.listJoin(garage.services.![value], ' ')},
+                              data-vehicle=${#strings.listJoin(garage.vehicleTypes, ' ')}">
+
                     <div class="card-image-wrapper">
-                        <img src='https://s3.amazonaws.com/ideas-after/3e641c35-1be7-42e1-9c5c-5f113100637c.jpeg'
-                            alt='Interior of a modern auto garage'>
+                        <!-- Use Thymeleaf to set the image source dynamically -->
+                        <img th:src="@{/uploads/garage-cards/{image}(image=${garage.cardImage})}"
+                            th:alt="${garage.garageName}" />
                     </div>
                     <div class='card-content'>
-                        <h3>Surat Premium Motors</h3>
+                        <h3 th:text="${garage.garageName}">Garage Name</h3>
                         <p class='card-location'>
                             <svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='currentColor'>
                                 <path fill-rule='evenodd'
                                     d='M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z'
                                     clip-rule='evenodd' />
                             </svg>
-                            <span>123, Adajan Patiya, Surat</span>
+                            <span th:text="${garage.address+', '+garage.city.name}">Full Garage
+                                Address</span>
                         </p>
-                        <div class='rating-display' data-rating-display='4.8'></div>
+                        <!-- The rating will be generated by your existing JS based on this data attribute -->
+                        <div class='rating-display' th:attr="data-rating-display=${garage.averageRating}"></div>
+
                         <div class='service-tags'>
-                            <span class='service-tag' data-service-value='general-service'>General Service</span>
-                            <span class='service-tag' data-service-value='car-wash'>Car Wash</span>
-                            <span class='service-tag' data-service-value='ac-repair'>AC Repair</span>
-                            <span class='service-tag' data-service-value='battery-service'>Battery Service</span>
+                            <!-- Loop through the services for this specific garage -->
+                            <span th:each="service : ${garage.services}" class='service-tag'
+                                th:attr="data-service-value=${service.value}" th:text="${service.displayName}">
+                                Service Name
+                            </span>
                         </div>
-                        <button class='btn btn-primary view-details-btn'>View Details</button>
+                        <button class='btn btn-primary view-details-btn' th:attr="data-garage-id=${garage.id}">View
+                            Details</button>
                     </div>
                 </div>
 
-                <!-- Garage Card 2 -->
-                <div class='garage-card scroll-animate delay-100' data-city='Mumbai' data-rating='4.2'
-                    data-services='denting-painting tyre-alignment' data-vehicle="car">
-                    <div class="card-image-wrapper">
-                        <img src='https://images.squarespace-cdn.com/content/v1/635b2b8c52d4e8330236dd2e/669ccaa7-7c85-4902-a36f-493270d6c2ed/Jon+6.jpg?format=2500w'
-                            alt='Mechanic working on car body'>
-                    </div>
-                    <div class='card-content'>
-                        <h3>Classic Car Repairs</h3>
-                        <p class='card-location'>
-                            <svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='currentColor'>
-                                <path fill-rule='evenodd'
-                                    d='M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z'
-                                    clip-rule='evenodd' />
-                            </svg>
-                            <span>45, Andheri West, Mumbai</span>
-                        </p>
-                        <div class='rating-display' data-rating-display='4.2'></div>
-                        <div class='service-tags'>
-                            <span class='service-tag' data-service-value='denting-painting'>Denting/Painting</span>
-                            <span class='service-tag' data-service-value='tyre-alignment'>Tyre Alignment</span>
-                        </div>
-                        <button class='btn btn-primary view-details-btn'>View Details</button>
-                    </div>
-                </div>
-
-                <!-- More cards follow the same pattern... -->
-                <div class='garage-card scroll-animate delay-200' data-city='Surat' data-rating='3.9'
-                    data-services='general-service car-wash' data-vehicle="car">
-                    <div class="card-image-wrapper">
-                        <img src='https://media.istockphoto.com/id/1379161193/photo/professional-worker-cleaning-car-rim.jpg?s=612x612&w=0&k=20&c=aTh9fOWAZer9X2RtE1iIngjMA6wxfUJ6-a6LJlixUZo='
-                            alt='Clean auto care workshop'>
-                    </div>
-                    <div class='card-content'>
-                        <h3>Vesu Auto Care</h3>
-                        <p class='card-location'>
-                            <svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='currentColor'>
-                                <path fill-rule='evenodd'
-                                    d='M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z'
-                                    clip-rule='evenodd' />
-                            </svg>
-                            <span>78, VIP Road, Vesu, Surat</span>
-                        </p>
-                        <div class='rating-display' data-rating-display='3.9'></div>
-                        <div class='service-tags'>
-                            <span class='service-tag' data-service-value='general-service'>General Service</span>
-                            <span class='service-tag' data-service-value='car-wash'>Car Wash</span>
-                        </div>
-                        <button class='btn btn-primary view-details-btn'>View Details</button>
-                    </div>
-                </div>
-
-                <div class='garage-card scroll-animate delay-300' data-city='Ahmedabad' data-rating='4.6'
-                    data-services='general-service denting-painting ac-repair engine-diagnostics' data-vehicle="car">
-                    <div class="card-image-wrapper">
-                        <img src='https://cdn.prod.website-files.com/637d6390b70424b49c14ff1e/640f9b7180be91100cbcbe07_delivery-vehicle-maintenance-hero.webp'
-                            alt='Mechanic inspecting a car engine'>
-                    </div>
-                    <div class='card-content'>
-                        <h3>Speedy Automotive</h3>
-                        <p class='card-location'>
-                            <svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='currentColor'>
-                                <path fill-rule='evenodd'
-                                    d='M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z'
-                                    clip-rule='evenodd' />
-                            </svg>
-                            <span>Plot 9, SG Highway, Ahmedabad</span>
-                        </p>
-                        <div class='rating-display' data-rating-display='4.6'></div>
-                        <div class='service-tags'>
-                            <span class='service-tag' data-service-value='general-service'>General Service</span>
-                            <span class='service-tag' data-service-value='denting-painting'>Denting/Painting</span>
-                            <span class='service-tag' data-service-value='ac-repair'>AC Repair</span>
-                            <span class='service-tag' data-service-value='engine-diagnostics'>Engine Diagnostics</span>
-                        </div>
-                        <button class='btn btn-primary view-details-btn'>View Details</button>
-                    </div>
-                </div>
-
-                <div class='garage-card scroll-animate delay-400' data-city='Surat' data-rating='2.5'
-                    data-services='car-wash' data-vehicle="car">
-                    <div class="card-image-wrapper">
-                        <img src='https://www.shutterstock.com/image-photo/automotive-detailer-washing-away-smart-600nw-2287564871.jpg'
-                            alt='A car being washed with soap and water'>
-                    </div>
-                    <div class='card-content'>
-                        <h3>Budget Car Wash</h3>
-                        <p class='card-location'>
-                            <svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='currentColor'>
-                                <path fill-rule='evenodd'
-                                    d='M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z'
-                                    clip-rule='evenodd' />
-                            </svg>
-                            <span>Opp. Railway Station, Varachha, Surat</span>
-                        </p>
-                        <div class='rating-display' data-rating-display='2.5'></div>
-                        <div class='service-tags'>
-                            <span class='service-tag' data-service-value='car-wash'>Car Wash</span>
-                        </div>
-                        <button class='btn btn-primary view-details-btn'>View Details</button>
-                    </div>
-                </div>
-
-                <div class='garage-card scroll-animate delay-500' data-city='Mumbai' data-rating='4.9'
-                    data-services='custom-modification car-wrapping' data-vehicle="car">
-                    <div class="card-image-wrapper">
-                        <img src='https://images.unsplash.com/photo-1581291518633-83b4ebd1d83e?w=400&h=250&fit=crop&q=80'
-                            alt='Custom modified sports car'>
-                    </div>
-                    <div class='card-content'>
-                        <h3>Mumbai Modders</h3>
-                        <p class='card-location'>
-                            <svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='currentColor'>
-                                <path fill-rule='evenodd'
-                                    d='M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z'
-                                    clip-rule='evenodd' />
-                            </svg>
-                            <span>Gala 12, Kurla Industrial Estate, Mumbai</span>
-                        </p>
-                        <div class='rating-display' data-rating-display='4.9'></div>
-                        <div class='service-tags'>
-                            <span class='service-tag' data-service-value='custom-modification'>Custom
-                                Modification</span>
-                            <span class='service-tag' data-service-value='car-wrapping'>Car Wrapping</span>
-                        </div>
-                        <button class='btn btn-primary view-details-btn'>View Details</button>
-                    </div>
-                </div>
-
-                <!-- New Bike Garage Card -->
-                <div class='garage-card scroll-animate delay-100' data-city='Surat' data-rating='4.7'
-                    data-services='general-service' data-vehicle="bike">
-                    <div class="card-image-wrapper">
-                        <img src='https://apnamechanic.com/blog/wp-content/uploads/2021/11/bike-service-at-home-735x396-1.jpg'
-                            alt='Motorcycle being serviced'>
-                    </div>
-                    <div class='card-content'>
-                        <h3>Surat Bike Works</h3>
-                        <p class='card-location'>
-                            <svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='currentColor'>
-                                <path fill-rule='evenodd'
-                                    d='M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z'
-                                    clip-rule='evenodd' />
-                            </svg>
-                            <span>88, Ring Road, Surat</span>
-                        </p>
-                        <div class='rating-display' data-rating-display='4.7'></div>
-                        <div class='service-tags'>
-                            <span class='service-tag' data-service-value='general-service'>General Service</span>
-                        </div>
-                        <button class='btn btn-primary view-details-btn'>View Details</button>
-                    </div>
-                </div>
-
-                <div id='no-results'>
+                <!-- This message is controlled by your existing script.js for filtering -->
+                <div id='no-results' style="display: none;">
                     <h3>No Garages Found</h3>
                     <p>Try adjusting your filters to find what you're looking for.</p>
                 </div>
             </div>
         </section>
     </main>
+
+    <!-- The footer fragment will be included here -->
     <footer th:replace="~{fragments/footer::footer}"></footer>
-    <!-- Details Modal -->
+
+    <!-- Details Modal (remains the same as your provided code) -->
     <div id='details-modal' class='modal-overlay'>
         <div id='modal-content' class='modal-content'>
             <!-- Modal content will be populated by JavaScript -->
         </div>
     </div>
+
+    <!-- Your existing script.js -->
     <script th:src="@{/javascript/script.js}"></script>
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
 
-            const locationFilter = document.getElementById('location-filter');
-            const ratingFilter = document.getElementById('rating-filter');
-            const resetFiltersBtn = document.getElementById('reset-filters-btn');
-            const garageCards = document.querySelectorAll('.garage-card');
-            const noResultsMessage = document.getElementById('no-results');
-            const servicesFilterContainer = document.getElementById('services-filter-container');
-            const vehicleTypeOptions = document.querySelectorAll('.vehicle-option');
-            let serviceCheckboxes = [];
+</body>
+<script>
+    /**
+     * Main script for the GearNest dashboard page.
+     * Handles dynamic filtering, star rating generation, modal popups,
+     * and animations for the garage listings.
+     */
+    document.addEventListener('DOMContentLoaded', () => {
 
-            // --- Star Rating Generation ---
-            function generateStars(rating) {
-                const fullStar = `<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='currentColor'><path d='M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z' /></svg>`;
-                const halfStar = `<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='currentColor'><path d='M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292zM10 12.956L12.247 14.4l-.585-2.51 1.823-1.66-2.52-.36L10 7.427v5.529z' /></svg>`;
-                const emptyStar = `<svg style='color: var(--color-gray-300);' xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='currentColor'><path d='M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z' /></svg>`;
-                let starsHTML = '';
-                for (let i = 1; i <= 5; i++) {
-                    if (rating >= i) { starsHTML += fullStar; }
-                    else if (rating >= i - 0.5) { starsHTML += halfStar; }
-                    else { starsHTML += emptyStar; }
-                }
-                return `<div class='stars-container'>${starsHTML}</div><span class='rating-value'>${rating}</span>`;
+        // --- Element Selection ---
+        const locationFilter = document.getElementById('location-filter');
+        const ratingFilter = document.getElementById('rating-filter');
+        const resetFiltersBtn = document.getElementById('reset-filters-btn');
+        const garageContainer = document.getElementById('garage-container');
+        const garageCards = document.querySelectorAll('.garage-card');
+        const noResultsMessage = document.getElementById('no-results');
+        const servicesFilterContainer = document.getElementById('services-filter-container');
+        const vehicleTypeOptions = document.querySelectorAll('.vehicle-option');
+        const modal = document.getElementById('details-modal');
+        const modalContent = document.getElementById('modal-content');
+        let serviceCheckboxes = [];
+
+        // --- Star Rating Generation ---
+        // Generates star icons (full, half, empty) based on a numerical rating.
+        function generateStars(rating) {
+            const fullStar = `<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='currentColor'><path d='M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z' /></svg>`;
+            const halfStar = `<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='currentColor'><path d='M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292zM10 12.956L12.247 14.4l-.585-2.51 1.823-1.66-2.52-.36L10 7.427v5.529z' /></svg>`;
+            const emptyStar = `<svg style='color: #d1d5db;' xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='currentColor'><path d='M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z' /></svg>`;
+
+            let starsHTML = '';
+            for (let i = 1; i <= 5; i++) {
+                if (rating >= i) { starsHTML += fullStar; }
+                else if (rating >= i - 0.5) { starsHTML += halfStar; }
+                else { starsHTML += emptyStar; }
             }
+            return `<div class='stars-container'>${starsHTML}</div><span class='rating-value'>${rating.toFixed(1)}</span>`;
+        }
 
-            document.querySelectorAll('[data-rating-display]').forEach(el => {
-                const rating = parseFloat(el.dataset.ratingDisplay);
-                el.innerHTML = generateStars(rating);
-            });
-
-            function initializeDynamicFilters() {
-                const serviceMap = new Map();
-                garageCards.forEach(card => {
-                    card.querySelectorAll('.service-tag').forEach(tag => {
-                        const value = tag.dataset.serviceValue;
-                        const displayName = tag.textContent;
-                        if (!serviceMap.has(value)) {
-                            serviceMap.set(value, displayName);
-                        }
-                    });
-                });
-
-                const sortedServices = new Map([...serviceMap.entries()].sort((a, b) => a[1].localeCompare(b[1])));
-                servicesFilterContainer.innerHTML = '';
-
-                sortedServices.forEach((displayName, value) => {
-                    const checkboxHTML = `
-                            <label class='service-label'>
-                                <input type='checkbox' name='service' value='${value}'>
-                                <span>${displayName}</span>
-                            </label>`;
-                    servicesFilterContainer.insertAdjacentHTML('beforeend', checkboxHTML);
-                });
-
-                serviceCheckboxes = document.querySelectorAll('input[name="service"]');
-                serviceCheckboxes.forEach(checkbox => {
-                    checkbox.addEventListener('change', () => {
-                        checkbox.closest('.service-label').classList.toggle('selected', checkbox.checked);
-                        applyFilters();
-                    });
-                });
-            }
-
-            function applyFilters() {
-                const locationQuery = locationFilter.value.toLowerCase().trim();
-                const minRating = parseFloat(ratingFilter.value);
-                const selectedVehicle = document.querySelector('input[name="vehicle-type"]:checked').value;
-                const selectedServices = Array.from(serviceCheckboxes)
-                    .filter(checkbox => checkbox.checked)
-                    .map(checkbox => checkbox.value);
-                let visibleCards = 0;
-
-                garageCards.forEach(card => {
-                    const cardCity = card.dataset.city.toLowerCase();
-                    const cardRating = parseFloat(card.dataset.rating);
-                    const cardServices = card.dataset.services.split(' ');
-                    const cardVehicle = card.dataset.vehicle;
-
-                    const locationMatch = cardCity.includes(locationQuery);
-                    const ratingMatch = cardRating >= minRating;
-                    const vehicleMatch = selectedVehicle === 'all' || cardVehicle === selectedVehicle;
-                    const serviceMatch = selectedServices.length === 0 || selectedServices.every(service => cardServices.includes(service));
-
-                    if (locationMatch && ratingMatch && vehicleMatch && serviceMatch) {
-                        card.classList.remove('hidden-card');
-                        visibleCards++;
-                    } else {
-                        card.classList.add('hidden-card');
+        // --- Dynamic Filter & Card Initialization ---
+        // Populates the service filters based on the available garage services.
+        function initializeDynamicFilters() {
+            const serviceMap = new Map();
+            garageCards.forEach(card => {
+                card.querySelectorAll('.service-tag').forEach(tag => {
+                    const value = tag.dataset.serviceValue;
+                    const displayName = tag.textContent;
+                    if (value && displayName && !serviceMap.has(value)) {
+                        serviceMap.set(value, displayName);
                     }
                 });
+            });
 
-                noResultsMessage.style.display = visibleCards === 0 ? 'block' : 'none';
+            const sortedServices = new Map([...serviceMap.entries()].sort((a, b) => a[1].localeCompare(b[1])));
+            servicesFilterContainer.innerHTML = ''; // Clear existing filters
+
+            sortedServices.forEach((displayName, value) => {
+                const checkboxHTML = `
+                <label class='service-label'>
+                    <input type='checkbox' name='service' value='${value}'>
+                    <span>${displayName}</span>
+                </label>`;
+                servicesFilterContainer.insertAdjacentHTML('beforeend', checkboxHTML);
+            });
+
+            serviceCheckboxes = document.querySelectorAll('input[name="service"]');
+            serviceCheckboxes.forEach(checkbox => checkbox.addEventListener('change', handleFilterChange));
+        }
+
+        // --- Filtering Logic ---
+        // The main function that applies all active filters to the garage cards.
+        function applyFilters() {
+            const locationQuery = locationFilter.value.toLowerCase().trim();
+            const minRating = parseFloat(ratingFilter.value);
+            const selectedVehicle = document.querySelector('input[name="vehicle-type"]:checked').value;
+            const selectedServices = Array.from(serviceCheckboxes)
+                .filter(checkbox => checkbox.checked)
+                .map(checkbox => checkbox.value);
+
+            let visibleCards = 0;
+
+            garageCards.forEach(card => {
+                const cardCity = card.dataset.city.toLowerCase();
+                const cardRating = parseFloat(card.dataset.rating);
+                const cardServices = card.dataset.services.split(' ');
+                const cardVehicles = card.dataset.vehicle.split(' ');
+                const locationMatch = locationQuery === '' || cardCity.includes(locationQuery);
+                const ratingMatch = cardRating >= minRating;
+                const vehicleMatch = selectedVehicle === 'all' || cardVehicles.includes(selectedVehicle);
+                const serviceMatch = selectedServices.length === 0 || selectedServices.every(service => cardServices.includes(service));
+
+                if (locationMatch && ratingMatch && vehicleMatch && serviceMatch) {
+                    card.style.display = 'block';
+                    visibleCards++;
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+
+            noResultsMessage.style.display = visibleCards === 0 ? 'block' : 'none';
+        }
+
+        // Toggles the 'selected' class on filter labels and applies filters.
+        function handleFilterChange(event) {
+            const label = event.target.closest('label');
+            if (label) {
+                label.classList.toggle('selected', event.target.checked);
             }
+            applyFilters();
+        }
 
-            function resetFilters() {
-                locationFilter.value = '';
-                ratingFilter.value = '0';
+        function resetFilters() {
+            locationFilter.value = '';
+            ratingFilter.value = '0';
 
-                vehicleTypeOptions.forEach(opt => opt.classList.remove('selected'));
-                const allVehicleOption = document.querySelector('input[name="vehicle-type"][value="all"]');
+            vehicleTypeOptions.forEach(opt => opt.classList.remove('selected'));
+            const allVehicleOption = document.querySelector('input[name="vehicle-type"][value="all"]');
+            if (allVehicleOption) {
                 allVehicleOption.checked = true;
                 allVehicleOption.parentElement.classList.add('selected');
+            }
 
-                serviceCheckboxes.forEach(checkbox => {
-                    checkbox.checked = false;
-                    checkbox.closest('.service-label').classList.remove('selected');
-                });
+            serviceCheckboxes.forEach(checkbox => {
+                checkbox.checked = false;
+                checkbox.closest('.service-label').classList.remove('selected');
+            });
+            applyFilters();
+        }
+
+        // --- Modal Logic ---
+        function showModal(card) {
+
+            const title = card.querySelector('h3').textContent;
+            const address = card.querySelector('.card-location span').textContent.trim();
+            const rating = parseFloat(card.dataset.rating);
+            const garageId = card.querySelector('.view-details-btn').dataset.garageId;
+            const services = Array.from(card.querySelectorAll('.service-tag')).map(tag =>
+                `<span class='service-tag' data-service-value='${tag.dataset.serviceValue}'>${tag.textContent}</span>`
+            ).join('');
+
+            modalContent.innerHTML = `
+            <div class='modal-header'>
+                <h2>${title}</h2>
+                <button id='close-modal-btn' aria-label="Close modal">&times;</button>
+            </div>
+            <div class='modal-body'>
+                <p class='modal-address'>${address}</p>
+                <div class='rating-display'>${generateStars(rating)}</div>
+                <h4>Services Offered:</h4>
+                <div class='service-tags'>${services}</div>
+            </div>
+            <div class='modal-footer'>
+                <a href="/user/book-service/${garageId}" class='btn btn-primary'>Book Service</a>
+            </div>`;
+
+            modal.classList.add('is-visible');
+            document.body.style.overflow = 'hidden'; // Prevent background scrolling
+            document.getElementById('close-modal-btn').addEventListener('click', hideModal);
+        }
+
+        function hideModal() {
+            modal.classList.remove('is-visible');
+            document.body.style.overflow = 'auto';
+        }
+
+        // --- Scroll Animation Observer ---
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('is-visible');
+                }
+            });
+        }, { threshold: 0.1 });
+
+        // --- Event Listeners ---
+        locationFilter.addEventListener('keyup', applyFilters);
+        ratingFilter.addEventListener('change', applyFilters);
+        resetFiltersBtn.addEventListener('click', resetFilters);
+
+        vehicleTypeOptions.forEach(option => {
+            option.addEventListener('click', () => {
+                vehicleTypeOptions.forEach(opt => opt.classList.remove('selected'));
+                option.classList.add('selected');
+                option.querySelector('input').checked = true;
                 applyFilters();
-            }
-
-            // --- Modal Logic ---
-            const modal = document.getElementById('details-modal');
-            const modalContent = document.getElementById('modal-content');
-
-            function showModal(card) {
-                const title = card.querySelector('h3').textContent;
-                const address = card.querySelector('.card-location span').textContent.trim();
-                const rating = parseFloat(card.dataset.rating);
-                const services = Array.from(card.querySelectorAll('.service-tag')).map(tag =>
-                    `<span class='service-tag' data-service-value='${tag.dataset.serviceValue}'>${tag.textContent}</span>`
-                ).join('');
-
-                modalContent.innerHTML = `
-                        <div class='modal-body'>
-                            <div class='modal-header'>
-                                <h2 style='font-size: 1.5rem; font-weight: 700; margin-bottom: 0.5rem;'>${title}</h2>
-                                <button id='close-modal-btn'>&times;</button>
-                            </div>
-                            <p style='color: var(--color-text-light); margin-bottom: 1rem;'>${address}</p>
-                            <div class='rating-display' style='margin-bottom: 1rem;'>${generateStars(rating)}</div>
-                            <h4 style='font-weight: 600; color: var(--color-gray-700); margin-bottom: 0.5rem;'>Services Offered:</h4>
-                            <div class='service-tags' style='margin-bottom: 1rem;'>${services}</div>
-                        </div>
-                        <div class='modal-footer'>
-                            <a href="/user/bookservice" class='btn btn-primary'>Book Service</a>
-                        </div>`;
-
-                modal.classList.add('is-visible');
-                document.getElementById('close-modal-btn').addEventListener('click', hideModal);
-            }
-
-            function hideModal() {
-                modal.classList.remove('is-visible');
-            }
-
-            document.querySelectorAll('.view-details-btn').forEach(btn => {
-                btn.addEventListener('click', (e) => {
-                    const card = e.target.closest('.garage-card');
-                    showModal(card);
-                });
             });
-
-            modal.addEventListener('click', (e) => { if (e.target === modal) { hideModal(); } });
-            document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && modal.classList.contains('is-visible')) { hideModal(); } });
-
-            // --- Scroll Animation Observer ---
-            const observer = new IntersectionObserver((entries) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) { entry.target.classList.add('is-visible'); }
-                });
-            }, { threshold: 0.1 });
-            document.querySelectorAll('.scroll-animate').forEach(el => observer.observe(el));
-
-            // --- Event Listeners ---
-            locationFilter.addEventListener('keyup', applyFilters);
-            ratingFilter.addEventListener('change', applyFilters);
-            resetFiltersBtn.addEventListener('click', resetFilters);
-
-            vehicleTypeOptions.forEach(option => {
-                option.addEventListener('click', () => {
-                    vehicleTypeOptions.forEach(opt => opt.classList.remove('selected'));
-                    option.classList.add('selected');
-                    option.querySelector('input').checked = true;
-                    applyFilters();
-                });
-            });
-
-            // --- Initializations ---
-            initializeDynamicFilters();
         });
-    </script>
-</body>
+
+        garageContainer.addEventListener('click', (e) => {
+            const detailsButton = e.target.closest('.view-details-btn');
+            if (detailsButton) {
+                showModal(detailsButton.closest('.garage-card'));
+            }
+        });
+
+        modal.addEventListener('click', (e) => { if (e.target === modal) hideModal(); });
+        document.addEventListener('keydown', (e) => { if (e.key === 'Escape') hideModal(); });
+
+        // --- Initializations ---
+        document.querySelectorAll('[data-rating-display]').forEach(el => {
+            const rating = parseFloat(el.dataset.ratingDisplay);
+            el.innerHTML = generateStars(rating);
+        });
+
+        initializeDynamicFilters();
+        document.querySelectorAll('.scroll-animate').forEach(el => observer.observe(el));
+    });
+
+</script>
 
 </html>

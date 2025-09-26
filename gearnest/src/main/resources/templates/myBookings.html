@@ -11,6 +11,20 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="shortcut icon" th:href="@{/images/logo.png}" type="image/x-icon">
 </head>
+<style>
+    /* New CSS for the no-bookings-message */
+    #no-bookings-message {
+        text-align: center;
+        font-size: 1.25rem;
+        font-weight: 500;
+        color: #4a5568;
+        padding: 2rem;
+        border-radius: 8px;
+        background-color: #e2e8f0;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        margin-top: 2rem;
+    }
+</style>
 
 <body>
     <header th:replace="~{fragments/header::header}"></header>
@@ -23,139 +37,104 @@
 
                 <div class="service-filters">
                     <button class="filter-btn active" data-filter="all">All</button>
-                    <button class="filter-btn" data-filter="scheduled">Scheduled</button>
+                    <button class="filter-btn" data-filter="booked">Booked</button>
+                    <button class="filter-btn" data-filter="in progress">In Progress</button>
                     <button class="filter-btn" data-filter="completed">Completed</button>
                     <button class="filter-btn" data-filter="cancelled">Cancelled</button>
                 </div>
 
                 <div class="service-list">
-                    <!-- Service Card 1 -->
-                    <div class="service-card scroll-animate" data-status="completed">
-                        <div class="service-card-header">
-                            <div>
-                                <p class="booking-id">BOOKING ID: #GNS123456789</p>
-                                <p class="booking-date">Booked on: 08 Sep 2025</p>
-                            </div>
-                            <div>
-                                <p>Payment: VISA **** 1234</p>
-                                <p class="service-total"><strong>Total: ₹1,499.00</strong></p>
-                            </div>
-                        </div>
-                        <div class="service-card-body">
-                            <img src="https://images.unsplash.com/photo-1517524206127-48bbd363f369?w=120&h=120&fit=crop&q=80"
-                                alt="Car Service" class="service-card-img">
-                            <div class="service-details">
-                                <h3>Surat Premium Motors</h3>
-                                <p>123, Adajan Patiya, Surat</p>
-                                <p><strong>Service:</strong> General Service</p>
-                                <p><strong>Vehicle:</strong> Maruti Suzuki Swift (GJ05 AB 1234)</p>
-                            </div>
-                        </div>
-                        <div class="service-timeline">
-                            <div class="timeline">
-                                <div class="timeline-step completed">
-                                    <div class="timeline-dot"></div>
-                                    <div class="timeline-step-label">Booked</div>
-                                </div>
-                                <div class="timeline-step completed">
-                                    <div class="timeline-dot"></div>
-                                    <div class="timeline-step-label">In Progress</div>
-                                </div>
-                                <div class="timeline-step completed">
-                                    <div class="timeline-dot"></div>
-                                    <div class="timeline-step-label">Completed</div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="service-actions">
-                            <a href="/user/invoice" target="_blank" class="btn">View Invoice</a>
-                            <a href="/user/feedback" class="btn">Rate & Review</a>
-                            <a href="index.html#filter-section" class="btn btn-primary">Book Again</a>
-                        </div>
+                    <div id="no-bookings-message" th:if="${#lists.isEmpty(bookings)}" class="alert alert-info"
+                        style="display: block;">
+                        <h2>You have no bookings yet.</h2>
+                        <p>It looks like you haven't scheduled a service. Book your first service today!</p>
+                        <a href="dashboard#filter-section" class="btn btn-primary">Book a Service</a>
                     </div>
-                    <!-- Service Card 2 -->
-                    <div class="service-card scroll-animate delay-100" data-status="scheduled">
-                        <div class="service-card-header">
-                            <div>
-                                <p class="booking-id">BOOKING ID: #GNS987654321</p>
-                                <p class="booking-date">Booked on: 12 Sep 2025</p>
-                            </div>
-                            <div>
-                                <p>Payment: Pay at Garage</p>
-                                <p class="service-total"><strong>Total: ₹799.00</strong></p>
-                            </div>
-                        </div>
-                        <div class="service-card-body">
-                            <img src="https://images.unsplash.com/photo-1626247123932-b69856345479?w=120&h=120&fit=crop&q=80"
-                                alt="Bike Service" class="service-card-img">
-                            <div class="service-details">
-                                <h3>Surat Bike Works</h3>
-                                <p>88, Ring Road, Surat</p>
-                                <p><strong>Service:</strong> Tyre Alignment</p>
-                                <p><strong>Vehicle:</strong> Honda Activa (GJ05 XY 5678)</p>
-                            </div>
-                        </div>
-                        <div class="service-timeline">
-                            <div class="timeline">
-                                <div class="timeline-step completed">
-                                    <div class="timeline-dot"></div>
-                                    <div class="timeline-step-label">Booked</div>
+                    <div th:unless="${#lists.isEmpty(bookings)}">
+                        <div th:each="booking : ${bookings}" class="service-card scroll-animate"
+                            th:data-status="${booking.status.toLowerCase()}">
+                            <div class="service-card-header">
+                                <div>
+                                    <p class="booking-id" th:text="'BOOKING ID: #' + ${booking.id}"></p>
+                                    <p class="booking-date"
+                                        th:text="'Booked on: ' + ${#temporals.format(booking.bookingDate, 'dd MMM yyyy')}">
+                                    </p>
                                 </div>
-                                <div class="timeline-step">
-                                    <div class="timeline-dot"></div>
-                                    <div class="timeline-step-label">In Progress</div>
-                                </div>
-                                <div class="timeline-step">
-                                    <div class="timeline-dot"></div>
-                                    <div class="timeline-step-label">Completed</div>
+                                <div>
+                                    <p>Payment: <span
+                                            th:text="${booking.razorpayPaymentId != null ? 'Online' : 'Pay at Garage'}"></span>
+                                    </p>
+                                    <p class="service-total"><strong>Total: ₹<span
+                                                th:text="${#numbers.formatDecimal(booking.totalFee, 0, 2)}"></span></strong>
+                                    </p>
                                 </div>
                             </div>
-                        </div>
-                        <div class="service-actions">
-                            <a href="#" class="btn">Need Help?</a>
-                            <a href="#" class="btn btn-primary">Cancel Booking</a>
-                        </div>
-                    </div>
-                    <!-- Service Card 3 -->
-                    <div class="service-card scroll-animate delay-200" data-status="cancelled">
-                        <div class="service-card-header">
-                            <div>
-                                <p class="booking-id">BOOKING ID: #GNS112233445</p>
-                                <p class="booking-date">Booked on: 01 Sep 2025</p>
-                            </div>
-                            <div>
-                                <p>Payment: UPI</p>
-                                <p class="service-total"><strong>Total: ₹250.00</strong></p>
-                            </div>
-                        </div>
-                        <div class="service-card-body">
-                            <img src="https://images.unsplash.com/photo-1607954941324-b9a242f3e8f8?w=120&h=120&fit=crop&q=80"
-                                alt="Car Wash" class="service-card-img">
-                            <div class="service-details">
-                                <h3>Budget Car Wash</h3>
-                                <p>Opp. Railway Station, Varachha, Surat</p>
-                                <p><strong>Service:</strong> Car Wash</p>
-                                <p><strong>Vehicle:</strong> Tata Nexon (GJ05 EF 3456)</p>
-                            </div>
-                        </div>
-                        <div class="service-timeline">
-                            <div class="timeline">
-                                <div class="timeline-step completed">
-                                    <div class="timeline-dot"></div>
-                                    <div class="timeline-step-label">Booked</div>
-                                </div>
-                                <div class="timeline-step">
-                                    <div class="timeline-dot"></div>
-                                    <div class="timeline-step-label">Cancelled</div>
-                                </div>
-                                <div class="timeline-step">
-                                    <div class="timeline-dot"></div>
-                                    <div class="timeline-step-label">Completed</div>
+                            <div class="service-card-body">
+                                <img th:src="${booking.garage.cardImage != null} ? @{/uploads/garage-cards/{file}(file=${booking.garage.cardImage})} : @{https://placehold.co/120x120/d1d5db/334155?text=Garage}"
+                                    alt="Garage Profile" class="service-card-img">
+                                <div class="service-details">
+                                    <h3 th:text="${booking.garage.garageName}">Garage Name</h3>
+                                    <p th:text="${booking.garage.address}">Garage Address</p>
+                                    <p><strong>Services:</strong> <span
+                                            th:text="${#strings.listJoin(booking.bookingServiceItems.![particularGarageService.service.name], ', ')}"></span>
+                                    </p>
+                                    <p><strong>Vehicle:</strong> <span
+                                            th:text="${booking.vehicleMake} + ' ' + ${booking.vehicleModel} + ' (' + ${booking.vehicleNumber} + ')'"></span>
+                                    </p>
                                 </div>
                             </div>
-                        </div>
-                        <div class="service-actions">
-                            <a href="index.html#filter-section" class="btn btn-primary">Book Again</a>
+                            <div class="service-timeline">
+                                <!-- Timeline for non-cancelled bookings -->
+                                <div th:if="${!booking.status.equalsIgnoreCase('Cancelled')}" class="timeline-group">
+                                    <div th:classappend="${booking.status.equalsIgnoreCase('Booked') || booking.status.equalsIgnoreCase('In Progress') || booking.status.equalsIgnoreCase('Completed') ? 'completed' : ''}"
+                                        class="timeline-step">
+                                        <div class="timeline-dot"></div>
+                                        <div class="timeline-step-label">Booked</div>
+                                    </div>
+                                    <div th:classappend="${booking.status.equalsIgnoreCase('In Progress') || booking.status.equalsIgnoreCase('Completed') ? 'completed' : ''}"
+                                        class="timeline-step">
+                                        <div class="timeline-dot"></div>
+                                        <div class="timeline-step-label">In Progress</div>
+                                    </div>
+                                    <div th:classappend="${booking.status.equalsIgnoreCase('Completed') ? 'completed' : ''}"
+                                        class="timeline-step">
+                                        <div class="timeline-dot"></div>
+                                        <div class="timeline-step-label">Completed</div>
+                                    </div>
+                                </div>
+                                <!-- Timeline for cancelled bookings -->
+                                <div th:if="${booking.status.equalsIgnoreCase('Cancelled')}"
+                                    class="timeline-group cancelled">
+                                    <div class="timeline-step completed">
+                                        <div class="timeline-dot"></div>
+                                        <div class="timeline-step-label">Booked</div>
+                                    </div>
+                                    <div th:classappend="${booking.status.equalsIgnoreCase('Cancelled') ? 'completed' : ''}"
+                                        class="timeline-step cancelled-step">
+                                        <div class="timeline-dot"></div>
+                                        <div class="timeline-step-label">Cancelled</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="service-actions">
+                                <div th:if="${booking.status.equalsIgnoreCase('Completed')}">
+                                    <a th:href="@{ /user/invoice/{id}(id=${booking.id})}" target="_blank" class="btn">
+                                        View Invoice</a>
+                                    <a href="#" class="btn">Rate & Review</a>
+                                    <a href="#" class="btn btn-primary">Book Again</a>
+                                </div>
+                                <div th:if="${booking.status.equalsIgnoreCase('Booked')}">
+                                    <a href="#" class="btn">Need Help?</a>
+                                    <a href="#" class="btn btn-primary cancel-booking-btn"
+                                        th:data-booking-id="${booking.id}">Cancel Booking</a>
+                                </div>
+                                <div th:if="${booking.status.equalsIgnoreCase('Cancelled')}">
+                                    <a href="#" class="btn btn-primary">Book Again</a>
+                                </div>
+                                <div th:if="${booking.status.equalsIgnoreCase('In Progress')}">
+                                    <a href="#" class="btn btn-primary">Need Help?</a>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -177,6 +156,7 @@
             // Service page filter logic
             const filterButtons = document.querySelectorAll('.filter-btn');
             const serviceCards = document.querySelectorAll('.service-card');
+            const noBookingsMessage = document.getElementById('no-bookings-message');
 
             filterButtons.forEach(button => {
                 button.addEventListener('click', () => {
@@ -184,18 +164,28 @@
                     button.classList.add('active');
                     const filter = button.dataset.filter;
 
+                    let cardsFound = false;
                     serviceCards.forEach(card => {
-                        if (filter === 'all' || card.dataset.status === filter) {
+                        const cardStatus = card.dataset.status;
+                        if (filter === 'all' || cardStatus === filter) {
                             card.style.display = 'flex';
+                            cardsFound = true;
                         } else {
                             card.style.display = 'none';
                         }
                     });
+
+                    if (noBookingsMessage) {
+                        if (cardsFound) {
+                            noBookingsMessage.style.display = 'none';
+                        } else {
+                            noBookingsMessage.style.display = 'block';
+                        }
+                    }
                 });
             });
         });
     </script>
-
 </body>
 
 </html>

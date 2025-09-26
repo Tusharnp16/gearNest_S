@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" th:replace="garage/fragments/base::layout(~{::main})">
+
+<head>
+    <style>
+
+    </style>
+</head>
+
+<main>
+    <div class="head-title">
+        <div class="left">
+            <h1 th:text="${title}">Manage Bookings</h1>
+            <ul class="breadcrumb">
+                <li><a href="#">Manage Bookings</a></li>
+                <li><i class='bx bx-chevron-right'></i></li>
+                <li><a class="active" href="#">List</a></li>
+            </ul>
+        </div>
+    </div>
+
+    <div th:if="${#lists.isEmpty(bookings)}" class="alert alert-info">
+        No bookings found for your garage.
+    </div>
+    <div th:unless="${#lists.isEmpty(bookings)}" class="booking-table-container">
+        <table id="myTable" class="booking-table">
+            <thead>
+                <tr>
+                    <th>Booking ID</th>
+                    <th>User</th>
+                    <th>Vehicle</th>
+                    <th>Services</th>
+                    <th>Date & Time</th>
+                    <th>Total Fee</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="booking : ${bookings}">
+                    <td th:text="${booking.id}"></td>
+                    <td th:text="${booking.user.firstName} + ' ' + ${booking.user.lastName}"></td>
+                    <td th:text="${booking.vehicleMake} + ' ' + ${booking.vehicleModel}"></td>
+                    <td>
+                        <ul class="service-list">
+                            <li th:each="item : ${booking.bookingServiceItems}"
+                                th:text="${item.particularGarageService.service.name}"></li>
+                        </ul>
+                    </td>
+                    <td>
+                        <span th:text="${#temporals.format(booking.bookingDate, 'dd-MM-yyyy')}"></span><br>
+                        <span th:text="${booking.timeSlot}"></span>
+                    </td>
+                    <td th:text="'₹' + ${#numbers.formatDecimal(booking.totalFee, 0, 2)}"></td>
+                    <td>
+                        <span th:class="|status-badge ${booking.status.toLowerCase()}|"
+                            th:text="${booking.status}"></span>
+                    </td>
+                    <td>
+                        <button class="btn btn-primary btn-sm view-details-btn" th:data-booking-id="${booking.id}">View
+                            Details</button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</main>
+
+</html>
