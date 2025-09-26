@@ -10,6 +10,168 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="shortcut icon" th:href="@{/images/logo.png}" type="image/x-icon">
+    <style>
+        /* Floating Chat Icon */
+        #chatbot-icon {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: linear-gradient(135deg, #df0e0e, #00d4ff);
+            color: white;
+            font-size: 28px;
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.3);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        #chatbot-icon:hover {
+            transform: scale(1.1);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+        }
+
+        /* Chat Window */
+        #chatbot-window {
+            position: fixed;
+            bottom: 90px;
+            right: 20px;
+            width: 340px;
+            height: 450px;
+            display: none;
+            flex-direction: column;
+            border-radius: 20px;
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+            overflow: hidden;
+            animation: fadeInUp 0.3s ease;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                transform: translateY(30px);
+                opacity: 0;
+            }
+
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        /* Header */
+        #chat-header {
+            background: linear-gradient(135deg, #ff0000, #00d4ff);
+            color: white;
+            padding: 15px;
+            font-weight: bold;
+            text-align: center;
+            font-size: 16px;
+            letter-spacing: 1px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Chat Body */
+        #chat-body {
+            flex: 1;
+            padding: 12px;
+            overflow-y: auto;
+            font-size: 14px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            scrollbar-width: thin;
+        }
+
+        /* Messages */
+        .message {
+            max-width: 75%;
+            padding: 10px 14px;
+            border-radius: 15px;
+            line-height: 1.4;
+            word-wrap: break-word;
+            font-size: 14px;
+            animation: popIn 0.2s ease;
+        }
+
+        @keyframes popIn {
+            from {
+                transform: scale(0.9);
+                opacity: 0;
+            }
+
+            to {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        .message.user {
+            align-self: flex-end;
+            background: linear-gradient(135deg, #ff0000, #00d4ff);
+            color: white;
+            border-bottom-right-radius: 4px;
+        }
+
+        .message.bot {
+            align-self: flex-start;
+            background: rgba(255, 255, 255, 0.8);
+            color: #333;
+            border-bottom-left-radius: 4px;
+        }
+
+        /* Footer */
+        #chat-footer {
+            display: flex;
+            border-top: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 8px;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+        }
+
+        #chat-input {
+            flex: 1;
+            border: none;
+            outline: none;
+            padding: 10px;
+            border-radius: 12px;
+            background: rgba(255, 255, 255, 0.8);
+            margin-right: 8px;
+            font-size: 14px;
+        }
+
+        #chat-footer button {
+            border: none;
+            background: linear-gradient(135deg, #ff0101, #00d4ff);
+            color: white;
+            padding: 10px 15px;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: 0.2s ease;
+        }
+
+        #chat-footer button:hover {
+            transform: scale(1.05);
+        }
+
+        #chatbot-icon {
+            z-index: 9999;
+            /* Always on top */
+        }
+
+        #chatbot-window {
+            z-index: 9998;
+            /* Just below icon if overlapping */
+        }
+
+        ̥
+    </style>
 </head>
 
 <body>
@@ -149,6 +311,23 @@
         </div>
     </div>
 
+    <!-- Chatbot Icon -->
+    <div id="chatbot-icon" onclick="toggleChatbot()">
+        💬
+    </div>
+
+    <!-- Chatbot Window -->
+    <div id="chatbot-window">
+        <div id="chat-header">Garage Assistant</div>
+        <div id="chat-body"></div>
+        <div id="chat-footer">
+            <input type="text" id="chat-input" placeholder="Type a message..."
+                onkeypress="if(event.key === 'Enter'){sendMessage();}">
+            <button onclick="sendMessage()">Send</button>
+        </div>
+    </div>
+    ̥
+
     <!-- Your existing script.js -->
     <script th:src="@{/javascript/script.js}"></script>
 
@@ -159,6 +338,36 @@
      * Handles dynamic filtering, star rating generation, modal popups,
      * and animations for the garage listings.
      */
+    function toggleChatbot() {
+        const chatWindow = document.getElementById("chatbot-window");
+        chatWindow.style.display = (chatWindow.style.display === "none" || chatWindow.style.display === "")
+            ? "flex" : "none";
+    }
+
+    function sendMessage() {
+        let input = document.getElementById("chat-input");
+        let message = input.value.trim();
+        if (!message) return;
+
+        // Display user message
+        let chatBody = document.getElementById("chat-body");
+        chatBody.innerHTML += `<div><b>You:</b> ${message}</div>`;
+
+        // Send to backend
+        fetch("/api/chat", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(message)
+        })
+            .then(res => res.text())
+            .then(reply => {
+                chatBody.innerHTML += `<div><b>Bot:</b> ${reply}</div>`;
+                chatBody.scrollTop = chatBody.scrollHeight; // auto scroll
+            });
+
+        input.value = "";
+    }
+
     document.addEventListener('DOMContentLoaded', () => {
 
         // --- Element Selection ---
