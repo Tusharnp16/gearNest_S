@@ -11,167 +11,193 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="shortcut icon" th:href="@{/images/logo.png}" type="image/x-icon">
     <style>
-        /* Floating Chat Icon */
-        #chatbot-icon {
+        /* --- CHAT TOGGLE BUTTON --- */
+        .chat-toggle-button {
             position: fixed;
-            bottom: 20px;
-            right: 20px;
-            background: linear-gradient(135deg, #df0e0e, #00d4ff);
-            color: white;
-            font-size: 28px;
-            border-radius: 50%;
+            bottom: 2rem;
+            right: 2rem;
             width: 60px;
             height: 60px;
+            background: linear-gradient(to right, var(--color-primary), var(--color-primary-dark));
+            color: var(--color-white);
+            border-radius: 50%;
+            border: none;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease;
+            z-index: 1000;
+        }
+
+        .chat-toggle-button:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .chat-toggle-button svg {
+            width: 32px;
+            height: 32px;
+            transition: transform 0.3s ease, opacity 0.3s ease;
+        }
+
+        .chat-toggle-button .icon-close {
+            display: none;
+        }
+
+        /* --- CHAT WINDOW --- */
+        .chat-window {
+            position: fixed;
+            bottom: 6.5rem;
+            right: 2rem;
+            width: 100%;
+            max-width: 370px;
+            height: 500px;
+            background-color: var(--color-white);
+            border: 1px solid var(--color-gray-200);
+            border-radius: var(--border-radius-xl);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.15);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.3s ease, transform 0.3s ease;
+            pointer-events: none;
+            z-index: 999;
+        }
+
+        .chat-window.active {
+            opacity: 1;
+            transform: translateY(0);
+            pointer-events: auto;
+        }
+
+        /* --- CHAT HEADER --- */
+        .chat-header {
+            background: linear-gradient(to right, var(--color-primary), var(--color-primary-dark));
+            color: var(--color-white);
+            padding: 1rem;
+            font-size: 1.25rem;
+            font-weight: 600;
+            text-align: center;
+            flex-shrink: 0;
+        }
+
+        /* --- CHAT MESSAGES --- */
+        .chat-messages {
+            flex-grow: 1;
+            padding: 1rem;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+            background-color: var(--color-background);
+        }
+
+        .message {
+            max-width: 80%;
+            padding: 0.75rem 1rem;
+            border-radius: 1rem;
+            line-height: 1.4;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .bot-message {
+            background-color: var(--color-gray-100);
+            color: var(--text-dark);
+            align-self: flex-start;
+            border-bottom-left-radius: 0.25rem;
+        }
+
+        .user-message {
+            background: linear-gradient(to right, var(--color-primary), var(--color-primary-dark));
+            color: var(--color-white);
+            align-self: flex-end;
+            border-bottom-right-radius: 0.25rem;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* --- CHAT INPUT --- */
+        .chat-input-form {
+            display: flex;
+            padding: 1rem;
+            background-color: var(--color-white);
+            border-top: 1px solid var(--color-gray-200);
+            flex-shrink: 0;
+        }
+
+        .chat-input {
+            flex-grow: 1;
+            border: 1px solid var(--color-gray-300);
+            padding: 0.75rem;
+            border-radius: 1.5rem;
+            background-color: var(--color-white);
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+            font-family: 'Inter', sans-serif;
+            font-size: 1rem;
+        }
+
+        .chat-input:focus {
+            outline: none;
+            border-color: var(--color-primary);
+            box-shadow: 0 0 0 3px rgba(243, 122, 101, 0.2);
+        }
+
+        .send-button {
+            width: 45px;
+            height: 45px;
+            margin-left: 0.75rem;
+            border: none;
+            border-radius: 50%;
+            background: linear-gradient(to right, var(--color-primary), var(--color-primary-dark));
+            color: white;
+            cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
-            cursor: pointer;
-            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.3);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            transition: var(--transition-fast);
         }
 
-        #chatbot-icon:hover {
+        .send-button:hover {
             transform: scale(1.1);
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
         }
 
-        /* Chat Window */
-        #chatbot-window {
-            position: fixed;
-            bottom: 90px;
-            right: 20px;
-            width: 340px;
-            height: 450px;
-            display: none;
-            flex-direction: column;
-            border-radius: 20px;
-            background: rgba(255, 255, 255, 0.15);
-            backdrop-filter: blur(15px);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
-            overflow: hidden;
-            animation: fadeInUp 0.3s ease;
+        .send-button svg {
+            width: 24px;
+            height: 24px;
         }
 
-        @keyframes fadeInUp {
-            from {
-                transform: translateY(30px);
-                opacity: 0;
+        /* Responsive */
+        @media (max-width: 480px) {
+            .chat-window {
+                bottom: 0;
+                right: 0;
+                width: 100%;
+                height: 100%;
+                max-width: 100%;
+                border-radius: 0;
             }
 
-            to {
-                transform: translateY(0);
-                opacity: 1;
+            .chat-toggle-button {
+                bottom: 1rem;
+                right: 1rem;
             }
         }
-
-        /* Header */
-        #chat-header {
-            background: linear-gradient(135deg, #ff0000, #00d4ff);
-            color: white;
-            padding: 15px;
-            font-weight: bold;
-            text-align: center;
-            font-size: 16px;
-            letter-spacing: 1px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-        }
-
-        /* Chat Body */
-        #chat-body {
-            flex: 1;
-            padding: 12px;
-            overflow-y: auto;
-            font-size: 14px;
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-            scrollbar-width: thin;
-        }
-
-        /* Messages */
-        .message {
-            max-width: 75%;
-            padding: 10px 14px;
-            border-radius: 15px;
-            line-height: 1.4;
-            word-wrap: break-word;
-            font-size: 14px;
-            animation: popIn 0.2s ease;
-        }
-
-        @keyframes popIn {
-            from {
-                transform: scale(0.9);
-                opacity: 0;
-            }
-
-            to {
-                transform: scale(1);
-                opacity: 1;
-            }
-        }
-
-        .message.user {
-            align-self: flex-end;
-            background: linear-gradient(135deg, #ff0000, #00d4ff);
-            color: white;
-            border-bottom-right-radius: 4px;
-        }
-
-        .message.bot {
-            align-self: flex-start;
-            background: rgba(255, 255, 255, 0.8);
-            color: #333;
-            border-bottom-left-radius: 4px;
-        }
-
-        /* Footer */
-        #chat-footer {
-            display: flex;
-            border-top: 1px solid rgba(255, 255, 255, 0.2);
-            padding: 8px;
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(10px);
-        }
-
-        #chat-input {
-            flex: 1;
-            border: none;
-            outline: none;
-            padding: 10px;
-            border-radius: 12px;
-            background: rgba(255, 255, 255, 0.8);
-            margin-right: 8px;
-            font-size: 14px;
-        }
-
-        #chat-footer button {
-            border: none;
-            background: linear-gradient(135deg, #ff0101, #00d4ff);
-            color: white;
-            padding: 10px 15px;
-            border-radius: 12px;
-            cursor: pointer;
-            transition: 0.2s ease;
-        }
-
-        #chat-footer button:hover {
-            transform: scale(1.05);
-        }
-
-        #chatbot-icon {
-            z-index: 9999;
-            /* Always on top */
-        }
-
-        #chatbot-window {
-            z-index: 9998;
-            /* Just below icon if overlapping */
-        }
-
-        ̥
     </style>
+
 </head>
 
 <body>
@@ -311,22 +337,41 @@
         </div>
     </div>
 
-    <!-- Chatbot Icon -->
-    <div id="chatbot-icon" onclick="toggleChatbot()">
-        💬
+    <!-- Chat Toggle Button -->
+    <button class="chat-toggle-button" id="chat-toggle">
+        <svg class="icon-open" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+            stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round"
+                d="M2.25 12.76c0 1.6 1.123 2.994 2.707 3.227 1.068.157 2.148.279 3.238.364.466.037.893.281 1.153.671L12 21l2.652-3.978c.26-.39.687-.634 1.153-.67 1.09-.086 2.17-.208 3.238-.365 1.584-.233 2.707-1.626 2.707-3.228V6.741c0-1.602-1.123-2.995-2.707-3.228A48.394 48.394 0 0012 3c-2.392 0-4.744.175-7.043.513C3.373 3.746 2.25 5.14 2.25 6.741v6.018z" />
+        </svg>
+        <svg class="icon-close" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+            stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+        </svg>
+    </button>
+
+    <!-- Chat Window -->
+    <div class="chat-window" id="chat-window">
+        <div class="chat-header">Garage Assistant</div>
+        <div class="chat-messages" id="chat-messages">
+            <div class="message bot-message">
+                Hello! How can I assist you with your vehicle today?
+            </div>
+        </div>
+        <form class="chat-input-form" id="chat-form">
+            <input type="text" class="chat-input" id="chat-input" placeholder="Type a message...">
+            <button type="submit" class="send-button">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                    stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round"
+                        d="M6 12L3.269 3.126A59.768 59.768 0 0121.485 12 59.77 59.77 0 013.27 20.876L5.999 12zm0 0h7.5" />
+                </svg>
+            </button>
+        </form>
     </div>
 
-    <!-- Chatbot Window -->
-    <div id="chatbot-window">
-        <div id="chat-header">Garage Assistant</div>
-        <div id="chat-body"></div>
-        <div id="chat-footer">
-            <input type="text" id="chat-input" placeholder="Type a message..."
-                onkeypress="if(event.key === 'Enter'){sendMessage();}">
-            <button onclick="sendMessage()">Send</button>
-        </div>
-    </div>
-    ̥
+
+
 
     <!-- Your existing script.js -->
     <script th:src="@{/javascript/script.js}"></script>
@@ -338,11 +383,135 @@
      * Handles dynamic filtering, star rating generation, modal popups,
      * and animations for the garage listings.
      */
-    function toggleChatbot() {
-        const chatWindow = document.getElementById("chatbot-window");
-        chatWindow.style.display = (chatWindow.style.display === "none" || chatWindow.style.display === "")
-            ? "flex" : "none";
-    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+        const chatToggle = document.getElementById('chat-toggle');
+        const chatWindow = document.getElementById('chat-window');
+        const chatForm = document.getElementById('chat-form');
+        const chatInput = document.getElementById('chat-input');
+        const chatMessages = document.getElementById('chat-messages');
+        const iconOpen = document.querySelector('.icon-open');
+        const iconClose = document.querySelector('.icon-close');
+
+        const toggleChatWindow = (forceClose = false) => {
+            const isActive = chatWindow.classList.contains('active');
+
+            if (forceClose || isActive) {
+                chatWindow.classList.remove('active');
+                iconOpen.style.display = 'block';
+                iconClose.style.display = 'none';
+            } else {
+                chatWindow.classList.add('active');
+                iconOpen.style.display = 'none';
+                iconClose.style.display = 'block';
+            }
+        };
+
+        // Toggle on button click
+        chatToggle.addEventListener('click', (e) => {
+            e.stopPropagation(); // Prevents the window click listener from firing immediately
+            toggleChatWindow();
+        });
+
+        // Prevent clicks inside the window from closing it
+        chatWindow.addEventListener('click', (e) => {
+            e.stopPropagation();
+        });
+
+        // Close when clicking anywhere else on the page
+        window.addEventListener('click', () => {
+            if (chatWindow.classList.contains('active')) {
+                toggleChatWindow(true); // Force close
+            }
+        });
+
+        // --- Handle Message Sending ---
+        chatForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const messageText = chatInput.value.trim();
+            if (messageText === '') return;
+
+            addMessage(messageText, 'user-message');
+            chatInput.value = '';
+            chatInput.disabled = true;
+
+            const botResponse = await getBotResponse(messageText);
+            addMessage(botResponse, 'bot-message');
+            chatInput.disabled = false;
+            chatInput.focus();
+        });
+
+        // --- Add a message to the chat window ---
+        function addMessage(text, type) {
+            const messageElement = document.createElement('div');
+            messageElement.classList.add('message', type);
+            messageElement.textContent = text;
+            chatMessages.appendChild(messageElement);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+
+        // --- Add/Remove Typing Indicator ---
+        function addTypingIndicator() {
+            const typingIndicator = document.createElement('div');
+            typingIndicator.classList.add('message', 'bot-message', 'typing-indicator');
+            typingIndicator.innerHTML = '<span></span><span></span><span></span>';
+            chatMessages.appendChild(typingIndicator);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+
+        function removeTypingIndicator() {
+            const typingIndicator = document.querySelector('.typing-indicator');
+            if (typingIndicator) {
+                typingIndicator.remove();
+            }
+        }
+
+        // --- Gemini API Logic ---
+        async function getBotResponse(userInput) {
+            addTypingIndicator();
+
+            const systemPrompt = "You are a helpful and friendly garage assistant for a platform called GearNest. Keep your responses concise and focused on helping users with vehicle services.";
+            const userQuery = userInput;
+            const apiKey = "AIzaSyDm5Pq000mBTjBOL5aUvLHMM8nKDAaaePE";
+            const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-05-20:generateContent?key=${apiKey}`;
+
+            const payload = {
+                contents: [{ parts: [{ text: userQuery }] }],
+                systemInstruction: {
+                    parts: [{ text: systemPrompt }]
+                },
+            };
+
+            try {
+                const response = await fetch(apiUrl, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+
+                if (!response.ok) {
+                    throw new Error(`API request failed with status ${response.status}`);
+                }
+
+                const result = await response.json();
+                const candidate = result.candidates?.[0];
+
+                removeTypingIndicator();
+
+                if (candidate && candidate.content?.parts?.[0]?.text) {
+                    return candidate.content.parts[0].text;
+                } else {
+                    return "I'm sorry, I couldn't generate a response. Please try again.";
+                }
+            } catch (error) {
+                console.error("Error calling Gemini API:", error);
+                removeTypingIndicator();
+                return "Sorry, I'm having trouble connecting. Please try again later.";
+            }
+        }
+
+    });
+
 
     function sendMessage() {
         let input = document.getElementById("chat-input");

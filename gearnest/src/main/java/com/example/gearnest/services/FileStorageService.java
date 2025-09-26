@@ -43,8 +43,15 @@ public class FileStorageService {
         }
 
         // Clean the filename
-        String originalFilename = StringUtils.cleanPath(file.getOriginalFilename());
+        // Get the original filename, providing an empty string as a default if it's
+        // null
+        String originalFilename = file.getOriginalFilename();
+        if (originalFilename == null) {
+            originalFilename = "";
+        }
 
+        // Clean the filename (now guaranteed not to be null)
+        originalFilename = StringUtils.cleanPath(originalFilename);
         // Generate a new unique filename using UUID
         String generatedFilename = UUID.randomUUID().toString() + "_" + originalFilename;
 

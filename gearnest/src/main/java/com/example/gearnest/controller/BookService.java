@@ -15,8 +15,6 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import com.example.gearnest.model.Booking;
 import com.example.gearnest.model.Garage;
 import com.example.gearnest.model.ParticularGarageService;
-import com.example.gearnest.repository.BookingRepository;
-import com.example.gearnest.repository.CityRepository;
 import com.example.gearnest.repository.GarageRepository;
 import com.example.gearnest.repository.ParticularGarageServiceRepository;
 import com.example.gearnest.repository.StateRepository;
@@ -27,14 +25,12 @@ public class BookService {
 
     @Autowired
     private StateRepository stateRepository;
-    @Autowired
-    private CityRepository cityRepository;
+
     @Autowired
     private GarageRepository garageRepository;
     @Autowired
     private ParticularGarageServiceRepository particularGarageServiceRepository;
-    @Autowired
-    private BookingRepository bookingRepository;
+
     @Autowired
     private UserRepository userRepository;
 
