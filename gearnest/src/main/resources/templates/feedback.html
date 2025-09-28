@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>Feedback - GearNest</title>
+    <title th:text="${title}">Feedback - GearNest</title>
     <link rel="stylesheet" th:href="@{/css/style.css}">
     <link rel="stylesheet" th:href="@{/css/feedback.css}">
     <link rel="shortcut icon" th:href="@{/images/logo.png}" type="image/x-icon">
@@ -27,10 +27,17 @@
             <div class="container">
                 <div class="section-title">
                     <h2>Share Your Feedback</h2>
-                    <p>We'd love to hear from you. Let us know how we're doing!</p>
+                    <p th:if="${booking != null}">How was your experience with <strong
+                            th:text="${booking.garage.garageName}">[Garage Name]</strong> for booking ID <span
+                            th:text="${booking.id}">[Booking ID]</span>?</p>
+                    <p th:unless="${booking != null}">We'd love to hear from you. Let us know how we're doing!</p>
                 </div>
-                <form id="feedback-form" class="feedback-form scroll-animate" th:action="@{/feedback}"
+                <form id="feedback-form" class="feedback-form scroll-animate" th:action="@{/user/feedback/submit}"
                     th:object="${feedback}" method="post">
+
+                    <!-- Hidden fields to pass user and garage data to the controller -->
+                    <input type="hidden" th:field="*{user}" th:value="${feedback.user.id}">
+                    <input type="hidden" th:field="*{garage}" th:value="${feedback.garage.id}">
 
                     <div th:if="${success}" class="success" th:text="${success}"></div>
                     <div th:if="${error}" class="error" th:text="${error}"></div>
@@ -38,34 +45,35 @@
                     <div class="form-row">
                         <div class="form-group">
                             <label for="name">Your Name</label>
-                            <input type="text" id="name" th:field="*{name}" required>
+                            <input type="text" id="name"
+                                th:value="${feedback.user.firstName + ' ' + feedback.user.lastName}" readonly disabled>
                         </div>
                         <div class="form-group">
                             <label for="email">Your Email</label>
-                            <input type="email" id="email" name="email" th:field="*{email}" required>
+                            <input type="email" id="email" th:value="${feedback.user.email}" readonly disabled>
                         </div>
                     </div>
                     <div class="form-group">
                         <label>Your Rating</label>
                         <div class="rating-wrapper">
                             <div class="rating-stars">
-                                <input type="radio" id="star5" name="rating" value="5" required /><label for="star5"
-                                    title="Excellent"></label>
-                                <input type="radio" id="star4" name="rating" value="4" /><label for="star4"
-                                    title="Very Good"></label>
-                                <input type="radio" id="star3" name="rating" value="3" /><label for="star3"
-                                    title="Good"></label>
-                                <input type="radio" id="star2" name="rating" value="2" /><label for="star2"
-                                    title="Fair"></label>
-                                <input type="radio" id="star1" name="rating" value="1" /><label for="star1"
-                                    title="Poor"></label>
+                                <input type="radio" id="star5" name="rating" value="5" th:field="*{rating}"
+                                    required /><label for="star5" title="Excellent"></label>
+                                <input type="radio" id="star4" name="rating" value="4" th:field="*{rating}" /><label
+                                    for="star4" title="Very Good"></label>
+                                <input type="radio" id="star3" name="rating" value="3" th:field="*{rating}" /><label
+                                    for="star3" title="Good"></label>
+                                <input type="radio" id="star2" name="rating" value="2" th:field="*{rating}" /><label
+                                    for="star2" title="Fair"></label>
+                                <input type="radio" id="star1" name="rating" value="1" th:field="*{rating}" /><label
+                                    for="star1" title="Poor"></label>
                             </div>
                             <span id="rating-text"></span>
                         </div>
                     </div>
                     <div class="form-group">
-                        <label for="feedback">Your Feedback</label>
-                        <textarea id="feedback" name="feedback" rows="5" th:field="*{message}" required></textarea>
+                        <label for="review">Your Feedback</label>
+                        <textarea id="review" name="review" rows="5" th:field="*{review}" required></textarea>
                     </div>
                     <div class="form-group" style="margin-bottom: 0;">
                         <button type="submit" class="btn btn-primary" style="width: 100%;">Submit Feedback</button>

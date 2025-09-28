@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${status} + ' Error - GearNest'">Error - GearNest</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <style>
+        /* Keep your CSS as before */
+        :root {
+            --color-primary: #F37A65;
+            --color-primary-dark: #D64141;
+            --color-secondary: #1f2937;
+            --color-text: #1f2937;
+            --color-text-light: #4b5563;
+            --color-background: #FFFBF5;
+            --color-white: #ffffff;
+            --border-radius-lg: 0.5rem;
+            --transition-fast: all 0.2s ease-in-out;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--color-background);
+            color: var(--color-text);
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 2rem;
+            box-sizing: border-box;
+        }
+
+        .error-container {
+            text-align: center;
+            max-width: 600px;
+        }
+
+        .error-illustration {
+            width: 100%;
+            max-width: 300px;
+            margin-bottom: 2rem;
+        }
+
+        .error-code {
+            font-size: 6rem;
+            font-weight: 800;
+            color: var(--color-primary);
+            margin: 0;
+            line-height: 1;
+        }
+
+        .error-title {
+            font-size: 2rem;
+            font-weight: 700;
+            margin: 1rem 0 0.5rem;
+        }
+
+        .error-message {
+            font-size: 1.125rem;
+            color: var(--color-text-light);
+            margin-bottom: 2rem;
+        }
+
+        .btn {
+            display: inline-block;
+            font-weight: 600;
+            padding: 0.8rem 2rem;
+            border-radius: var(--border-radius-lg);
+            text-decoration: none;
+            border: none;
+            cursor: pointer;
+            transition: var(--transition-fast);
+        }
+
+        .btn-primary {
+            background: linear-gradient(to right, #F37A65, #D64141);
+            background-size: 200% auto;
+            color: #fff;
+            box-shadow: 0 4px 15px 0 rgba(220, 80, 70, 0.35);
+        }
+
+        .btn-primary:hover {
+            background-position: right center;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px 0 rgba(220, 80, 70, 0.3);
+        }
+
+        .scroll-animate {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+        }
+
+        .scroll-animate.is-visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    </style>
+</head>
+
+<body>
+    <main>
+        <div class="error-container scroll-animate">
+
+            <!-- Illustration (same as before) -->
+            <svg class="error-illustration" viewBox="0 0 200 150" xmlns="http://www.w3.org/2000/svg">
+                <path d="M 30 110 C 10 110, 10 90, 30 90 L 170 90 C 190 90, 190 110, 170 110 Z" fill="#D1D5DB" />
+                <path d="M 40 90 L 50 60 L 150 60 L 160 90" fill="#E5E7EB" />
+                <path d="M 55 60 L 75 60 L 70 90 L 50 90 Z" fill="#F9FAFB" stroke="#9CA3AF" stroke-width="2" />
+                <path d="M 125 60 L 145 60 L 150 90 L 130 90 Z" fill="#F9FAFB" stroke="#9CA3AF" stroke-width="2" />
+                <circle cx="50" cy="110" r="15" fill="#374151" stroke="#1F2937" stroke-width="3" />
+                <circle cx="150" cy="110" r="15" fill="#374151" stroke="#1F2937" stroke-width="3" />
+                <circle cx="50" cy="110" r="5" fill="#D1D5DB" />
+                <circle cx="150" cy="110" r="5" fill="#D1D5DB" />
+                <circle cx="100" cy="40" r="30" fill="#FEE2E2" />
+                <circle cx="100" cy="40" r="25" fill="#EF4444" />
+                <path d="M 95 25 L 105 25 L 105 45 L 95 45 Z" fill="#FFFBF5" />
+                <circle cx="100" cy="55" r="4" fill="#FFFBF5" />
+            </svg>
+
+            <!-- Dynamic Error Info -->
+            <h1 class="error-code" th:text="${status} ?: '???'">???</h1>
+            <h2 class="error-title" th:text="${error} ?: 'An Unexpected Error Occurred'">An Unexpected Error Occurred
+            </h2>
+            <p class="error-message" th:text="${message} ?: 'We apologize for the inconvenience.'">We apologize for the
+                inconvenience.</p>
+
+            <!-- Dynamic Button -->
+            <a th:href="@{/}" class="btn btn-primary">Go Back Home</a>
+
+            <!-- Developer trace (optional) -->
+            <div th:if="${trace}"
+                style="margin-top:2rem; padding-top:1rem; border-top:1px solid #E5E7EB; text-align:left;">
+                <h4 style="font-weight:700; font-size:1.125rem; margin-bottom:0.5rem;">Developer Trace</h4>
+                <pre style="background-color:#F3F4F6; padding:1rem; border-radius:0.25rem; font-size:0.875rem; color:#4B5563; white-space:pre-wrap;"
+                    th:text="${trace}">No trace available</pre>
+            </div>
+
+        </div>
+    </main>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) { entry.target.classList.add('is-visible'); }
+                });
+            }, { threshold: 0.1 });
+            document.querySelectorAll('.scroll-animate').forEach(el => observer.observe(el));
+        });
+    </script>
+</body>
+
+</html>

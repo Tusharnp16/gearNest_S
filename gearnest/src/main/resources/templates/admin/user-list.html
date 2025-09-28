@@ -41,8 +41,9 @@
                             <tr th:each="user, stat:${userList}">
                                 <td th:text="${stat.count}">1</td>
                                 <td>
-                                    <img th:src="@{'/uploads/user-profiles/' + ${user.profilePic}}" alt="Profile pic"
-                                        width="40" height="40" class="rounded-circle" />
+                                    <img th:src="@{${user.profilePic} == null or ${user.profilePic} == 'default.jpg' ? '/images/default.png' : '/uploads/user-profiles/' + ${user.profilePic}}"
+                                        alt="Profile pic" width="40" height="40" class="rounded-circle" />
+
                                 </td>
 
                                 <td style="text-transform: capitalize;" th:text="${user.firstName+' '+user.lastName}">

@@ -42,16 +42,21 @@
                         <tbody>
                             <tr th:each="booking, stat : ${bookingList}">
                                 <td th:text="${stat.count}">1</td>
-                                <td th:text="${booking.customerName}">Name</td>
-                                <td th:text="${booking.customerPhone}">Phone</td>
-                                <!-- <td th:text="${garageMap[booking.garageId]?.name}">Garage Name</td> -->
-                                <td th:text="${booking.selectedService}">Service</td>
-                                <td th:text="${booking.bookingDate}">Date</td>
-                                <td th:text="${booking.bookingTime}">Time</td>
-                                <td th:text="${#temporals.format(booking.createdAt, 'dd MMM yyyy hh:mm a')}">Request At
+                                <td th:text="${booking.user.firstName + ' ' + booking.user.lastName}">Name</td>
+                                <td th:text="${booking.user.phone}">Phone</td>
+                                <!-- <td th:text="${booking.garage.garageName}">Garage Name</td> -->
+                                <td th:text="${booking.vehicleModel}">Service</td>
+                                <td th:text="${#temporals.format(booking.bookingDate, 'dd MMM yyyy')}">Date</td>
+                                <td th:text="${booking.timeSlot}">Time</td>
+                                <td th:text="${#temporals.format(booking.bookingDate, 'dd MMM yyyy hh:mm a')}">Request
+                                    At</td>
+                                <td>
+                                    <span th:text="${booking.status}"
+                                        th:class="'status-badge ' + ${booking.status.toLowerCase()}">
+                                    </span>
                                 </td>
-                                <td th:text="${booking.status}">Status</td>
                             </tr>
+
                         </tbody>
                     </table>
                 </div>

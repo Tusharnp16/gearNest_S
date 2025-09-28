@@ -1,42 +1,130 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org" th:replace="garage/fragments/base::layout(~{::main})">
-
-<!-- Main content will override the fragment in base.html -->
 <main>
     <div class="head-title">
         <div class="left">
-            <h1>Dashboard</h1>
+            <h1 th:text="${title}">Dashboard</h1>
             <ul class="breadcrumb">
                 <li><a href="#">Dashboard</a></li>
                 <li><i class='bx bx-chevron-right'></i></li>
                 <li><a class="active" href="#">Home</a></li>
             </ul>
         </div>
+        <a href="/garage/bookings" class="btn-download">
+            <i class='bx bxs-calendar-check'></i>
+            <span class="text">Manage Bookings</span>
+        </a>
     </div>
 
+    <!-- KPI Boxes -->
     <ul class="box-info">
         <li>
             <i class="fas fa-solid fa-users totalNumbers"></i>
             <span class="text">
-                <h3>100</h3>
+                <h3 th:text="${totalCustomers}">0</h3>
                 <p>Total Customers</p>
             </span>
         </li>
         <li>
             <i class="fas fa-screwdriver-wrench totalNumbers"></i>
             <span class="text">
-                <h3>100</h3>
+                <h3 th:text="${totalServices}">0</h3>
                 <p>Total Services</p>
             </span>
         </li>
         <li>
             <i class="fa-solid fa-calendar-check totalNumbers"></i>
             <span class="text">
-                <h3>100</h3>
-                <p>Total Booking</p>
+                <h3 th:text="${totalBookings}">0</h3>
+                <p>Total Bookings</p>
+            </span>
+        </li>
+        <li>
+            <i class='bx bxs-dollar-circle totalNumbers'></i>
+            <span class="text">
+                <h3 th:text="'₹' + ${#numbers.formatDecimal(totalEarnings, 0, 2)}">₹0.00</h3>
+                <p>Total Revenue</p>
             </span>
         </li>
     </ul>
+
+    <!-- Charts Section -->
+    <div class="table-data">
+        <div class="order">
+            <div class="head" style="display:flex;justify-content:space-between;align-items:center;">
+                <h3 id="revenueHeading">Revenue Growth (Weekly)</h3>
+                <select id="revenueFilter" class="form-select" style="width:150px;">
+                    <option value="weekly" selected>Weekly</option>
+                    <option value="monthly">Monthly</option>
+                    <option value="yearly">Yearly</option>
+                </select>
+            </div>
+            <div style="flex:1; display:flex; justify-content:center; align-items:center;">
+                <canvas id="revenueChart"></canvas>
+            </div>
+        </div>
+
+        <div class="todo">
+            <div class="head">
+                <h3>Booking Status Breakdown</h3>
+            </div>
+            <div style="flex:1; min-width:300px;">
+                <div style="margin:auto; display:flex; justify-content:center; align-items:center;">
+                    <canvas id="bookingChart"></canvas>
+                </div>
+                <input type="hidden" id="booking-counts-data"
+                    th:value="${bookingCounts[0]} + ',' + ${bookingCounts[1]} + ',' + ${bookingCounts[2]} + ',' + ${bookingCounts[3]}">
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        // Booking Status Chart
+        const bookingCounts = document.getElementById('booking-counts-data').value.split(',').map(Number);
+        const bookingCtx = document.getElementById('bookingChart').getContext('2d');
+        new Chart(bookingCtx, {
+            type: 'doughnut',
+            data: {
+                labels: ['Booked', 'In Progress', 'Completed', 'Cancelled'],
+                datasets: [{ data: bookingCounts, backgroundColor: ['#3498db', '#f39c12', '#2ecc71', '#e74c3c'] }]
+            },
+            options: { responsive: true, plugins: { legend: { position: 'bottom' } } }
+        });
+
+        // Revenue Chart
+        let revenueChart;
+        function loadRevenueData(filter) {
+            fetch(`/garage/dashboard/revenue?filter=${filter}`)
+                .then(res => res.json())
+                .then(data => {
+                    const ctx = document.getElementById('revenueChart').getContext('2d');
+                    if (revenueChart) revenueChart.destroy();
+                    revenueChart = new Chart(ctx, {
+                        type: 'line',
+                        data: {
+                            labels: data.labels,
+                            datasets: [{
+                                label: 'Revenue (₹)',
+                                data: data.values,
+                                backgroundColor: 'rgba(46, 204, 113, 0.2)',
+                                borderColor: '#2ecc71',
+                                borderWidth: 2,
+                                fill: true,
+                                tension: 0.3
+                            }]
+                        },
+                        options: { responsive: true, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true } } }
+                    });
+                    document.getElementById("revenueHeading").textContent = data.title;
+                });
+        }
+
+        loadRevenueData("weekly");
+        document.getElementById("revenueFilter").addEventListener("change", function () {
+            loadRevenueData(this.value);
+        });
+    </script>
 </main>
 
 </html>

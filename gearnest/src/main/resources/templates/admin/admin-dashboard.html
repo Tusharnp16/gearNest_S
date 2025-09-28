@@ -1,8 +1,8 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org" th:replace="admin/fragments/base::layout(~{::main})">
+<html lang="en" xmlns:th="http://www.thymeleaf.org" th:replace="~{admin/fragments/base::layout(~{::main})}">
 
-<!-- Main content will override the fragment in base.html -->
 <main>
+
     <div class="head-title">
         <div class="left">
             <h1>Dashboard</h1>
@@ -14,30 +14,197 @@
         </div>
     </div>
 
-    <ul class="box-info">
-        <li>
-            <i class="fas fa-solid fa-users totalNumbers"></i>
-            <span class="text">
-                <h3 th:text="${userCount}"></h3>
-                <p>Total Users</p>
-            </span>
-        </li>
-        <li>
-            <i class="fas fa-screwdriver-wrench totalNumbers"></i>
-            <span class="text">
-                <h3 th:text="${garageCount}"></h3>
-                <p>Total Garages</p>
-            </span>
-        </li>
-        <li>
-            <i class="fa-solid fa-calendar-check totalNumbers"></i>
-            <span class="text">
-                <h3 th:text="${bookingCount}"></h3>
-                <p>Total Booking</p>
-            </span>
-        </li>
-    </ul>
+    <!-- Dashboard boxes -->
+    <div class="box-container">
+        <ul class="box-info">
+            <li>
+                <i class="fas fa-solid fa-users totalNumbers"></i>
+                <span class="text">
+                    <h3 th:text="${userCount}">100</h3>
+                    <p>Total Users</p>
+                </span>
+            </li>
+            <li>
+                <i class="fas fa-screwdriver-wrench totalNumbers"></i>
+                <span class="text">
+                    <h3 th:text="${garageCount}">50</h3>
+                    <p>Total Garages</p>
+                </span>
+            </li>
+            <li>
+                <i class="fa-solid fa-calendar-check totalNumbers"></i>
+                <span class="text">
+                    <h3 th:text="${bookingCount}">200</h3>
+                    <p>Total Bookings</p>
+                </span>
+            </li>
+            <li>
+                <i class="bx bxs-dollar-circle totalNumbers"></i>
+                <span class="text">
+                    <h3 th:text="'₹ ' + ${totalRevenue}">INR 5000.00</h3>
+                    <p>Total Revenue</p>
+                </span>
+            </li>
+            <li>
+                <i class="fas fa-list-check totalNumbers"></i>
+                <span class="text">
+                    <h3 th:text="${serviceCount}">500</h3>
+                    <p>Total Services</p>
+                </span>
+            </li>
 
+            <!-- Duplicate boxes for smooth infinite scroll -->
+            <li>
+                <i class="fas fa-solid fa-users totalNumbers"></i>
+                <span class="text">
+                    <h3 th:text="${userCount}">100</h3>
+                    <p>Total Users</p>
+                </span>
+            </li>
+            <li>
+                <i class="fas fa-screwdriver-wrench totalNumbers"></i>
+                <span class="text">
+                    <h3 th:text="${garageCount}">50</h3>
+                    <p>Total Garages</p>
+                </span>
+            </li>
+            <li>
+                <i class="fa-solid fa-calendar-check totalNumbers"></i>
+                <span class="text">
+                    <h3 th:text="${bookingCount}">200</h3>
+                    <p>Total Bookings</p>
+                </span>
+            </li>
+            <li>
+                <i class="bx bxs-dollar-circle totalNumbers"></i>
+                <span class="text">
+                    <h3 th:text="'₹ ' + ${totalRevenue}">INR 5000.00</h3>
+                    <p>Total Revenue</p>
+                </span>
+            </li>
+            <li>
+                <i class="fas fa-list-check totalNumbers"></i>
+                <span class="text">
+                    <h3 th:text="${serviceCount}">500</h3>
+                    <p>Total Services</p>
+                </span>
+            </li>
+        </ul>
+    </div>
+
+    <!-- Chart Section -->
+    <div style="display: flex; gap: 20px; margin-top: 30px;">
+        <!-- Revenue Line Chart -->
+        <div class="chart-card" style="flex:1;">
+            <div class="chart-header">
+                <h2 id="revenueHeading">Weekly Revenue</h2>
+                <select id="revenueFilter">
+                    <option value="weekly" selected>Weekly</option>
+                    <option value="monthly">Monthly</option>
+                    <option value="yearly">Yearly</option>
+                </select>
+            </div>
+            <canvas id="revenueChart"></canvas>
+        </div>
+
+        <!-- Booking Bar Chart -->
+        <div class="chart-card" style="flex:1;">
+            <div class="chart-header">
+                <h2 id="bookingHeading">Weekly Bookings</h2>
+                <select id="bookingFilter">
+                    <option value="weekly" selected>Weekly</option>
+                    <option value="monthly">Monthly</option>
+                    <option value="yearly">Yearly</option>
+                </select>
+            </div>
+            <canvas id="bookingChart"></canvas>
+        </div>
+    </div>
+
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        let revenueChart, bookingChart;
+
+        function getChartTitle(type, metric) {
+            return `${type.charAt(0).toUpperCase() + type.slice(1)} ${metric}`;
+        }
+
+        async function loadChartData(type, endpoint, chartType, chartId, label, chartInstance, headingId, metric) {
+            try {
+                const response = await fetch(`/admin/chart/${endpoint}?type=${type}`);
+                const data = await response.json();
+
+                const labels = Object.keys(data);
+                const values = Object.values(data);
+
+                document.getElementById(headingId).textContent = getChartTitle(type, metric);
+
+                if (chartInstance) chartInstance.destroy();
+
+                const ctx = document.getElementById(chartId).getContext('2d');
+
+                return new Chart(ctx, {
+                    type: chartType,
+                    data: {
+                        labels: labels,
+                        datasets: [{
+                            label: label,
+                            data: values,
+                            backgroundColor: chartType === 'line' ? 'rgba(46, 204, 113, 0.2)' : 'rgba(54, 162, 235, 0.6)',
+                            borderColor: chartType === 'line' ? '#2ecc71' : 'rgba(54, 162, 235, 1)',
+                            borderWidth: 2,
+                            fill: chartType === 'line',
+                            tension: chartType === 'line' ? 0.4 : 0, // Smooth curve for line
+                            borderRadius: chartType === 'bar' ? 6 : 0, // Rounded bars
+                            maxBarThickness: chartType === 'bar' ? 35 : undefined
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        plugins: {
+                            legend: { display: false },
+                            tooltip: {
+                                callbacks: {
+                                    label: function (context) {
+                                        return chartType === 'line' ? `₹ ${context.raw}` : `${context.raw} bookings`;
+                                    }
+                                }
+                            }
+                        },
+                        scales: {
+                            x: {
+                                grid: { display: false },
+                                ticks: { font: { size: 12 } }
+                            },
+                            y: {
+                                beginAtZero: true,
+                                grid: { color: 'rgba(200, 200, 200, 0.2)' },
+                                ticks: { font: { size: 12 } }
+                            }
+                        }
+                    }
+                });
+
+            } catch (error) {
+                console.error(`Failed to load ${metric} chart data:`, error);
+                return null;
+            }
+        }
+
+        document.addEventListener("DOMContentLoaded", async () => {
+            revenueChart = await loadChartData("weekly", "revenue", "line", "revenueChart", "Revenue (₹)", revenueChart, "revenueHeading", "Revenue");
+            bookingChart = await loadChartData("weekly", "bookings", "bar", "bookingChart", "Bookings", bookingChart, "bookingHeading", "Bookings");
+
+            document.getElementById("revenueFilter").addEventListener("change", async (e) => {
+                revenueChart = await loadChartData(e.target.value, "revenue", "line", "revenueChart", "Revenue (₹)", revenueChart, "revenueHeading", "Revenue");
+            });
+
+            document.getElementById("bookingFilter").addEventListener("change", async (e) => {
+                bookingChart = await loadChartData(e.target.value, "bookings", "bar", "bookingChart", "Bookings", bookingChart, "bookingHeading", "Bookings");
+            });
+        });
+    </script>
 </main>
 
 </html>

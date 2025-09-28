@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" th:replace="garage/fragments/base::layout(~{::main})">
+
+<main>
+    <div class="head-title">
+        <div class="left">
+            <h1 th:text="${title}">Manage Feedback</h1>
+            <ul class="breadcrumb">
+                <li><a href="#">Feedback</a></li>
+                <li><i class='bx bx-chevron-right'></i></li>
+                <li><a class="active" href="#">Received Reviews</a></li>
+            </ul>
+        </div>
+    </div>
+
+    <div th:if="${#lists.isEmpty(feedbackList)}" class="alert alert-info" style="margin-top: 20px; text-align: center;">
+        <i class='bx bx-message-square-error bx-md' style="color: #3498db;"></i>
+        <p>No customer feedback has been submitted for your garage yet.</p>
+    </div>
+
+    <div th:unless="${#lists.isEmpty(feedbackList)}" class="feedback-table-container">
+        <table id="feedbackTable" class="feedback-table">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Customer</th>
+                    <th>Rating</th>
+                    <th>Review Message</th>
+                    <th>Date Received</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="feedback, iterStat : ${feedbackList}">
+                    <td th:text="${iterStat.index + 1}"></td>
+                    <td th:text="${feedback.user.firstName} + ' ' + ${feedback.user.lastName}"></td>
+                    <td>
+                        <!-- Dynamic Star Rating Display -->
+                        <span th:each="i : ${#numbers.sequence(1, 5)}">
+                            <i
+                                th:class="${i <= feedback.rating} ? 'fas fa-star text-warning' : 'far fa-star text-muted'"></i>
+                        </span>
+                    </td>
+                    <td th:text="${feedback.review}"></td>
+                    <td th:text="${#temporals.format(feedback.createdAt, 'dd MMM yyyy')}"></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Optional: Include JS for DataTables if you want sorting/pagination -->
+    <script>
+
+    </script>
+</main>
+
+</html>

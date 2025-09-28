@@ -7,6 +7,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.PrePersist;
 import lombok.AllArgsConstructor;
@@ -18,25 +19,22 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Feedback {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    // Establishes a many-to-one relationship with the User entity.
-    // Each feedback is linked to a single user.
     @ManyToOne
+    @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
-    // Establishes a many-to-one relationship with the Garage entity.
-    // Each feedback is given to a single garage.
     @ManyToOne
+    @JoinColumn(name = "garage_id", nullable = false)
     private Garage garage;
 
     private Integer rating;
 
     @Column(length = 1000)
-    private String message;
+    private String review;
 
     private LocalDateTime createdAt;
     private boolean reviewed = false;

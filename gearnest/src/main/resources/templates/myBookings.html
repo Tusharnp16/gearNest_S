@@ -11,20 +11,6 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="shortcut icon" th:href="@{/images/logo.png}" type="image/x-icon">
 </head>
-<style>
-    /* New CSS for the no-bookings-message */
-    #no-bookings-message {
-        text-align: center;
-        font-size: 1.25rem;
-        font-weight: 500;
-        color: #4a5568;
-        padding: 2rem;
-        border-radius: 8px;
-        background-color: #e2e8f0;
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-        margin-top: 2rem;
-    }
-</style>
 
 <body>
     <header th:replace="~{fragments/header::header}"></header>
@@ -48,7 +34,7 @@
                         style="display: block;">
                         <h2>You have no bookings yet.</h2>
                         <p>It looks like you haven't scheduled a service. Book your first service today!</p>
-                        <a href="dashboard#filter-section" class="btn btn-primary">Book a Service</a>
+                        <a href="/user/book-service" class="btn btn-primary">Book a Service</a>
                     </div>
                     <div th:unless="${#lists.isEmpty(bookings)}">
                         <div th:each="booking : ${bookings}" class="service-card scroll-animate"
@@ -105,7 +91,8 @@
                                 <!-- Timeline for cancelled bookings -->
                                 <div th:if="${booking.status.equalsIgnoreCase('Cancelled')}"
                                     class="timeline-group cancelled">
-                                    <div class="timeline-step completed">
+                                    <div th:classappend="${!booking.status.equalsIgnoreCase('Cancelled') ? 'completed' : ''}"
+                                        class="timeline-step">
                                         <div class="timeline-dot"></div>
                                         <div class="timeline-step-label">Booked</div>
                                     </div>
@@ -119,9 +106,9 @@
                             <div class="service-actions">
                                 <div th:if="${booking.status.equalsIgnoreCase('Completed')}">
                                     <a th:href="@{ /user/invoice/{id}(id=${booking.id})}" target="_blank" class="btn">
-                                        View Invoice</a>
-                                    <a href="#" class="btn">Rate & Review</a>
-                                    <a href="#" class="btn btn-primary">Book Again</a>
+                                        View Invoice</a> <a th:href="@{/user/feedback(bookingId=${booking.id})}"
+                                        class="btn">Rate & Review</a>
+                                    <a th:href="@{/dashboard#filter-section}" class="btn btn-primary">Book Again</a>
                                 </div>
                                 <div th:if="${booking.status.equalsIgnoreCase('Booked')}">
                                     <a href="#" class="btn">Need Help?</a>
@@ -129,7 +116,7 @@
                                         th:data-booking-id="${booking.id}">Cancel Booking</a>
                                 </div>
                                 <div th:if="${booking.status.equalsIgnoreCase('Cancelled')}">
-                                    <a href="#" class="btn btn-primary">Book Again</a>
+                                    <a th:href="@{/dashboard#filter-section}" class="btn btn-primary">Book Again</a>
                                 </div>
                                 <div th:if="${booking.status.equalsIgnoreCase('In Progress')}">
                                     <a href="#" class="btn btn-primary">Need Help?</a>
@@ -143,6 +130,9 @@
     </main>
     <footer th:replace="~{fragments/footer::footer}"></footer>
 
+
+    <script th:src="@{/javascript/sweetalert2@11.js}"></script>
+    <script th:src="@{/javascript/jquery-3.7.1.min.js}"></script>
     <script th:src="@{/javascript/script.js}"></script>
     <script>
         document.addEventListener('DOMContentLoaded', () => {
@@ -182,6 +172,102 @@
                             noBookingsMessage.style.display = 'block';
                         }
                     }
+                });
+            });
+
+            // Handle Cancel Booking button click
+            const cancelButtons = document.querySelectorAll('.cancel-booking-btn');
+            cancelButtons.forEach(button => {
+                button.addEventListener('click', async (event) => {
+                    event.preventDefault();
+                    const bookingId = event.target.dataset.bookingId;
+
+                    Swal.fire({
+                        title: 'Are you sure?',
+                        text: "You want to cancel this booking?",
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonColor: '#d33',
+                        cancelButtonColor: '#3085d6',
+                        confirmButtonText: 'Yes, cancel it!'
+                    }).then(async (result) => {
+                        if (result.isConfirmed) {
+                            Swal.fire({
+                                title: 'Sending OTP...',
+                                text: 'Please wait, this may take a moment.',
+                                allowOutsideClick: false,
+                                didOpen: () => {
+                                    Swal.showLoading();
+                                }
+                            });
+                            try {
+                                const response = await fetch('/user/send-otp', {
+                                    method: 'POST',
+                                    headers: {
+                                        'Content-Type': 'application/x-www-form-urlencoded'
+                                    },
+                                    body: new URLSearchParams({
+                                        'bookingId': bookingId
+                                    })
+                                });
+
+                                if (!response.ok) {
+                                    const errorText = await response.text();
+                                    throw new Error(errorText);
+                                }
+
+                                Swal.fire({
+                                    title: 'OTP Sent!',
+                                    text: "Please check your email for the OTP to confirm cancellation.",
+                                    input: 'text',
+                                    inputPlaceholder: 'Enter OTP',
+                                    showCancelButton: true,
+                                    confirmButtonText: 'Verify OTP',
+                                    showLoaderOnConfirm: true,
+                                    preConfirm: async (otp) => {
+                                        try {
+                                            const otpResponse = await fetch('/user/cancel-booking-with-otp', {
+                                                method: 'POST',
+                                                headers: {
+                                                    'Content-Type': 'application/x-www-form-urlencoded'
+                                                },
+                                                body: new URLSearchParams({
+                                                    'bookingId': bookingId,
+                                                    'otp': otp
+                                                })
+                                            });
+
+                                            if (!otpResponse.ok) {
+                                                const errorText = await otpResponse.text();
+                                                throw new Error(errorText);
+                                            }
+                                            return await otpResponse.text();
+                                        } catch (error) {
+                                            Swal.showValidationMessage(`Request failed: ${error}`);
+                                        }
+                                    },
+                                    allowOutsideClick: () => !Swal.isLoading()
+                                }).then((otpResult) => {
+                                    if (otpResult.isConfirmed) {
+                                        Swal.fire({
+                                            icon: 'success',
+                                            title: 'Cancelled!',
+                                            text: otpResult.value,
+                                        }).then(() => {
+                                            location.reload();
+                                        });
+                                    }
+                                });
+
+                            } catch (error) {
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Error',
+                                    text: `Failed to cancel booking: ${error.message}`,
+                                });
+                            }
+                        }
+                    });
                 });
             });
         });

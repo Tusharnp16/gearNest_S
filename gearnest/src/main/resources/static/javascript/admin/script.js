@@ -86,22 +86,14 @@ switchMode.addEventListener('change', function () {
 });
 
 
-// Notification Menu Toggle
-document.querySelector('.notification').addEventListener('click', function () {
-    document.querySelector('.notification-menu').classList.toggle('show');
-    document.querySelector('.profile-menu').classList.remove('show'); // Close profile menu if open
-});
-
 // Profile Menu Toggle
 document.querySelector('.profile').addEventListener('click', function () {
     document.querySelector('.profile-menu').classList.toggle('show');
-    document.querySelector('.notification-menu').classList.remove('show'); // Close notification menu if open
 });
 
 // Close menus if clicked outside
 window.addEventListener('click', function (e) {
     if (!e.target.closest('.notification') && !e.target.closest('.profile')) {
-        document.querySelector('.notification-menu').classList.remove('show');
         document.querySelector('.profile-menu').classList.remove('show');
     }
 });
@@ -134,77 +126,6 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 });
 
-$(document).ready(function () {
-
-    // Initialize garageTable if it exists
-    if ($('#garageTable').length && $('#garageTable tbody tr').length > 0) {
-        $('#garageTable').DataTable({
-            responsive: true,
-            pageLength: 5,
-            lengthMenu: [5, 10, 25, 50],
-            order: [[0, 'asc']],
-            columnDefs: [
-                { orderable: false, targets: [1, 7] } // Adjust targets based on your actual columns
-            ]
-        });
-    }
-
-    // Initialize feedbackTable if it exists and has data
-    if ($('#feedbackTable').length && $('#feedbackTable tbody tr').length > 0) {
-        $('#feedbackTable').DataTable({
-            responsive: true,
-            pageLength: 5,
-            lengthMenu: [5, 10, 25, 50],
-            order: [[0, 'asc']],
-            columnDefs: [
-                { orderable: false, targets: [5] } // Disable sorting for actions column
-            ]
-        });
-    }
-
-    // Initialize contactUsTable if it exists and has data
-    if ($('#contactUsTable').length && $('#contactUsTable tbody tr').length > 0) {
-        $('#contactUsTable').DataTable({
-            responsive: true,
-            pageLength: 5,
-            lengthMenu: [5, 10, 25, 50],
-            order: [[0, 'asc']],
-            columnDefs: [
-                { orderable: false, targets: [6] } // Disable sorting for actions column
-            ]
-        });
-    }
-
-    // Initialize usersTable if it exists and has data
-
-    if ($('#usersTable').length && $('#usersTable tbody tr').length > 0) {
-        $('#usersTable').DataTable({
-            responsive: true,
-            pageLength: 5,
-            lengthMenu: [5, 10, 25, 50],
-            order: [[0, 'asc']]
-            // No columnDefs needed since all columns are sortable
-        });
-    }
-
-    // Initialize servicesTable if it exists and has data
-    if ($('#servicesTable').length && $('#servicesTable tbody tr').length > 0) {
-        if ($.fn.DataTable.isDataTable('#servicesTable')) {
-            $('#servicesTable').DataTable().clear().destroy();
-        }
-
-        $('#servicesTable').DataTable({
-            responsive: true,
-            pageLength: 5,
-            lengthMenu: [5, 10, 25, 50],
-            order: [[0, 'asc']],
-            columnDefs: [
-                { orderable: false, targets: [2] } // Disable sorting for "Action" column
-            ]
-        });
-    }
-
-});
 
 
 document.addEventListener("DOMContentLoaded", function () {
@@ -257,7 +178,16 @@ document.addEventListener("DOMContentLoaded", function () {
                 confirmButtonText: 'Yes, delete it!'
             }).then((result) => {
                 if (result.isConfirmed) {
-                    form.submit();
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Delete Successfullt!',
+                        text: 'The reply has been Deleted.',
+                        timer: 2000,
+                        showConfirmButton: false
+                    }).then(() => {
+                        form.submit();
+                        window.location.reload(); // reload to reflect updated status
+                    });
                 }
             });
         });
@@ -396,9 +326,18 @@ document.addEventListener("DOMContentLoaded", function () {
                     didOpen: () => Swal.showLoading(),
                     allowOutsideClick: false
                 });
-
+                Swal.fire({
+                    position: "top-end",
+                    icon: "success",
+                    title: "Service Add successfully!",
+                    showConfirmButton: false,
+                    timer: 2000
+                }).then(() => {
+                    form.submit();
+                    location.reload();
+                });
                 // Submit form manually after validation
-                form.submit();
+
             } else {
                 submitBtn.disabled = false;
             }
@@ -786,3 +725,28 @@ $(function () { // Shorthand for $(document).ready()
     });
 });
 
+
+const dataTablesConfig = [
+    { id: '#feedbackTable', unsortable: [5] },
+    { id: '#contactUsTable', unsortable: [6] },
+    { id: '#usersTable', unsortable: [] },
+    { id: '#servicesTable', unsortable: [2] },
+    { id: '#garageTable', unsortable: [1, 7] },
+    { id: '#vehicleTypesTable', unsortable: [2] }
+];
+
+dataTablesConfig.forEach(cfg => {
+    const table = $(cfg.id);
+    if (table.length && table.find('tbody tr').length > 0) {
+        if ($.fn.DataTable.isDataTable(cfg.id)) {
+            table.DataTable().clear().destroy();
+        }
+        table.DataTable({
+            responsive: true,
+            pageLength: 5,
+            lengthMenu: [5, 10, 25, 50],
+            order: [[0, 'asc']],
+            columnDefs: cfg.unsortable.map(idx => ({ orderable: false, targets: idx }))
+        });
+    }
+});

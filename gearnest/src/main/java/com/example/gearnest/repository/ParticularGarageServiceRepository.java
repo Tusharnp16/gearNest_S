@@ -30,4 +30,6 @@ public interface ParticularGarageServiceRepository extends JpaRepository<Particu
      */
     @Query("SELECT DISTINCT pgs.vehicleType FROM ParticularGarageService pgs WHERE pgs.garage.id = :garageId")
     List<VehicleType> findDistinctVehicleTypesByGarageId(Long garageId);
+
+    long countByGarageId(Long garageId);
 }

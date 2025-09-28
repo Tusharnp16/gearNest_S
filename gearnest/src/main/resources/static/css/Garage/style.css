@@ -29,10 +29,8 @@ li {
     --light-yellow: #FFF2C6;
     --orange: #FD7238;
     --light-orange: #FFE0D3;
-    --green: #2ecc71;
-    --light-green: #d4edda;
-    --purple: #9b59b6;
-    --light-purple: #e6d4f1;
+    --green: #006400;
+    --light-green: #d4f4dd;
 }
 
 html {
@@ -571,8 +569,10 @@ body.dark #content nav .profile-menu li a {
 
 
 #content main .box-info {
-
-    margin: 20px;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    grid-gap: 24px;
+    margin-top: 36px;
 }
 
 #content main .box-info li {
@@ -611,41 +611,10 @@ body.dark #content nav .profile-menu li a {
     color: var(--orange);
 }
 
+
 #content main .box-info li:nth-child(4) .totalNumbers {
     background: var(--light-green);
     color: var(--green);
-}
-
-#content main .box-info li:nth-child(5) .totalNumbers {
-    background: var(--light-purple);
-    color: var(--purple);
-}
-
-
-#content main .box-info li:nth-child(6) .totalNumbers {
-    background: var(--light-blue);
-    color: var(--blue);
-}
-
-
-#content main .box-info li:nth-child(7) .totalNumbers {
-    background: var(--light-yellow);
-    color: var(--yellow);
-}
-
-#content main .box-info li:nth-child(8) .totalNumbers {
-    background: var(--light-orange);
-    color: var(--orange);
-}
-
-#content main .box-info li:nth-child(9) .totalNumbers {
-    background: var(--light-green);
-    color: var(--green);
-}
-
-#content main .box-info li:nth-child(10) .totalNumbers {
-    background: var(--light-purple);
-    color: var(--purple);
 }
 
 #content main .box-info li .text h3 {
@@ -686,7 +655,7 @@ body.dark #content nav .profile-menu li a {
 }
 
 #content main .table-data .head h3 {
-    margin-right: auto;
+    margin: auto;
     font-size: 24px;
     font-weight: 600;
 }
@@ -1014,152 +983,583 @@ th {
     color: var(--dark) !important;
 }
 
+/* =================================================
+   NAVBAR PROFILE DROPDOWN STYLES
+==================================================== */
 
+nav .profile {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-left: 24px;
+    position: relative;
+}
+
+nav .profile img {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+/* Style the clickable area (name + picture) */
+nav .profile .dropdown-toggle {
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+    color: var(--dark, #212529);
+    /* Use dark variable or default */
+    cursor: pointer;
+    gap: 10px;
+    transition: color 0.2s;
+}
+
+/* Remove Bootstrap's default arrow icon */
+nav .profile .dropdown-toggle::after {
+    display: none;
+}
+
+/* Style the dropdown menu container */
+nav .profile .dropdown-menu {
+    border-radius: 10px;
+    box-shadow: 4px 4px 16px rgba(0, 0, 0, .1);
+    border: none;
+    padding: 8px 0;
+    /* Adjust margin to align below the profile icon */
+    margin-top: 15px !important;
+    min-width: 180px;
+    /* Ensure sufficient width */
+}
+
+/* Style individual links inside the dropdown */
+nav .profile .dropdown-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 15px;
+    font-size: 14px;
+    color: #4a5568;
+}
+
+nav .profile .dropdown-item:hover {
+    background-color: #f0f2f5;
+    /* Light background on hover */
+    color: #3498db;
+    /* Blue text on hover */
+}
+
+/* Style the icons inside the dropdown links */
+nav .profile .dropdown-item i {
+    font-size: 18px;
+}
+
+
+/* CSS for the small toggle switch */
+.switch {
+    position: relative;
+    display: inline-block;
+    width: 40px;
+    /* Smaller width */
+    height: 24px;
+    /* Smaller height */
+}
+
+.switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    -webkit-transition: .4s;
+    transition: .4s;
+    border-radius: 24px;
+    /* Smaller border-radius */
+}
+
+/* Add text to the slider */
+.slider:after {
+
+    color: white;
+    display: block;
+    position: absolute;
+    transform: translate(-50%, -50%);
+    top: 50%;
+    left: 50%;
+    font-size: 10px;
+    font-weight: bold;
+    font-family: Arial, sans-serif;
+    transition: .4s;
+}
+
+
+.slider:before {
+    position: absolute;
+    content: "";
+    height: 16px;
+    /* Smaller height */
+    width: 16px;
+    /* Smaller width */
+    left: 4px;
+    bottom: 4px;
+    background-color: white;
+    -webkit-transition: .4s;
+    transition: .4s;
+    border-radius: 50%;
+}
+
+input:checked+.slider {
+    background-color: #2196F3;
+}
+
+input:focus+.slider {
+    box-shadow: 0 0 1px #2196F3;
+}
+
+input:checked+.slider:before {
+    -webkit-transform: translateX(16px);
+    /* Adjusted transform value */
+    -ms-transform: translateX(16px);
+    transform: translateX(16px);
+}
+
+/* manage bookings */
+
+/* Style for the booking table container */
+.booking-table-container {
+    width: 100%;
+    overflow-x: auto;
+}
+
+/* Base table styling */
+.booking-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+    font-size: 14px;
+    text-align: left;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+    background-color: #ffffff;
+}
+
+/* Table headers and cells padding and borders */
+.booking-table th,
+.booking-table td {
+    padding: 12px 15px;
+    border-bottom: 1px solid #e0e0e0;
+}
+
+/* Table header styling */
+.booking-table th {
+    background-color: #3498db;
+    color: white;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
+/* Alternate row colors for readability */
+.booking-table tr:nth-child(even) {
+    background-color: #f8f8f8;
+}
+
+/* Hover effect for rows to indicate interactivity */
+.booking-table tr:hover {
+    background-color: #f1f1f1;
+    cursor: pointer;
+}
+
+/* Style for status badges */
 .status-badge {
     display: inline-block;
-    height: max-content;
-    width: 6rem;
-    padding: 4px 10px;
+    padding: 4px 8px;
     border-radius: 12px;
-    font-size: 0.85rem;
-    font-weight: 600;
-    text-align: center;
-    color: #fff;
-    text-transform: capitalize;
+    font-size: 12px;
+    font-weight: 500;
+    color: white;
 }
 
-/* Status colors */
-.status-badge.booked {
-    background-color: #3498db;
-    /* Blue */
-}
-
-.status-badge.in,
-.status-badge.progress {
-    background-color: #f39c12;
-    /* Orange */
-}
-
-.status-badge.completed {
+/* Specific colors for different statuses */
+.status-badge.confirmed {
     background-color: #2ecc71;
-    /* Green */
+}
+
+.status-badge.pending {
+    background-color: #f39c12;
 }
 
 .status-badge.cancelled {
     background-color: #e74c3c;
-    /* Red */
 }
 
-.chart-card {
-    background: #fff;
-    padding: 20px;
-    border-radius: 12px;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
-}
-
-.chart-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 15px;
-}
-
-.chart-header h2 {
-    margin: 0;
-    font-size: 18px;
-    color: #333;
-}
-
-.chart-header select {
-    padding: 6px 25px;
-    border-radius: 8px;
-    border: 1px solid #ddd;
-    background-color: #f9f9f9;
-    font-size: 14px;
-    color: #333;
-    cursor: pointer;
-    appearance: none;
-    background-image: url("data:image/svg+xml;charset=US-ASCII,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='12'><polygon points='0,0 12,0 6,6' fill='%23333'/></svg>");
-    background-repeat: no-repeat;
-    background-position: right 10px center;
-    background-size: 12px;
-    transition: all 0.2s ease-in-out;
-}
-
-.chart-header select:hover {
-    border-color: #2ecc71;
-    background-color: #fff;
-}
-
-.chart-header select:focus {
-    border-color: #2ecc71;
-    box-shadow: 0 0 5px rgba(46, 204, 113, 0.5);
-}
-
-
-
-.box-container {
+/* Styles for SweetAlert2 select dropdown */
+.swal2-select {
     width: 100%;
+    max-width: 200px;
+    font-size: 14px;
+    padding: 8px;
+    border-radius: 5px;
+    border: 1px solid #dcdcdc;
+    margin-top: 10px;
+}
+
+/* style for manage bookings */
+.booking-table-container {
+    width: 100%;
+    overflow-x: auto;
+}
+
+.booking-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+    font-size: 14px;
+    text-align: left;
+    border-radius: 8px;
     overflow: hidden;
-    /* container stays static */
-    background: #f7f7f7;
-    padding: 10px 0;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+    background-color: #ffffff;
 }
 
-.box-info {
-    display: flex;
-    gap: 20px;
-    list-style: none;
-    padding: 0;
-    margin: 0;
-    white-space: nowrap;
-    /* prevent wrapping */
-    animation: scroll-left 20s linear infinite;
+.booking-table th,
+.booking-table td {
+    padding: 12px 15px;
+    border-bottom: 1px solid #e0e0e0;
 }
 
-.box-info li {
-    display: inline-flex;
-    /* keep boxes inline for horizontal scroll */
-    flex: 0 0 auto;
-    background: #fff;
-    padding: 30px !important;
+.booking-table th {
+    background-color: #3498db;
+    color: white;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
+.booking-table tr:nth-child(even) {
+    background-color: #f8f8f8;
+}
+
+.booking-table tr:hover {
+    background-color: #f1f1f1;
+}
+
+.status-badge {
+    display: inline-block;
+    padding: 4px 8px;
     border-radius: 12px;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
-    align-items: center;
-    gap: 10px;
-    min-width: 180px;
+    font-size: 12px;
+    font-weight: 500;
+    color: white;
+    height: max-content;
 }
 
-.totalNumbers {
-    font-size: 40px !important;
+.status-badge.booked {
+    background-color: #3498db;
+}
+
+.status-badge.in,
+.progress {
+    background-color: #f39c12;
+}
+
+.status-badge.completed {
+    background-color: #2ecc71;
+}
+
+.status-badge.cancelled {
+    background-color: #e74c3c;
+}
+
+.swal2-select {
+    width: 100%;
+    max-width: 200px !important;
+    font-size: 14px !important;
+    padding: 8px !important;
+    border-radius: 5px;
+    border: 1px solid #dcdcdc;
+    margin-top: 10px;
+}
+
+/* ===== Services Table Styling ===== */
+#offeredServicesTable {
+    border-radius: 10px;
+    overflow: hidden;
+    font-size: 14px;
+}
+
+#offeredServicesTable thead th {
+    background: #1e293b;
+    color: #fff;
+    font-weight: 600;
+    text-align: left;
+}
+
+#offeredServicesTable tbody tr:nth-child(even) {
+    background: #f8fafc;
+}
+
+#offeredServicesTable tbody tr:hover {
+    background: #e2e8f0;
+}
+
+#offeredServicesTable td {
+    vertical-align: middle;
+    padding: 10px 14px;
+}
+
+/* Pagination buttons */
+.dataTables_wrapper .dt-paging button {
+    background: #f1f5f9;
+    border: none;
+    border-radius: 6px;
+    padding: 6px 12px;
+    margin: 0 2px;
+    cursor: pointer;
+    color: #1e293b !important;
+    transition: all 0.2s;
+}
+
+.dataTables_wrapper .dt-paging button:hover {
+    background: #1e293b;
+    color: #fff !important;
+}
+
+.dataTables_wrapper .dt-paging .current {
+    background: #0f172a !important;
+    color: #fff !important;
+}
+
+
+/* ===== Booking Table Styles ===== */
+.booking-table-container {
+    margin-top: 20px;
+    padding: 15px;
+    background: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+}
+
+table.booking-table {
+    width: 100% !important;
+    border-collapse: separate;
+    border-spacing: 0;
+    border-radius: 12px;
+    overflow: hidden;
+    font-size: 14px;
+}
+
+/* Table Header */
+table.booking-table thead th {
+    background: #1e293b;
+    color: #ffffff;
+    font-weight: 600;
+    padding: 12px;
+    text-align: left;
+}
+
+/* Table Rows */
+table.booking-table tbody tr {
+    transition: background 0.2s ease;
+}
+
+table.booking-table tbody tr:nth-child(even) {
+    background: #f8fafc;
+}
+
+table.booking-table tbody tr:hover {
+    background: #e2e8f0;
+}
+
+/* Table Cells */
+table.booking-table td {
+    padding: 10px 14px;
+    border-bottom: 1px solid #e5e7eb;
+    vertical-align: top;
+}
+
+/* Status Badges */
+.status-badge {
+    display: inline-block;
+    padding: 4px 10px;
+    border-radius: 12px;
+    font-size: 13px;
+    font-weight: 600;
+    text-transform: capitalize;
+    text-align: center;
+}
+
+
+
+/* Cancelled = Red */
+.status-badge.cancelled {
+    background-color: #fee2e2;
+    /* light red background */
+    color: #991b1b;
+    /* dark red text */
+}
+
+/* Service list inside cell */
+.service-list {
+    padding-left: 15px;
+    margin: 0;
+}
+
+.service-list li {
+    list-style-type: disc;
+    font-size: 13px;
+    color: #374151;
+}
+
+
+/* ===== DataTable Custom Style ===== */
+.feedback-table-container {
+    margin-top: 20px;
+    padding: 15px;
+    background: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+}
+
+table.feedback-table {
+    width: 100% !important;
+    border-collapse: separate;
+    border-spacing: 0;
+    border-radius: 12px;
+    overflow: hidden;
+    font-size: 14px;
+}
+
+/* Table Header */
+table.feedback-table thead th {
+    background: #1e293b;
+    color: #ffffff;
+    font-weight: 600;
+    padding: 12px;
+    text-align: left;
+}
+
+/* Table Rows */
+table.feedback-table tbody tr {
+    transition: background 0.2s ease;
+}
+
+table.feedback-table tbody tr:nth-child(even) {
+    background: #f8fafc;
+}
+
+table.feedback-table tbody tr:hover {
+    background: #e2e8f0;
+}
+
+/* Table Cells */
+table.feedback-table td {
+    padding: 10px 14px;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+/* Pagination */
+.dataTables_wrapper .dataTables_paginate {
+    margin-top: 15px;
+    text-align: center;
+}
+
+.dataTables_wrapper .dataTables_paginate .paginate_button {
+    background: #f1f5f9;
+    border: none;
+    border-radius: 6px;
+    padding: 6px 12px;
+    margin: 0 3px;
+    cursor: pointer;
+    color: #1e293b !important;
+    transition: all 0.2s;
+}
+
+.dataTables_wrapper .dataTables_paginate .paginate_button:hover {
+    background: #1e293b;
+    color: #fff !important;
+}
+
+/* Active Page */
+.dataTables_wrapper .dataTables_paginate .paginate_button.current {
+    background: #0f172a !important;
+    color: #fff !important;
+}
+
+/* Search Box */
+.dataTables_wrapper .dataTables_filter {
+    margin-bottom: 12px;
+}
+
+.dataTables_wrapper .dataTables_filter input {
+    border: 1px solid #cbd5e1;
+    border-radius: 8px;
+    padding: 6px 10px;
+    margin-left: 8px;
+}
+
+/* Length Dropdown */
+.dataTables_wrapper .dataTables_length select {
+    border: 1px solid #cbd5e1;
+    border-radius: 8px;
+    padding: 4px 8px;
+    margin: 0 5px;
+}
+
+/* Chart Container Styling */
+.charts {
+    display: flex;
+    gap: 40px;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.chart-box {
+    flex: 1;
+    min-width: 300px;
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 15px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
+
+.chart-box .head h3 {
+    margin-bottom: 15px;
+    font-size: 1.2rem;
+    color: #333;
+}
+
+canvas {
+    max-width: 100%;
+    height: 300px !important;
+}
+
+/* KPI Boxes */
+.box-info li {
+    background-color: #fff;
+    border-radius: 12px;
+    padding: 15px 20px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.box-info li .text h3 {
+    margin: 0;
+    font-size: 1.5rem;
     color: #2ecc71;
 }
 
-.text h3 {
+.box-info li .text p {
     margin: 0;
-    font-size: 18px;
-    color: #333;
-}
-
-.text p {
-    margin: 0;
-    font-size: 15px !important;
+    font-size: 0.9rem;
     color: #666;
-}
-
-@keyframes scroll-left {
-    0% {
-        transform: translateX(0);
-    }
-
-    100% {
-        transform: translateX(-50%);
-    }
-
-    /* scroll the boxes only */
-}
-
-/* Pause scroll on hover */
-.box-container:hover .box-info {
-    animation-play-state: paused;
 }

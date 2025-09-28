@@ -27,7 +27,8 @@
                     <div class="user-info">
                         <!-- <img th:src="${session.loggedInUser?.profilePic != null} ? @{'/images/' + ${session.loggedInUser.profilePic}} : 'https://placehold.co/80x80/EFEFEF/333333?text=G'"
                             alt="User profile image"> -->
-                        <img th:src="@{${#strings.equals(session.loggedInUser.profilePic, 'default.png')} ? '/images/default.png' : '/uploads/user-profiles/' + ${session.loggedInUser.profilePic}}"
+
+                        <img th:src="@{${#strings.equals(session.loggedInUser.profilePic, 'default.jpg')} ? '/images/default.png' : '/uploads/user-profiles/' + ${session.loggedInUser.profilePic}}"
                             alt="User profile image">
                         <span>
                             <span style="font-weight: 400; color: #4a5568;">Hello, </span>

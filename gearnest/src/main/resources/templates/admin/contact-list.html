@@ -1,78 +1,3 @@
-<!-- <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
-
-<head>
-    <title>Admin - Contact Messages</title>
-    <link rel="stylesheet" th:href="@{/css/admin.css}">
-    <link rel="stylesheet" th:href="@{/css/style.css}" />
-</head>
-
-<body>
-    <header th:replace="~{fragments/header::header}"></header>
-
-    <h2 style="text-align:center;">Contact Messages Panel</h2>
-
-    <div style="margin: 10px;">
-        <a href="/admin/contact/filter?type=all">All</a> |
-        <a href="/admin/contact/filter?type=responded">Responded</a> |
-        <a href="/admin/contact/filter?type=unresponded">Unresponded</a>
-    </div>
-
-    <div style="text-align: right; margin-bottom: 10px;">
-        <a href="/admin/contact/export/excel">
-            <button style="background-color:#4caf50;">Export Excel</button>
-        </a>
-        <a href="/admin/contact/export/pdf">
-            <button style="background-color:#f44336;">Export PDF</button>
-        </a>
-    </div>
-<<<<<<< HEAD
-=======
-
->>>>>>> a332c5f8ddbd0f37537bb2cff6a96f14209117dd
-
-    <table>
-        <thead>
-            <tr>
-                <th>ID</th>
-                <th>Name</th>
-                <th>Email</th>
-                <th>Subject</th>
-                <th>Message</th>
-                <th>Responded</th>
-                <th>Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr th:each="contact : ${contactList}">
-                <td th:text="${contact.id}"></td>
-                <td th:text="${contact.name}"></td>
-                <td th:text="${contact.email}"></td>
-                <td th:text="${contact.subject}"></td>
-                <td th:text="${contact.message}"></td>
-                <td>
-                    <span th:text="${contact.responded} ? '✅' : '⏳'"></span>
-                </td>
-                <td>
-                    <form th:action="@{/admin/contact/respond-email}" method="post" style="margin-bottom: 5px;">
-                        <input type="hidden" name="id" th:value="${contact.id}" />
-                        <button type="submit">Send & Mark Responded</button>
-                    </form>
-                    <form th:action="@{/admin/contact/delete}" method="post"
-                        onsubmit="return confirm('Are you sure?');">
-                        <input type="hidden" name="id" th:value="${contact.id}" />
-                        <button type="submit" style="background-color: #888;">Delete</button>
-                    </form>
-                </td>
-            </tr>
-        </tbody>
-    </table>
-    <footer th:replace="~{fragments/footer::footer}"></footer>
-
-</body>
-
-</html> -->
-
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org" th:replace="~{admin/fragments/base::layout(~{::main})}">
 
@@ -134,14 +59,7 @@
                                     <span th:text="${contact.responded} ? '✅' : '⏳'"></span>
                                 </td>
                                 <td>
-                                    <!-- <form th:action="@{/admin/contact/respond-email}" method="post" class="mb-2">
-                                        <input type="hidden" name="id" th:value="${contact.id}" />
-                                        <textarea name="message" class="form-control mb-1" rows="2"
-                                            placeholder="Type your reply..." required></textarea>
-                                        <button type="submit" class="btn btn-sm btn-primary w-100">
-                                            <i class="bx bx-mail-send"></i> Send & Mark Responded
-                                        </button>
-                                    </form> -->
+
                                     <form th:id="'respondForm_' + ${contact.id}"
                                         th:action="@{/admin/contact/respond-email}" method="post" class="mb-2">
                                         <input type="hidden" name="id" th:value="${contact.id}" />
@@ -171,6 +89,7 @@
             </div>
         </div>
     </div>
+
 </main>
 
 </html>

@@ -7,28 +7,27 @@
     <link rel="shortcut icon" th:href="@{/images/logo.png}" type="image/x-icon">
 
     <!-- Boxicons -->
-    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
-    <link href='https://unpkg.com/boxicons@2.1.4/dist/boxicons.js' rel='stylesheet'>
+    <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
 
-    <!-- Font Awesome CDN -->
+    <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
 
-    <!-- Bootstrap & DataTables CSS -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" />
+    <!-- DataTables CSS -->
     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css" />
     <link rel="stylesheet" href="https://cdn.datatables.net/responsive/2.5.0/css/responsive.dataTables.min.css" />
 
-    <!-- In your base layout -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-
-
-    <!-- My CSS -->
+    <!-- Custom CSS -->
     <link rel="stylesheet" th:href="@{/css/admin/style.css}" />
 
-    <title th:text="'GearNest Admin'+${title}"></title>
+    <!-- Bootstrap JS Bundle (with Popper) -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+    <title th:text="'GearNest Admin ' + ${title}"></title>
 </head>
+
 
 <body>
     <!-- SIDEBAR -->
@@ -81,12 +80,6 @@
                     <span class="text">Carousel</span>
                 </a>
             </li>
-            <li th:classappend="${activePage} == 'feedback' ? 'active'">
-                <a href="feedback">
-                    <i class="fas fa-solid fa-thumbs-up"></i>
-                    <span class="text">Feedbacks</span>
-                </a>
-            </li>
             <li th:classappend="${activePage} == 'contact-us' ? 'active'">
                 <a href="contact">
                     <i class="fas fa-headset"></i> <span class="text">Contact Us</span>
@@ -94,12 +87,6 @@
             </li>
         </ul>
         <ul class="side-menu bottom">
-            <li>
-                <a href="#">
-                    <i class='bx bxs-cog bx-sm bx-spin-hover'></i>
-                    <span class="text">Settings</span>
-                </a>
-            </li>
             <li>
                 <a href="/logout" class="logout">
                     <i class='bx bx-power-off bx-sm bx-burst-hover'></i>
@@ -115,7 +102,7 @@
         <!-- NAVBAR -->
         <nav>
             <i class='bx bx-menu bx-sm'></i>
-            <a href="#" class="nav-link">Categories</a>
+            <a href="#" class="nav-link"></a>
             <form action="#">
                 <div class="form-input">
                     <input type="search" placeholder="Search...">
@@ -129,30 +116,15 @@
                 <div class="ball"></div>
             </label>
 
-            <!-- Notification Bell -->
-            <a href="#" class="notification" id="notificationIcon">
-                <i class='bx bxs-bell bx-tada-hover'></i>
-                <span class="num">8</span>
-            </a>
-            <div class="notification-menu" id="notificationMenu">
-                <ul>
-                    <li>New message from John</li>
-                    <li>Your order has been shipped</li>
-                    <li>New comment on your post</li>
-                    <li>Update available for your app</li>
-                    <li>Reminder: Meeting at 3PM</li>
-                </ul>
-            </div>
 
             <!-- Profile Menu -->
             <a href="#" class="profile" id="profileIcon">
-                <img src="https://placehold.co/600x400/png" alt="Profile">
+                <img th:src="@{/images/default.png}" alt="Profile">
             </a>
             <div class="profile-menu" id="profileMenu">
                 <ul>
-                    <li><a href="#">My Profile</a></li>
-                    <li><a href="#">Settings</a></li>
-                    <li><a href="#">Log Out</a></li>
+                    <!-- <li><a href="#">My Profile</a></li> -->
+                    <li><a href="/logout">Log Out</a></li>
                 </ul>
             </div>
         </nav>
@@ -168,14 +140,17 @@
     </section>
     <!-- CONTENT -->
 
-
-    <!-- jQuery + DataTables Scripts -->
+    <!-- jQuery + DataTables -->
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
     <script src="https://cdn.datatables.net/responsive/2.5.0/js/dataTables.responsive.min.js"></script>
 
-    <script th:src="@{/javascript/sweetalert2@11.js}"></script>
+    <!-- SweetAlert2 -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <!-- Custom Admin Script -->
     <script th:src="@{/javascript/admin/script.js}"></script>
+
 
 </body>
 

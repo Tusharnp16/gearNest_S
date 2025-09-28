@@ -23,6 +23,7 @@ public class OtpService {
         SimpleMailMessage message = new SimpleMailMessage();
         message.setTo(toEmail);
         message.setSubject("Your OTP Code");
+
         message.setText("Your OTP code is: " + otp);
         mailSender.send(message);
     }

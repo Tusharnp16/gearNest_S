@@ -22,7 +22,7 @@
                     <aside class="profile-sidebar scroll-animate">
                         <div class="profile-picture-container">
                             <!-- Dynamically set profile picture -->
-                            <img th:src="@{${#strings.equals(user.profilePic, 'default.png')} ? '/images/default.png' : '/uploads/user-profiles/' + ${user.profilePic}}"
+                            <img th:src="@{${#strings.equals(user.profilePic, 'default.jpg')} ? '/images/default.png' : '/uploads/user-profiles/' + ${user.profilePic}}"
                                 alt="User Profile Picture" class="profile-picture" id="profile-picture">
                             <input type="file" id="profile-picture-input" accept="image/*" style="display: none;">
                             <div class="edit-icon" id="edit-icon">

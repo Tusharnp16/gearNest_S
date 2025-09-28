@@ -1,4 +1,53 @@
+
+// Dark Mode Switcher
+const switchMode = document.getElementById('switch-mode');
+if (localStorage.getItem('theme') === 'dark') {
+    document.body.classList.add('dark');
+    if (switchMode) switchMode.checked = true;
+}
+if (switchMode) {
+    switchMode.addEventListener('change', function () {
+        document.body.classList.toggle('dark', this.checked);
+        localStorage.setItem('theme', this.checked ? 'dark' : 'light');
+    });
+}
+
+
+
 $(document).ready(function () {
+
+
+
+
+
+    // TOGGLE SIDEBAR
+    const menuBar = document.querySelector('#content nav .bx.bx-menu');
+    const sidebar = document.getElementById('sidebar');
+
+    // Sidebar toggle işlemi
+    menuBar.addEventListener('click', function () {
+        sidebar.classList.toggle('hide');
+    });
+
+    // Sayfa yüklendiğinde ve boyut değişimlerinde sidebar durumunu ayarlama
+    function adjustSidebar() {
+        if (window.innerWidth <= 576) {
+            sidebar.classList.add('hide');  // 576px ve altı için sidebar gizli
+            sidebar.classList.remove('show');
+        } else {
+            sidebar.classList.remove('hide');  // 576px'den büyükse sidebar görünür
+            sidebar.classList.add('show');
+        }
+    }
+
+    // Sayfa yüklendiğinde ve pencere boyutu değiştiğinde sidebar durumunu ayarlama
+    window.addEventListener('load', adjustSidebar);
+    window.addEventListener('resize', adjustSidebar);
+
+
+
+
+
 
     // --- SWEETALERT SUCCESS/ERROR HANDLING ---
     const successMessageSpan = $('#success-message');
@@ -470,3 +519,83 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 });
 
+
+
+function initializeFeedbackTable() {
+    if (typeof $ !== 'undefined' && typeof $.fn.DataTable !== 'undefined') {
+        if ($('#feedbackTable').length) {
+            $('#feedbackTable').DataTable({
+                responsive: true,
+                paging: true,
+                info: true,
+                order: [[4, 'desc']], // sort by Date Received
+                language: {
+                    search: "_INPUT_",
+                    searchPlaceholder: "Search feedback...",
+                    lengthMenu: "Show _MENU_ entries",
+                    info: "Showing _START_ to _END_ of _TOTAL_ feedbacks",
+                    paginate: {
+                        previous: "<i class='bx bx-chevron-left'></i>",
+                        next: "<i class='bx bx-chevron-right'></i>"
+                    }
+                }
+            });
+        }
+    }
+}
+
+function initializeBookingTable() {
+    if (typeof $ !== 'undefined' && typeof $.fn.DataTable !== 'undefined') {
+        if ($('#myTable').length) {
+            $('#myTable').DataTable({
+                responsive: true,
+                paging: true,
+                info: true,
+                order: [[0, 'desc']], // default sort by Booking ID
+                language: {
+                    search: "_INPUT_",
+                    searchPlaceholder: "Search bookings...",
+                    lengthMenu: "Show _MENU_ entries",
+                    info: "Showing _START_ to _END_ of _TOTAL_ bookings",
+                    paginate: {
+                        previous: "<i class='bx bx-chevron-left'></i>",
+                        next: "<i class='bx bx-chevron-right'></i>"
+                    }
+                }
+            });
+        }
+    }
+}
+
+function initializeOfferedServicesTable() {
+    if ($('#offeredServicesTable').length) {
+        new DataTable('#offeredServicesTable', {
+            responsive: true,
+            paging: true,
+            searching: true,
+            ordering: true,
+            info: true,
+            language: {
+                search: "_INPUT_",
+                searchPlaceholder: "Search services...",
+                lengthMenu: "Show _MENU_ services per page",
+                info: "Showing _START_ to _END_ of _TOTAL_ services",
+                paginate: {
+                    previous: "<i class='bx bx-chevron-left'></i>",
+                    next: "<i class='bx bx-chevron-right'></i>"
+                }
+            },
+            columnDefs: [
+                { orderable: false, targets: [3, 4] } // disable sort on Status + Actions
+            ]
+        });
+    }
+}
+
+
+
+document.addEventListener('DOMContentLoaded', () => {
+    initializeFeedbackTable();
+    initializeBookingTable();
+    initializeOfferedServicesTable();
+});
