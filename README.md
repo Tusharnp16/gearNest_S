@@ -9,7 +9,7 @@
 ---
 
 ### 🚀 Live Demo
-> (If deployed) [🌐 Click here to view GearNest live](#)
+> (If deployed) [🌐 http://localhost:8080/](#)
 
 ---
 
