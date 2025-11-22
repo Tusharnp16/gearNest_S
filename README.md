@@ -8,11 +8,6 @@
 
 ---
 
-### 🚀 Live Demo
-> (If deployed) [🌐 http://localhost:8080/](#)
-
----
-
 ## 📸 Preview
 
 | User Panel | Garage Panel | Admin Panel |
