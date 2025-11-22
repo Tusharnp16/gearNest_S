@@ -1,5 +1,5 @@
 <div align="center">
-  <img src="https://i.postimg.cc/4xC1RhbR/garage.png" alt="GearNest Logo" height="100"/>
+  <img src="https://i.postimg.cc/4xC1RhbR/garage.png](https://i.postimg.cc/fT98FQD6/logo.png" alt="GearNest Logo" height="100"/>
 
   <h1>⚙️ GearNest</h1>
   <p><strong>The Ultimate Garage Management System</strong></p>
@@ -17,7 +17,7 @@
 
 | Home Page | Garage Listings | Admin Panel |
 |:--:|:--:|:--:|
-| ![](https://i.postimg.cc/vBjPK8QP/garagelisting.png) | ![](https://i.postimg.cc/g0sjsfkB/admin-Garages.png) | ![](https://i.postimg.cc/59YKCz3D/login.png) |
+| ![](https://i.postimg.cc/dty5Xcwb/Customer.png) | ![](https://i.postimg.cc/KvM0Vhxw/Garage.png) | ![](https://i.postimg.cc/wTmwPYgP/Admin.png) |
 
 ---
 
