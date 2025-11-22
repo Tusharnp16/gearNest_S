@@ -1,5 +1,5 @@
 <div align="center">
-  <img src="https://i.postimg.cc/4xC1RhbR/garage.png](https://i.postimg.cc/fT98FQD6/logo.png" alt="GearNest Logo" height="100"/>
+  <img src="https://i.postimg.cc/fT98FQD6/logo.png" alt="GearNest Logo" height="100"/>
 
   <h1>⚙️ GearNest</h1>
   <p><strong>The Ultimate Garage Management System</strong></p>
@@ -15,7 +15,7 @@
 
 ## 📸 Preview
 
-| Home Page | Garage Listings | Admin Panel |
+| User Panel | Garage Panel | Admin Panel |
 |:--:|:--:|:--:|
 | ![](https://i.postimg.cc/dty5Xcwb/Customer.png) | ![](https://i.postimg.cc/KvM0Vhxw/Garage.png) | ![](https://i.postimg.cc/wTmwPYgP/Admin.png) |
 
@@ -23,12 +23,23 @@
 
 ## 🧠 Features
 
-✅ User-friendly garage listings with ratings  
-✅ Garage profile management (with logos, hours, pricing, services)  
-✅ Admin panel to approve, reject, blacklist garages  
-✅ Dynamic Thymeleaf templates  
-✅ Responsive & modern UI (with dark-mode vibes 🌙)  
-✅ ⚡ Banger CSS animations & button effects
+
+    ✅ User-friendly garage listings with ratings
+
+    ✅ Garage profile management (logos, hours, pricing, services)
+
+    ✅ Admin panel to approve, reject, and blacklist garages
+
+    ✅ Dynamic Thymeleaf templates for smooth navigation
+
+    ✅ Responsive & modern UI with dark-mode vibes 🌙
+
+    ✅ ⚡ Banger CSS animations & button effects for a premium, interactive user experience
+
+    ✅ Track bookings & receive email notifications (garage + user alerts)
+
+    ✅ 🤖 Garage Assistance (smart suggestions, service recommendations, automated help)
+
 
 ---
 
