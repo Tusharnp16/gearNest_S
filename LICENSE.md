@@ -1,4 +1,4 @@
-Copyright (c) 2025 [Your Name]
+Copyright (c) 2025 GearNest
 
 Permission is NOT granted to any person or entity to use, copy,
 modify, merge, publish, distribute, sublicense, and/or sell copies
