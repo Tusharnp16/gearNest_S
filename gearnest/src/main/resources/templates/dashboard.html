@@ -118,6 +118,40 @@
             border-bottom-right-radius: 0.25rem;
         }
 
+        /* The original CSS provided for the typing indicator was just empty spans, 
+           so we add a basic animation here to show activity */
+        .typing-indicator span {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            background-color: var(--color-primary);
+            border-radius: 50%;
+            margin: 0 2px;
+            animation: dot-bounce 0.6s infinite ease-in-out alternate;
+        }
+
+        .typing-indicator span:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+
+        .typing-indicator span:nth-child(3) {
+            animation-delay: 0.4s;
+        }
+
+        @keyframes dot-bounce {
+            from {
+                transform: scale(0.8);
+                opacity: 0.6;
+            }
+
+            to {
+                transform: scale(1.2);
+                opacity: 1;
+            }
+        }
+
+
+
         @keyframes fadeIn {
             from {
                 opacity: 0;
@@ -378,11 +412,21 @@
 
 </body>
 <script>
+    // --- Utility Function for Exponential Backoff (MUST be defined outside DOMContentLoaded) ---
     /**
-     * Main script for the GearNest dashboard page.
-     * Handles dynamic filtering, star rating generation, modal popups,
-     * and animations for the garage listings.
+     * Retries the API call using exponential backoff.
      */
+    async function retryFetch(fn, retries = 5, delay = 1000) {
+        try {
+            return await fn();
+        } catch (error) {
+            if (retries > 0) {
+                await new Promise(res => setTimeout(res, delay));
+                return retryFetch(fn, retries - 1, delay * 2);
+            }
+            throw error;
+        }
+    }
 
     document.addEventListener('DOMContentLoaded', () => {
         const chatToggle = document.getElementById('chat-toggle');
@@ -392,10 +436,11 @@
         const chatMessages = document.getElementById('chat-messages');
         const iconOpen = document.querySelector('.icon-open');
         const iconClose = document.querySelector('.icon-close');
+        const sendButton = chatForm.querySelector('.send-button');
 
+        // --- CHAT UI FUNCTIONS (Based on user's simple structure) ---
         const toggleChatWindow = (forceClose = false) => {
             const isActive = chatWindow.classList.contains('active');
-
             if (forceClose || isActive) {
                 chatWindow.classList.remove('active');
                 iconOpen.style.display = 'block';
@@ -404,95 +449,82 @@
                 chatWindow.classList.add('active');
                 iconOpen.style.display = 'none';
                 iconClose.style.display = 'block';
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+                chatInput.focus();
             }
         };
 
-        // Toggle on button click
-        chatToggle.addEventListener('click', (e) => {
-            e.stopPropagation(); // Prevents the window click listener from firing immediately
-            toggleChatWindow();
-        });
-
-        // Prevent clicks inside the window from closing it
-        chatWindow.addEventListener('click', (e) => {
-            e.stopPropagation();
-        });
-
-        // Close when clicking anywhere else on the page
-        window.addEventListener('click', () => {
-            if (chatWindow.classList.contains('active')) {
-                toggleChatWindow(true); // Force close
-            }
-        });
-
-        // --- Handle Message Sending ---
-        chatForm.addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const messageText = chatInput.value.trim();
-            if (messageText === '') return;
-
-            addMessage(messageText, 'user-message');
-            chatInput.value = '';
-            chatInput.disabled = true;
-
-            const botResponse = await getBotResponse(messageText);
-            addMessage(botResponse, 'bot-message');
-            chatInput.disabled = false;
-            chatInput.focus();
-        });
-
-        // --- Add a message to the chat window ---
         function addMessage(text, type) {
             const messageElement = document.createElement('div');
             messageElement.classList.add('message', type);
+            // Using textContent as per user's original structure (no message-bubble div needed)
             messageElement.textContent = text;
             chatMessages.appendChild(messageElement);
             chatMessages.scrollTop = chatMessages.scrollHeight;
         }
 
-        // --- Add/Remove Typing Indicator ---
         function addTypingIndicator() {
             const typingIndicator = document.createElement('div');
+            // Using ID for easy removal
+            typingIndicator.id = 'typing-indicator';
+            // Using user's classes/spans for indicator
             typingIndicator.classList.add('message', 'bot-message', 'typing-indicator');
+            // Adding a simple indicator structure that CSS can style
             typingIndicator.innerHTML = '<span></span><span></span><span></span>';
             chatMessages.appendChild(typingIndicator);
             chatMessages.scrollTop = chatMessages.scrollHeight;
         }
 
         function removeTypingIndicator() {
-            const typingIndicator = document.querySelector('.typing-indicator');
+            const typingIndicator = document.getElementById('typing-indicator');
             if (typingIndicator) {
                 typingIndicator.remove();
             }
         }
 
-        // --- Gemini API Logic ---
+
         async function getBotResponse(userInput) {
             addTypingIndicator();
 
             const systemPrompt = "You are a helpful and friendly garage assistant for a platform called GearNest. Keep your responses concise and focused on helping users with vehicle services.";
             const userQuery = userInput;
-            const apiKey = "AIzaSyDm5Pq000mBTjBOL5aUvLHMM8nKDAaaePE";
-            const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-05-20:generateContent?key=${apiKey}`;
+
+            const apiKey = "AIzaSyD1nbouKOuM06-HLC3Pa_BptgCpu9XqkrI";
+
+            // FIX 2: Use the current, correct model
+            const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`;
 
             const payload = {
                 contents: [{ parts: [{ text: userQuery }] }],
+                // FIX 3: Reverting to the official top-level systemInstruction structure 
+                // that is reliably accepted by the API endpoint:
                 systemInstruction: {
                     parts: [{ text: systemPrompt }]
                 },
+                // FIX 4: Adding Google Search grounding tool
+                tools: [{ "google_search": {} }],
             };
 
             try {
-                const response = await fetch(apiUrl, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(payload)
-                });
+                const fetchOperation = async () => {
+                    const response = await fetch(apiUrl, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(payload)
+                    });
 
-                if (!response.ok) {
-                    throw new Error(`API request failed with status ${response.status}`);
-                }
+                    if (!response.ok) {
+                        // Check if the error response body is available for better debugging
+                        const errorText = await response.text();
+                        console.error("API Response Error Body:", errorText);
+                        // Using a simple fallback error message for the user
+                        const errorMsg = `API Error ${response.status}: Failed to get response.`;
+                        throw new Error(errorMsg);
+                    }
+                    return response;
+                };
 
+                const response = await retryFetch(fetchOperation);
                 const result = await response.json();
                 const candidate = result.candidates?.[0];
 
@@ -501,43 +533,54 @@
                 if (candidate && candidate.content?.parts?.[0]?.text) {
                     return candidate.content.parts[0].text;
                 } else {
-                    return "I'm sorry, I couldn't generate a response. Please try again.";
+                    console.error("API response missing expected text content.", result);
+                    return "I'm sorry, I couldn't generate a response. The API returned an empty result.";
                 }
             } catch (error) {
                 console.error("Error calling Gemini API:", error);
                 removeTypingIndicator();
-                return "Sorry, I'm having trouble connecting. Please try again later.";
+                return "Sorry, I'm having trouble connecting right now. Please try again later. (Error: API Request Failed)";
             }
         }
 
-    });
+
+        // --- Event Handlers ---
+        chatToggle.addEventListener('click', (e) => {
+            e.stopPropagation();
+            toggleChatWindow();
+        });
+
+        chatWindow.addEventListener('click', (e) => {
+            e.stopPropagation();
+        });
+
+        window.addEventListener('click', (e) => {
+            if (chatWindow.classList.contains('active') && !e.target.closest('a, button, input, select')) {
+                toggleChatWindow(true);
+            }
+        });
+
+        chatForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const messageText = chatInput.value.trim();
+            if (messageText === '') return;
+
+            addMessage(messageText, 'user-message');
+            chatInput.value = '';
+            chatInput.disabled = true;
+            sendButton.disabled = true;
+
+            const botResponse = await getBotResponse(messageText);
+            addMessage(botResponse, 'bot-message');
+            chatInput.disabled = false;
+            sendButton.disabled = false;
+            chatInput.focus();
+        });
 
 
-    function sendMessage() {
-        let input = document.getElementById("chat-input");
-        let message = input.value.trim();
-        if (!message) return;
-
-        // Display user message
-        let chatBody = document.getElementById("chat-body");
-        chatBody.innerHTML += `<div><b>You:</b> ${message}</div>`;
-
-        // Send to backend
-        fetch("/api/chat", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(message)
-        })
-            .then(res => res.text())
-            .then(reply => {
-                chatBody.innerHTML += `<div><b>Bot:</b> ${reply}</div>`;
-                chatBody.scrollTop = chatBody.scrollHeight; // auto scroll
-            });
-
-        input.value = "";
-    }
-
-    document.addEventListener('DOMContentLoaded', () => {
+        // ---------------------------------------------------------------------
+        // --- Main App Logic (Star Ratings, Filtering, Modal) ---
+        // ---------------------------------------------------------------------
 
         // --- Element Selection ---
         const locationFilter = document.getElementById('location-filter');

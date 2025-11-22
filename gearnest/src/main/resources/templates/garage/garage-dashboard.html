@@ -95,18 +95,21 @@
         // Revenue Chart
         let revenueChart;
         function loadRevenueData(filter) {
-            fetch(`/garage/dashboard/revenue?filter=${filter}`)
+            fetch(`/garage/dashboard/revenue?type=${filter}`)
                 .then(res => res.json())
                 .then(data => {
+                    const labels = Object.keys(data);
+                    const values = Object.values(data);
+
                     const ctx = document.getElementById('revenueChart').getContext('2d');
                     if (revenueChart) revenueChart.destroy();
                     revenueChart = new Chart(ctx, {
                         type: 'line',
                         data: {
-                            labels: data.labels,
+                            labels: labels,
                             datasets: [{
                                 label: 'Revenue (₹)',
-                                data: data.values,
+                                data: values,
                                 backgroundColor: 'rgba(46, 204, 113, 0.2)',
                                 borderColor: '#2ecc71',
                                 borderWidth: 2,
@@ -114,9 +117,43 @@
                                 tension: 0.3
                             }]
                         },
-                        options: { responsive: true, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true } } }
+                        options: {
+                            responsive: true,
+                            plugins: { legend: { display: false } },
+                            scales: {
+                                y: {
+                                    beginAtZero: true,
+                                    ticks: {
+                                        callback: function (value) {
+                                            return '₹' + value.toLocaleString();
+                                        }
+                                    }
+                                }
+                            }
+                        }
                     });
-                    document.getElementById("revenueHeading").textContent = data.title;
+
+                    // ---- Dynamic heading ----
+                    let heading = "Revenue Growth";
+                    const now = new Date();
+
+                    if (filter === "weekly") {
+                        // Show week range (Sun–Sat)
+                        const today = new Date();
+                        const sunday = new Date(today);
+                        sunday.setDate(today.getDate() - today.getDay()); // Sunday
+                        const saturday = new Date(sunday);
+                        saturday.setDate(sunday.getDate() + 6); // Saturday
+
+                        const options = { weekday: 'short', day: 'numeric', month: 'short' };
+                        heading += ` (Sunday to Monday)`;
+                    } else if (filter === "monthly") {
+                        heading += ` (${now.getFullYear()})`;
+                    } else if (filter === "yearly") {
+                        heading += ` (Last 5 Years)`;
+                    }
+
+                    document.getElementById("revenueHeading").textContent = heading;
                 });
         }
 
@@ -125,6 +162,7 @@
             loadRevenueData(this.value);
         });
     </script>
+
 </main>
 
 </html>

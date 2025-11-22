@@ -3,11 +3,10 @@ package com.example.gearnest.controller;
 import java.security.Principal;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
-import java.time.Month;
 import java.time.YearMonth;
 import java.time.format.TextStyle;
-import java.util.ArrayList;
-import java.util.HashMap;
+import java.time.temporal.TemporalAdjusters;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -29,7 +28,6 @@ import com.example.gearnest.repository.BookingRepository;
 import com.example.gearnest.repository.FeedbackRepository;
 import com.example.gearnest.repository.GarageRepository;
 import com.example.gearnest.repository.ParticularGarageServiceRepository;
-import com.example.gearnest.repository.UserRepository;
 
 @Controller
 @RequestMapping("/garage")
@@ -44,8 +42,8 @@ public class GarageDashboardController {
         @Autowired
         private FeedbackRepository feedbackRepository;
 
-        @Autowired
-        private UserRepository userRepository;
+        // @Autowired
+        // private UserRepository userRepository;
 
         @Autowired
         private ParticularGarageServiceRepository particularGarageServiceRepository;
@@ -134,100 +132,74 @@ public class GarageDashboardController {
 
         @GetMapping("/dashboard/revenue")
         @ResponseBody
-        public Map<String, Object> getRevenueData(@RequestParam(defaultValue = "weekly") String filter) {
-                Map<String, Object> response = new HashMap<>();
-                LocalDate today = LocalDate.now();
-                List<Booking> allBookings = bookingRepository.findAll();
-
-                List<String> labels = new ArrayList<>();
-                List<Double> values = new ArrayList<>();
-                String title = "";
-
-                switch (filter.toLowerCase()) {
-                        case "monthly":
-                                int year = today.getYear();
-                                labels = IntStream.rangeClosed(1, 12)
-                                                .mapToObj(m -> Month.of(m).getDisplayName(TextStyle.SHORT,
-                                                                Locale.ENGLISH))
-                                                .collect(Collectors.toList());
-
-                                values = IntStream.rangeClosed(1, 12)
-                                                .mapToObj(m -> {
-                                                        YearMonth ym = YearMonth.of(year, m);
-                                                        return allBookings.stream()
-                                                                        .filter(b -> "Completed"
-                                                                                        .equalsIgnoreCase(b.getStatus())
-                                                                                        && YearMonth.from(b
-                                                                                                        .getBookingDate()
-                                                                                                        .toLocalDate())
-                                                                                                        .equals(ym))
-                                                                        .mapToDouble(Booking::getTotalFee)
-                                                                        .sum();
-                                                }).collect(Collectors.toList());
-
-                                // Full month name in heading
-                                title = "Revenue Growth ("
-                                                + today.getMonth().getDisplayName(TextStyle.FULL, Locale.ENGLISH) + ")";
-                                break;
-
-                        case "yearly":
-                                int currentYear = today.getYear();
-                                labels = IntStream.rangeClosed(currentYear - 4, currentYear)
-                                                .mapToObj(String::valueOf)
-                                                .collect(Collectors.toList());
-
-                                values = labels.stream()
-                                                .map(y -> {
-                                                        int yr = Integer.parseInt(y);
-                                                        return allBookings.stream()
-                                                                        .filter(b -> "Completed"
-                                                                                        .equalsIgnoreCase(b.getStatus())
-                                                                                        && b.getBookingDate()
-                                                                                                        .getYear() == yr)
-                                                                        .mapToDouble(Booking::getTotalFee)
-                                                                        .sum();
-                                                }).collect(Collectors.toList());
-
-                                title = "Revenue Growth (Last 5 Years)";
-                                break;
-
-                        default: // weekly → current week (Sunday → Saturday)
-                                 // Get Sunday of current week
-                                LocalDate startOfWeek = today.with(DayOfWeek.SUNDAY);
-                                // Get Saturday of current week
-                                LocalDate endOfWeek = startOfWeek.plusDays(6);
-
-                                labels = IntStream.rangeClosed(0, 6)
-                                                .mapToObj(i -> startOfWeek.plusDays(i)
-                                                                .getDayOfWeek()
-                                                                .getDisplayName(TextStyle.SHORT, Locale.ENGLISH))
-                                                .collect(Collectors.toList());
-
-                                values = IntStream.rangeClosed(0, 6)
-                                                .mapToObj(i -> {
-                                                        LocalDate date = startOfWeek.plusDays(i);
-                                                        return allBookings.stream()
-                                                                        .filter(b -> "Completed"
-                                                                                        .equalsIgnoreCase(b.getStatus())
-                                                                                        && b.getBookingDate()
-                                                                                                        .toLocalDate()
-                                                                                                        .isEqual(date))
-                                                                        .mapToDouble(Booking::getTotalFee)
-                                                                        .sum();
-                                                }).collect(Collectors.toList());
-
-                                title = "Revenue Growth (" +
-                                                startOfWeek.getDayOfWeek().getDisplayName(TextStyle.FULL,
-                                                                Locale.ENGLISH)
-                                                + " - " +
-                                                endOfWeek.getDayOfWeek().getDisplayName(TextStyle.FULL, Locale.ENGLISH)
-                                                + ")";
-
+        public Map<String, Double> getGarageRevenueData(@RequestParam String type, Principal principal) {
+                Garage garage = garageRepository.findByEmail(principal.getName());
+                if (garage == null) {
+                        return Map.of(); // return empty if garage not found
                 }
 
-                response.put("labels", labels);
-                response.put("values", values);
-                response.put("title", title);
-                return response;
+                List<Booking> allBookings = bookingRepository.findByGarageId(garage.getId());
+                LocalDate now = LocalDate.now();
+                Map<String, Double> result = new LinkedHashMap<>();
+
+                switch (type.toLowerCase()) {
+                        case "weekly": {
+                                // Sunday → Saturday
+                                LocalDate startOfWeek = now.with(TemporalAdjusters.previousOrSame(DayOfWeek.SUNDAY));
+                                for (int i = 0; i < 7; i++) {
+                                        LocalDate day = startOfWeek.plusDays(i);
+                                        String key = day.getDayOfWeek().getDisplayName(TextStyle.SHORT, Locale.ENGLISH);
+
+                                        double sum = allBookings.stream()
+                                                        .filter(b -> "Completed".equalsIgnoreCase(b.getStatus())
+                                                                        && b.getBookingDate() != null
+                                                                        && b.getBookingDate().toLocalDate()
+                                                                                        .isEqual(day))
+                                                        .mapToDouble(Booking::getTotalFee)
+                                                        .sum();
+
+                                        result.put(key, sum);
+                                }
+                                break;
+                        }
+                        case "monthly": {
+                                int year = now.getYear();
+                                for (int m = 1; m <= 12; m++) {
+                                        YearMonth ym = YearMonth.of(year, m);
+                                        String key = ym.getMonth().getDisplayName(TextStyle.SHORT, Locale.ENGLISH);
+
+                                        double sum = allBookings.stream()
+                                                        .filter(b -> "Completed".equalsIgnoreCase(b.getStatus())
+                                                                        && b.getBookingDate() != null
+                                                                        && YearMonth.from(b.getBookingDate()
+                                                                                        .toLocalDate()).equals(ym))
+                                                        .mapToDouble(Booking::getTotalFee)
+                                                        .sum();
+
+                                        result.put(key, sum);
+                                }
+                                break;
+                        }
+                        case "yearly":
+                        default: {
+                                int currentYear = now.getYear();
+                                for (int i = 4; i >= 0; i--) {
+                                        int year = currentYear - i;
+                                        String key = String.valueOf(year);
+
+                                        double sum = allBookings.stream()
+                                                        .filter(b -> "Completed".equalsIgnoreCase(b.getStatus())
+                                                                        && b.getBookingDate() != null
+                                                                        && b.getBookingDate().getYear() == year)
+                                                        .mapToDouble(Booking::getTotalFee)
+                                                        .sum();
+
+                                        result.put(key, sum);
+                                }
+                                break;
+                        }
+                }
+                return result;
         }
+
 }
